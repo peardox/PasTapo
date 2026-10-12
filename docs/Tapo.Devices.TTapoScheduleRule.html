@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Devices: Record TTapoScheduleRule</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoScheduleRule"></span><h1 class="cio">Record TTapoScheduleRule</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Fields">Fields</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Devices.html">Tapo.Devices</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoScheduleRule = record</code></p>
+<h2 class="description">Description</h2>
+<p>
+A rule that switches a plug on or off at a set time.</p>
+<p>
+
+
+<p>Build rules with the class functions, which validate them. Sunrise and sunset times use the location set in the Tapo app.
+
+<p>Example: </p>
+
+<pre class="longcode">
+Rule := Plug.AddScheduleRule(TTapoScheduleRule.ClockWeekly(<span class="pascal_numeric">7</span>, <span class="pascal_numeric">30</span>, TapoWeekdays, True));
+Plug.AddScheduleRule(TTapoScheduleRule.SunsetOnce(-<span class="pascal_numeric">15</span>, False));</pre>
+
+<p></p>
+<h2 class="overview">Overview</h2>
+<span id="PasDoc-Fields"></span><h3 class="summary">Fields</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoScheduleRule.html#Id">Id</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoScheduleRule.html#Enabled">Enabled</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoScheduleRule.html#TimeKind">TimeKind</a></strong>: <a href="Tapo.Devices.html#TTapoScheduleTimeKind">TTapoScheduleTimeKind</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoScheduleRule.html#Hour">Hour</a></strong>: Integer;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoScheduleRule.html#Minute">Minute</a></strong>: Integer;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoScheduleRule.html#OffsetMinutes">OffsetMinutes</a></strong>: Integer;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoScheduleRule.html#Repeating">Repeating</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoScheduleRule.html#Days">Days</a></strong>: <a href="Tapo.Devices.html#TTapoWeekDays">TTapoWeekDays</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoScheduleRule.html#DesiredOn">DesiredOn</a></strong>: Boolean;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoScheduleRule.html#ClockWeekly-Integer-Integer-TTapoWeekDays-Boolean-">ClockWeekly</a></strong>(AHour, AMinute: Integer; ADays: <a href="Tapo.Devices.html#TTapoWeekDays">TTapoWeekDays</a>; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoScheduleRule.html#ClockOnce-Integer-Integer-Boolean-">ClockOnce</a></strong>(AHour, AMinute: Integer; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoScheduleRule.html#SunriseWeekly-Integer-TTapoWeekDays-Boolean-">SunriseWeekly</a></strong>(AOffsetMinutes: Integer; ADays: <a href="Tapo.Devices.html#TTapoWeekDays">TTapoWeekDays</a>; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoScheduleRule.html#SunriseOnce-Integer-Boolean-">SunriseOnce</a></strong>(AOffsetMinutes: Integer; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoScheduleRule.html#SunsetWeekly-Integer-TTapoWeekDays-Boolean-">SunsetWeekly</a></strong>(AOffsetMinutes: Integer; ADays: <a href="Tapo.Devices.html#TTapoWeekDays">TTapoWeekDays</a>; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoScheduleRule.html#SunsetOnce-Integer-Boolean-">SunsetOnce</a></strong>(AOffsetMinutes: Integer; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoScheduleRule.html#WithEnabled-Boolean-">WithEnabled</a></strong>(AEnabled: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Devices.TTapoScheduleRule.html#Validate">Validate</a></strong>;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Fields</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Id"></span><code><strong>Id</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The id the device assigned; empty for a rule not yet added.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Enabled"></span><code><strong>Enabled</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+False if the rule is switched off in the app.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="TimeKind"></span><code><strong>TimeKind</strong>: <a href="Tapo.Devices.html#TTapoScheduleTimeKind">TTapoScheduleTimeKind</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+What the time is measured from.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Hour"></span><code><strong>Hour</strong>: Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The hour, 0 to 23, for stkClock.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Minute"></span><code><strong>Minute</strong>: Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The minute, 0 to 59, for stkClock.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="OffsetMinutes"></span><code><strong>OffsetMinutes</strong>: Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Minutes from sunrise or sunset, -360 to 360 (negative = before).</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Repeating"></span><code><strong>Repeating</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True for a weekly rule; False for a rule that fires once.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Days"></span><code><strong>Days</strong>: <a href="Tapo.Devices.html#TTapoWeekDays">TTapoWeekDays</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The days a weekly rule fires on.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="DesiredOn"></span><code><strong>DesiredOn</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The state the plug switches to.</p>
+</td></tr>
+</table>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ClockWeekly-Integer-Integer-TTapoWeekDays-Boolean-"></span><code>class function <strong>ClockWeekly</strong>(AHour, AMinute: Integer; ADays: <a href="Tapo.Devices.html#TTapoWeekDays">TTapoWeekDays</a>; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A rule that fires at a clock time on the given days.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AHour</dt>
+<dd>0 to 23.</dd>
+<dt>AMinute</dt>
+<dd>0 to 59.</dd>
+<dt>ADays</dt>
+<dd>At least one day.</dd>
+<dt>ADesiredOn</dt>
+<dd>True to switch on, False to switch off.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A value is out of range.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ClockOnce-Integer-Integer-Boolean-"></span><code>class function <strong>ClockOnce</strong>(AHour, AMinute: Integer; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A rule that fires once, at the next occurrence of a clock time.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AHour</dt>
+<dd>0 to 23.</dd>
+<dt>AMinute</dt>
+<dd>0 to 59.</dd>
+<dt>ADesiredOn</dt>
+<dd>True to switch on, False to switch off.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A value is out of range.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SunriseWeekly-Integer-TTapoWeekDays-Boolean-"></span><code>class function <strong>SunriseWeekly</strong>(AOffsetMinutes: Integer; ADays: <a href="Tapo.Devices.html#TTapoWeekDays">TTapoWeekDays</a>; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A rule that fires at an offset from sunrise on the given days.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AOffsetMinutes</dt>
+<dd>-360 to 360; negative is before sunrise.</dd>
+<dt>ADays</dt>
+<dd>At least one day.</dd>
+<dt>ADesiredOn</dt>
+<dd>True to switch on, False to switch off.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A value is out of range.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SunriseOnce-Integer-Boolean-"></span><code>class function <strong>SunriseOnce</strong>(AOffsetMinutes: Integer; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A rule that fires once, at an offset from the next sunrise.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AOffsetMinutes</dt>
+<dd>-360 to 360; negative is before sunrise.</dd>
+<dt>ADesiredOn</dt>
+<dd>True to switch on, False to switch off.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A value is out of range.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SunsetWeekly-Integer-TTapoWeekDays-Boolean-"></span><code>class function <strong>SunsetWeekly</strong>(AOffsetMinutes: Integer; ADays: <a href="Tapo.Devices.html#TTapoWeekDays">TTapoWeekDays</a>; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A rule that fires at an offset from sunset on the given days.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AOffsetMinutes</dt>
+<dd>-360 to 360; negative is before sunset.</dd>
+<dt>ADays</dt>
+<dd>At least one day.</dd>
+<dt>ADesiredOn</dt>
+<dd>True to switch on, False to switch off.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A value is out of range.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SunsetOnce-Integer-Boolean-"></span><code>class function <strong>SunsetOnce</strong>(AOffsetMinutes: Integer; ADesiredOn: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A rule that fires once, at an offset from the next sunset.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AOffsetMinutes</dt>
+<dd>-360 to 360; negative is before sunset.</dd>
+<dt>ADesiredOn</dt>
+<dd>True to switch on, False to switch off.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A value is out of range.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithEnabled-Boolean-"></span><code>function <strong>WithEnabled</strong>(AEnabled: Boolean): <a href="Tapo.Devices.TTapoScheduleRule.html">TTapoScheduleRule</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Returns a copy of the rule, switched on or off.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Validate"></span><code>procedure <strong>Validate</strong>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Checks the rule's values.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A value is out of range, or a weekly rule has no days.</dd>
+</dl>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

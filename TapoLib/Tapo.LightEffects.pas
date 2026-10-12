@@ -1,3 +1,8 @@
+//** @abstract(Lighting-effect @(L920/L930@) and segment-effect presets of the Tapo app, as the
+//** JSON that set_lighting_effect / apply_segment_effect_rule take.)
+//**
+//** GENERATED from tapo/src/requests/set_device_info/lighting_effect.rs and segment_effect.rs of
+//** https://github.com/mihai-dinculescu/tapo - do not edit.
 unit Tapo.LightEffects;
 
 {
@@ -11,258 +16,250 @@ unit Tapo.LightEffects;
 interface
 
 type
-  (***
-    The lighting-effect presets of the Tapo app, for the L920 and L930 light strips.
-
-    @seealso(TTapoL920.SetLightingEffect)
-  *)
+  //** @abstract(The lighting-effect presets of the Tapo app, for the L920 and L930 light strips.)
+  //**
+  //** @seealso(TTapoL920.SetLightingEffect)
   /// <summary>The lighting-effect presets of the Tapo app, for the L920 and L930 light strips.</summary>
   /// <seealso cref="Tapo.Devices|TTapoL920.SetLightingEffect"/>
   TTapoLightingEffectPreset = (
-    (*** The 'Aurora' preset. *)
+    //** @abstract(The 'Aurora' preset.)
     /// <summary>The 'Aurora' preset.</summary>
     lepAurora,
-    (*** The 'Bubbling Cauldron' preset. *)
+    //** @abstract(The 'Bubbling Cauldron' preset.)
     /// <summary>The 'Bubbling Cauldron' preset.</summary>
     lepBubblingCauldron,
-    (*** The 'Candy Cane' preset. *)
+    //** @abstract(The 'Candy Cane' preset.)
     /// <summary>The 'Candy Cane' preset.</summary>
     lepCandyCane,
-    (*** The 'Christmas' preset. *)
+    //** @abstract(The 'Christmas' preset.)
     /// <summary>The 'Christmas' preset.</summary>
     lepChristmas,
-    (*** The 'Flicker' preset. *)
+    //** @abstract(The 'Flicker' preset.)
     /// <summary>The 'Flicker' preset.</summary>
     lepFlicker,
-    (*** The 'Grandma's Christmas Lights' preset. *)
+    //** @abstract(The 'Grandma's Christmas Lights' preset.)
     /// <summary>The 'Grandma's Christmas Lights' preset.</summary>
     lepGrandmasChristmasLights,
-    (*** The 'Hanukkah' preset. *)
+    //** @abstract(The 'Hanukkah' preset.)
     /// <summary>The 'Hanukkah' preset.</summary>
     lepHanukkah,
-    (*** The 'Haunted Mansion' preset. *)
+    //** @abstract(The 'Haunted Mansion' preset.)
     /// <summary>The 'Haunted Mansion' preset.</summary>
     lepHauntedMansion,
-    (*** The 'Icicle' preset. *)
+    //** @abstract(The 'Icicle' preset.)
     /// <summary>The 'Icicle' preset.</summary>
     lepIcicle,
-    (*** The 'Lightning' preset. *)
+    //** @abstract(The 'Lightning' preset.)
     /// <summary>The 'Lightning' preset.</summary>
     lepLightning,
-    (*** The 'Ocean' preset. *)
+    //** @abstract(The 'Ocean' preset.)
     /// <summary>The 'Ocean' preset.</summary>
     lepOcean,
-    (*** The 'Rainbow' preset. *)
+    //** @abstract(The 'Rainbow' preset.)
     /// <summary>The 'Rainbow' preset.</summary>
     lepRainbow,
-    (*** The 'Raindrop' preset. *)
+    //** @abstract(The 'Raindrop' preset.)
     /// <summary>The 'Raindrop' preset.</summary>
     lepRaindrop,
-    (*** The 'Spring' preset. *)
+    //** @abstract(The 'Spring' preset.)
     /// <summary>The 'Spring' preset.</summary>
     lepSpring,
-    (*** The 'Sunrise' preset. *)
+    //** @abstract(The 'Sunrise' preset.)
     /// <summary>The 'Sunrise' preset.</summary>
     lepSunrise,
-    (*** The 'Sunset' preset. *)
+    //** @abstract(The 'Sunset' preset.)
     /// <summary>The 'Sunset' preset.</summary>
     lepSunset,
-    (*** The 'Valentines' preset. *)
+    //** @abstract(The 'Valentines' preset.)
     /// <summary>The 'Valentines' preset.</summary>
     lepValentines);
 
-  (***
-    The segment-effect presets of the Tapo app, for the L920 and L930 light strips.
-
-    @seealso(TTapoL920.SetSegmentEffect)
-  *)
+  //** @abstract(The segment-effect presets of the Tapo app, for the L920 and L930 light strips.)
+  //**
+  //** @seealso(TTapoL920.SetSegmentEffect)
   /// <summary>The segment-effect presets of the Tapo app, for the L920 and L930 light strips.</summary>
   /// <seealso cref="Tapo.Devices|TTapoL920.SetSegmentEffect"/>
   TTapoSegmentEffectPreset = (
-    (*** The 'birthday' preset. *)
+    //** @abstract(The 'birthday' preset.)
     /// <summary>The 'birthday' preset.</summary>
     sepBirthday,
-    (*** The 'blue' preset. *)
+    //** @abstract(The 'blue' preset.)
     /// <summary>The 'blue' preset.</summary>
     sepBlue,
-    (*** The 'bonfire' preset. *)
+    //** @abstract(The 'bonfire' preset.)
     /// <summary>The 'bonfire' preset.</summary>
     sepBonfire,
-    (*** The 'candlelight' preset. *)
+    //** @abstract(The 'candlelight' preset.)
     /// <summary>The 'candlelight' preset.</summary>
     sepCandlelight,
-    (*** The 'carnival' preset. *)
+    //** @abstract(The 'carnival' preset.)
     /// <summary>The 'carnival' preset.</summary>
     sepCarnival,
-    (*** The 'cyan' preset. *)
+    //** @abstract(The 'cyan' preset.)
     /// <summary>The 'cyan' preset.</summary>
     sepCyan,
-    (*** The 'dancing' preset. *)
+    //** @abstract(The 'dancing' preset.)
     /// <summary>The 'dancing' preset.</summary>
     sepDancing,
-    (*** The 'dating' preset. *)
+    //** @abstract(The 'dating' preset.)
     /// <summary>The 'dating' preset.</summary>
     sepDating,
-    (*** The 'disco' preset. *)
+    //** @abstract(The 'disco' preset.)
     /// <summary>The 'disco' preset.</summary>
     sepDisco,
-    (*** The 'dreamland' preset. *)
+    //** @abstract(The 'dreamland' preset.)
     /// <summary>The 'dreamland' preset.</summary>
     sepDreamland,
-    (*** The 'electro_dance' preset. *)
+    //** @abstract(The 'electro_dance' preset.)
     /// <summary>The 'electro_dance' preset.</summary>
     sepElectroDance,
-    (*** The 'energetic' preset. *)
+    //** @abstract(The 'energetic' preset.)
     /// <summary>The 'energetic' preset.</summary>
     sepEnergetic,
-    (*** The 'excited' preset. *)
+    //** @abstract(The 'excited' preset.)
     /// <summary>The 'excited' preset.</summary>
     sepExcited,
-    (*** The 'fall' preset. *)
+    //** @abstract(The 'fall' preset.)
     /// <summary>The 'fall' preset.</summary>
     sepFall,
-    (*** The 'family' preset. *)
+    //** @abstract(The 'family' preset.)
     /// <summary>The 'family' preset.</summary>
     sepFamily,
-    (*** The 'fireworks' preset. *)
+    //** @abstract(The 'fireworks' preset.)
     /// <summary>The 'fireworks' preset.</summary>
     sepFireworks,
-    (*** The 'flower_field' preset. *)
+    //** @abstract(The 'flower_field' preset.)
     /// <summary>The 'flower_field' preset.</summary>
     sepFlowerField,
-    (*** The 'forest' preset. *)
+    //** @abstract(The 'forest' preset.)
     /// <summary>The 'forest' preset.</summary>
     sepForest,
-    (*** The 'game' preset. *)
+    //** @abstract(The 'game' preset.)
     /// <summary>The 'game' preset.</summary>
     sepGame,
-    (*** The 'green' preset. *)
+    //** @abstract(The 'green' preset.)
     /// <summary>The 'green' preset.</summary>
     sepGreen,
-    (*** The 'halloween' preset. *)
+    //** @abstract(The 'halloween' preset.)
     /// <summary>The 'halloween' preset.</summary>
     sepHalloween,
-    (*** The 'happy' preset. *)
+    //** @abstract(The 'happy' preset.)
     /// <summary>The 'happy' preset.</summary>
     sepHappy,
-    (*** The 'jazz' preset. *)
+    //** @abstract(The 'jazz' preset.)
     /// <summary>The 'jazz' preset.</summary>
     sepJazz,
-    (*** The 'lake' preset. *)
+    //** @abstract(The 'lake' preset.)
     /// <summary>The 'lake' preset.</summary>
     sepLake,
-    (*** The 'light_green' preset. *)
+    //** @abstract(The 'light_green' preset.)
     /// <summary>The 'light_green' preset.</summary>
     sepLightGreen,
-    (*** The 'lyric' preset. *)
+    //** @abstract(The 'lyric' preset.)
     /// <summary>The 'lyric' preset.</summary>
     sepLyric,
-    (*** The 'moonlight' preset. *)
+    //** @abstract(The 'moonlight' preset.)
     /// <summary>The 'moonlight' preset.</summary>
     sepMoonlight,
-    (*** The 'morning' preset. *)
+    //** @abstract(The 'morning' preset.)
     /// <summary>The 'morning' preset.</summary>
     sepMorning,
-    (*** The 'movie' preset. *)
+    //** @abstract(The 'movie' preset.)
     /// <summary>The 'movie' preset.</summary>
     sepMovie,
-    (*** The 'new_year' preset. *)
+    //** @abstract(The 'new_year' preset.)
     /// <summary>The 'new_year' preset.</summary>
     sepNewYear,
-    (*** The 'night' preset. *)
+    //** @abstract(The 'night' preset.)
     /// <summary>The 'night' preset.</summary>
     sepNight,
-    (*** The 'orange' preset. *)
+    //** @abstract(The 'orange' preset.)
     /// <summary>The 'orange' preset.</summary>
     sepOrange,
-    (*** The 'pink' preset. *)
+    //** @abstract(The 'pink' preset.)
     /// <summary>The 'pink' preset.</summary>
     sepPink,
-    (*** The 'purple' preset. *)
+    //** @abstract(The 'purple' preset.)
     /// <summary>The 'purple' preset.</summary>
     sepPurple,
-    (*** The 'quiet' preset. *)
+    //** @abstract(The 'quiet' preset.)
     /// <summary>The 'quiet' preset.</summary>
     sepQuiet,
-    (*** The 'red' preset. *)
+    //** @abstract(The 'red' preset.)
     /// <summary>The 'red' preset.</summary>
     sepRed,
-    (*** The 'relaxed' preset. *)
+    //** @abstract(The 'relaxed' preset.)
     /// <summary>The 'relaxed' preset.</summary>
     sepRelaxed,
-    (*** The 'rock' preset. *)
+    //** @abstract(The 'rock' preset.)
     /// <summary>The 'rock' preset.</summary>
     sepRock,
-    (*** The 'siren' preset. *)
+    //** @abstract(The 'siren' preset.)
     /// <summary>The 'siren' preset.</summary>
     sepSiren,
-    (*** The 'sleep' preset. *)
+    //** @abstract(The 'sleep' preset.)
     /// <summary>The 'sleep' preset.</summary>
     sepSleep,
-    (*** The 'snow' preset. *)
+    //** @abstract(The 'snow' preset.)
     /// <summary>The 'snow' preset.</summary>
     sepSnow,
-    (*** The 'star' preset. *)
+    //** @abstract(The 'star' preset.)
     /// <summary>The 'star' preset.</summary>
     sepStar,
-    (*** The 'study' preset. *)
+    //** @abstract(The 'study' preset.)
     /// <summary>The 'study' preset.</summary>
     sepStudy,
-    (*** The 'summer' preset. *)
+    //** @abstract(The 'summer' preset.)
     /// <summary>The 'summer' preset.</summary>
     sepSummer,
-    (*** The 'sunny' preset. *)
+    //** @abstract(The 'sunny' preset.)
     /// <summary>The 'sunny' preset.</summary>
     sepSunny,
-    (*** The 'sweet' preset. *)
+    //** @abstract(The 'sweet' preset.)
     /// <summary>The 'sweet' preset.</summary>
     sepSweet,
-    (*** The 'tense' preset. *)
+    //** @abstract(The 'tense' preset.)
     /// <summary>The 'tense' preset.</summary>
     sepTense,
-    (*** The 'thinking' preset. *)
+    //** @abstract(The 'thinking' preset.)
     /// <summary>The 'thinking' preset.</summary>
     sepThinking,
-    (*** The 'universe' preset. *)
+    //** @abstract(The 'universe' preset.)
     /// <summary>The 'universe' preset.</summary>
     sepUniverse,
-    (*** The 'volcano' preset. *)
+    //** @abstract(The 'volcano' preset.)
     /// <summary>The 'volcano' preset.</summary>
     sepVolcano,
-    (*** The 'warm' preset. *)
+    //** @abstract(The 'warm' preset.)
     /// <summary>The 'warm' preset.</summary>
     sepWarm,
-    (*** The 'white' preset. *)
+    //** @abstract(The 'white' preset.)
     /// <summary>The 'white' preset.</summary>
     sepWhite,
-    (*** The 'winter' preset. *)
+    //** @abstract(The 'winter' preset.)
     /// <summary>The 'winter' preset.</summary>
     sepWinter,
-    (*** The 'work' preset. *)
+    //** @abstract(The 'work' preset.)
     /// <summary>The 'work' preset.</summary>
     sepWork,
-    (*** The 'yellow' preset. *)
+    //** @abstract(The 'yellow' preset.)
     /// <summary>The 'yellow' preset.</summary>
     sepYellow);
 
-(***
-  The JSON the strip takes for a lighting-effect preset.
-
-  @param(APreset The preset.)
-
-  @returns(A JSON object as text, for set_lighting_effect.)
-*)
+//** @abstract(The JSON the strip takes for a lighting-effect preset.)
+//**
+//** @param(APreset The preset.)
+//**
+//** @returns(A JSON object as text, for set_lighting_effect.)
 /// <summary>The JSON the strip takes for a lighting-effect preset.</summary>
 /// <param name="APreset">The preset.</param>
 /// <returns>A JSON object as text, for set_lighting_effect.</returns>
 function LightingEffectPresetJSON(APreset: TTapoLightingEffectPreset): string;
-(***
-  The JSON the strip takes for a segment-effect preset.
-
-  @param(APreset The preset.)
-
-  @returns(A JSON object as text, for apply_segment_effect_rule.)
-*)
+//** @abstract(The JSON the strip takes for a segment-effect preset.)
+//**
+//** @param(APreset The preset.)
+//**
+//** @returns(A JSON object as text, for apply_segment_effect_rule.)
 /// <summary>The JSON the strip takes for a segment-effect preset.</summary>
 /// <param name="APreset">The preset.</param>
 /// <returns>A JSON object as text, for apply_segment_effect_rule.</returns>

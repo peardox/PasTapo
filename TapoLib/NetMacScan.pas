@@ -1,3 +1,36 @@
+//** @abstract(Cross-platform LAN MAC address scanner for Delphi @(FMX@).)
+//**
+//** @preformatted(
+//** How it works per platform:
+//**   Windows       : SendARP @(iphlpapi.dll@) for every host, run in parallel.
+//**                   SendARP issues a real ARP request, so devices that ignore
+//**                   ping are still found.
+//**   macOS / Linux : Sends a 1-byte UDP datagram to every host. This forces the
+//**                   OS to ARP-resolve each address. Then reads the kernel ARP
+//**                   table @(macOS: sysctl, falling back to "arp -an"; Linux:
+//**                   /proc/net/arp@). Hosts are processed in batches of 256 so
+//**                   large subnets don't overflow the kernel neighbour table.
+//**   Android / iOS : NOT POSSIBLE. Android 10+ and iOS 11+ block apps from
+//**                   reading the ARP table. ScanNetworkMacs raises
+//**                   ENotSupportedException there. Call MacScanSupported first.
+//** )
+//**
+//** If the ARP table cannot be read (recent macOS versions hide it from apps, even ones allowed on
+//** the local network), the scan raises an error rather than reporting an empty network;
+//** Tapo.Discovery then finds devices by TCP.
+//**
+//** ANetwork : any address inside the network, e.g. '192.168.1.0' or '192.168.1.42' ASubnet  :
+//** '255.255.255.0', '/24' or '24'
+//**
+//** @preformatted(
+//** Notes:
+//**   - The scanning machine's own MAC is not included on macOS/Linux
+//**     @(the OS doesn't keep an ARP entry for itself@).
+//**   - Phones and laptops often use randomised "private" MACs per WiFi network.
+//**   - macOS 15+: add NSLocalNetworkUsageDescription to the app's Info.plist
+//**     @(Project Options > Version Info@), or local network traffic is blocked.
+//**   - Linux FMX requires FMXLinux. macOS/Linux use Indy @(ships with Delphi@).
+//** )
 unit NetMacScan;
 
 {
@@ -9,12 +42,16 @@ unit NetMacScan;
                     ping are still found.
     macOS / Linux : Sends a 1-byte UDP datagram to every host. This forces the
                     OS to ARP-resolve each address. Then reads the kernel ARP
-                    table (macOS: "arp -an", Linux: /proc/net/arp).
-                    Hosts are processed in batches of 256 so large subnets
-                    don't overflow the kernel neighbour table.
+                    table (macOS: sysctl, falling back to "arp -an"; Linux:
+                    /proc/net/arp). Hosts are processed in batches of 256 so
+                    large subnets don't overflow the kernel neighbour table.
     Android / iOS : NOT POSSIBLE. Android 10+ and iOS 11+ block apps from
                     reading the ARP table. ScanNetworkMacs raises
                     ENotSupportedException there. Call MacScanSupported first.
+
+  If the ARP table cannot be read (recent macOS versions hide it from apps,
+  even ones allowed on the local network), the scan raises an error rather
+  than reporting an empty network; Tapo.Discovery then finds devices by TCP.
 
   ANetwork : any address inside the network, e.g. '192.168.1.0' or '192.168.1.42'
   ASubnet  : '255.255.255.0', '/24' or '24'
@@ -34,47 +71,158 @@ uses
   System.SysUtils;
 
 type
+  //** @abstract(One host found on the network.)
+  /// <summary>One host found on the network.</summary>
   TMacEntry = record
+    //** @abstract(The IPv4 address, for example '192.168.1.42'.)
+    /// <summary>The IPv4 address, for example '192.168.1.42'.</summary>
     IP: string;
-    MAC: string;   // normalised as 'AA:BB:CC:DD:EE:FF'
+    //** @abstract(The MAC address, normalised as 'AA:BB:CC:DD:EE:FF'.)
+    /// <summary>The MAC address, normalised as 'AA:BB:CC:DD:EE:FF'.</summary>
+    MAC: string;
   end;
+
+  //** @abstract(The hosts a scan found, in address order.)
+  /// <summary>The hosts a scan found, in address order.</summary>
   TMacEntries = TArray<TMacEntry>;
 
+  //** @abstract(Called on the main @(UI@) thread when an asynchronous scan ends.)
+  //**
+  //** @param(Entries The hosts found; empty if the scan failed.)
+  //**
+  //** @param(ErrorMsg Empty on success; otherwise why the scan failed.)
+  /// <summary>Called on the main (UI) thread when an asynchronous scan ends.</summary>
+  /// <param name="Entries">The hosts found; empty if the scan failed.</param>
+  /// <param name="ErrorMsg">Empty on success; otherwise why the scan failed.</param>
   TMacScanCompleteProc = reference to procedure(const Entries: TMacEntries;
     const ErrorMsg: string);
 
-  /// TNotifyEvent-style progress event, always fired on the main (UI) thread.
-  ///   Processed : IPs checked so far (0..Total)
-  ///   Found     : matching devices found so far (all devices, or only Tapo
-  ///               devices when using ScanTapoDevicesAsync)
-  ///   Total     : number of IPs under consideration (e.g. 254 for a /24)
-  /// The first call is (0, 0, Total), so you can set ProgressBar.Max there.
-  /// The last call before AOnComplete is (Total, Found, Total).
+  //** @abstract(Progress of a scan, in TNotifyEvent style. Always called on the main @(UI@) thread.)
+  //**
+  //** The first call is (0, 0, Total), so a progress bar can take its Max there; the last call
+  //** before the completion callback is (Total, Found, Total).
+  //**
+  //** @param(Sender The ASender passed to the scan.)
+  //**
+  //** @param(Processed Addresses checked so far, 0 to Total.)
+  //**
+  //** @param(Found Matching hosts found so far: all hosts, or TP-Link hosts only for
+  //** @link(ScanTapoDevicesAsync).)
+  //**
+  //** @param(Total Addresses in the subnet, for example 254 for a /24.)
+  /// <summary>Progress of a scan, in TNotifyEvent style. Always called on the main (UI) thread.</summary>
+  /// <param name="Sender">The ASender passed to the scan.</param>
+  /// <param name="Processed">Addresses checked so far, 0 to Total.</param>
+  /// <param name="Found">
+  ///   Matching hosts found so far: all hosts, or TP-Link hosts only for
+  ///   <see cref="ScanTapoDevicesAsync"/>.
+  /// </param>
+  /// <param name="Total">Addresses in the subnet, for example 254 for a /24.</param>
+  /// <remarks>
+  ///   The first call is (0, 0, Total), so a progress bar can take its Max
+  ///   there; the last call before the completion callback is
+  ///   (Total, Found, Total).
+  /// </remarks>
   TMacScanProgressEvent = procedure(Sender: TObject;
     Processed, Found, Total: Integer) of object;
 
-/// True on platforms where MAC scanning is possible (Windows, macOS, Linux).
+//** @abstract(True on platforms where MAC scanning is possible @(Windows, macOS, Linux@).)
+//**
+//** @returns(False on Android and iOS, which do not let apps read the ARP table.)
+/// <summary>True on platforms where MAC scanning is possible (Windows, macOS, Linux).</summary>
+/// <returns>False on Android and iOS, which do not let apps read the ARP table.</returns>
 function MacScanSupported: Boolean;
 
-/// Reports what the low-level calls the scan relies on actually return on
-/// this machine (popen, the ARP sysctl, arp -an, /proc/net/arp), and whether
-/// a TCP connection to AProbeHost succeeds (on macOS the default gateway when
-/// AProbeHost is empty), for tracking down a scan that finds nothing.
-/// Takes up to a few seconds; safe on any thread.
+//** @abstract(Reports what the low-level calls the scan relies on return on this machine.)
+//**
+//** Covers popen, the ARP sysctl, "arp -an" and "netstat" on macOS, and /proc/net/arp on Linux; on
+//** Windows there is nothing to report. Use it to find out why a scan finds nothing. Takes up to a
+//** few seconds; safe on any thread.
+//**
+//** @param(AProbeHost A host to try a TCP connection to @(ports 80 and 53@). Empty: the default
+//** gateway on macOS; nothing on other platforms.)
+//**
+//** @returns(A multi-line report, for a log.)
+/// <summary>Reports what the low-level calls the scan relies on return on this machine.</summary>
+/// <param name="AProbeHost">
+///   A host to try a TCP connection to (ports 80 and 53). Empty: the default
+///   gateway on macOS; nothing on other platforms.
+/// </param>
+/// <returns>A multi-line report, for a log.</returns>
+/// <remarks>
+///   Covers popen, the ARP sysctl, "arp -an" and "netstat" on macOS, and
+///   /proc/net/arp on Linux; on Windows there is nothing to report. Use it
+///   to find out why a scan finds nothing. Takes up to a few seconds; safe on
+///   any thread.
+/// </remarks>
 function MacScanDiagnostics(const AProbeHost: string = ''): string;
 
-/// The host addresses of a subnet, in order, without the network and
-/// broadcast addresses: ('192.168.1.0', '/24') gives 192.168.1.1..254.
-/// Raises EArgumentException for an invalid network or mask.
+//** @abstract(The host addresses of a subnet, in order, without the network and broadcast
+//** addresses.)
+//**
+//** @param(ANetwork Any address in the network, for example '192.168.1.0'.)
+//**
+//** @param(ASubnet The mask: '255.255.255.0', '/24' or '24'.)
+//**
+//** @returns(For example 192.168.1.1 to 192.168.1.254 for @('192.168.1.0', '/24'@).)
+//**
+//** @raises(EArgumentException The network or mask is not valid, or the range is larger than a /16.)
+/// <summary>The host addresses of a subnet, in order, without the network and broadcast addresses.</summary>
+/// <param name="ANetwork">Any address in the network, for example '192.168.1.0'.</param>
+/// <param name="ASubnet">The mask: '255.255.255.0', '/24' or '24'.</param>
+/// <returns>For example 192.168.1.1 to 192.168.1.254 for ('192.168.1.0', '/24').</returns>
+/// <exception cref="EArgumentException">The network or mask is not valid, or the range is larger than a /16.</exception>
 function SubnetHosts(const ANetwork, ASubnet: string): TArray<string>;
 
-/// Blocking scan. Don't call from the UI thread; use ScanNetworkMacsAsync.
-/// Typical /24 WiFi network: ~5-15 seconds.
+//** @abstract(Scans a subnet and returns every host that answered, with its MAC. Blocks.)
+//**
+//** Do not call it on the UI thread; use @link(ScanNetworkMacsAsync). A typical /24 Wi-Fi network
+//** takes about 5 to 15 seconds.
+//**
+//** @param(ANetwork Any address in the network, for example '192.168.1.0'.)
+//**
+//** @param(ASubnet The mask: '255.255.255.0', '/24' or '24'.)
+//**
+//** @returns(The hosts found, in address order.)
+//**
+//** @raises(EArgumentException The network or mask is not valid.)
+//**
+//** @raises(ENotSupportedException The platform does not let apps read the ARP table.)
+//**
+//** @raises(EOSError The ARP table could not be read.)
+/// <summary>Scans a subnet and returns every host that answered, with its MAC. Blocks.</summary>
+/// <param name="ANetwork">Any address in the network, for example '192.168.1.0'.</param>
+/// <param name="ASubnet">The mask: '255.255.255.0', '/24' or '24'.</param>
+/// <returns>The hosts found, in address order.</returns>
+/// <exception cref="EArgumentException">The network or mask is not valid.</exception>
+/// <exception cref="ENotSupportedException">The platform does not let apps read the ARP table.</exception>
+/// <exception cref="EOSError">The ARP table could not be read.</exception>
+/// <remarks>
+///   Do not call it on the UI thread; use <see cref="ScanNetworkMacsAsync"/>.
+///   A typical /24 Wi-Fi network takes about 5 to 15 seconds.
+/// </remarks>
 function ScanNetworkMacs(const ANetwork, ASubnet: string): TMacEntries;
 
-/// Runs the scan on a background thread. AOnComplete and AOnProgress are
-/// called on the main (UI) thread. ErrorMsg is empty on success.
-/// ASender is passed through as the Sender of AOnProgress.
+//** @abstract(Scans a subnet on a background thread.)
+//**
+//** Errors are not raised: they arrive in AOnComplete's ErrorMsg.
+//**
+//** @param(ANetwork Any address in the network, for example '192.168.1.0'.)
+//**
+//** @param(ASubnet The mask: '255.255.255.0', '/24' or '24'.)
+//**
+//** @param(AOnComplete Called on the main thread with the hosts found, or with the error.)
+//**
+//** @param(AOnProgress Optional; called on the main thread as the scan goes.)
+//**
+//** @param(ASender Passed to AOnProgress as its Sender.)
+/// <summary>Scans a subnet on a background thread.</summary>
+/// <param name="ANetwork">Any address in the network, for example '192.168.1.0'.</param>
+/// <param name="ASubnet">The mask: '255.255.255.0', '/24' or '24'.</param>
+/// <param name="AOnComplete">Called on the main thread with the hosts found, or with the error.</param>
+/// <param name="AOnProgress">Optional; called on the main thread as the scan goes.</param>
+/// <param name="ASender">Passed to AOnProgress as its Sender.</param>
+/// <remarks>Errors are not raised: they arrive in AOnComplete's ErrorMsg.</remarks>
 procedure ScanNetworkMacsAsync(const ANetwork, ASubnet: string;
   const AOnComplete: TMacScanCompleteProc;
   const AOnProgress: TMacScanProgressEvent = nil; ASender: TObject = nil);
@@ -92,24 +240,90 @@ procedure ScanNetworkMacsAsync(const ANetwork, ASubnet: string;
   network is almost always a Tapo/Kasa smart device -- but not guaranteed.
   --------------------------------------------------------------------------- }
 
-/// True if the MAC's first 3 bytes are a TP-Link/Tapo OUI.
-/// Accepts 'AA:BB:CC:DD:EE:FF', 'aa-bb-cc-dd-ee-ff', etc.
+//** @abstract(True if a MAC address starts with a TP-Link @(and so Tapo@) prefix.)
+//**
+//** @param(AMac The MAC, as 'AA:BB:CC:DD:EE:FF', 'aa-bb-cc-dd-ee-ff' or similar.)
+//**
+//** @returns(True for one of the TP-Link OUIs; also true for TP-Link routers and range extenders.)
+/// <summary>True if a MAC address starts with a TP-Link (and so Tapo) prefix.</summary>
+/// <param name="AMac">The MAC, as 'AA:BB:CC:DD:EE:FF', 'aa-bb-cc-dd-ee-ff' or similar.</param>
+/// <returns>True for one of the TP-Link OUIs; also true for TP-Link routers and range extenders.</returns>
 function IsTapoMac(const AMac: string): Boolean;
 
-/// Returns only the entries whose MAC is a TP-Link/Tapo OUI.
+//** @abstract(Keeps only the entries whose MAC has a TP-Link prefix.)
+//**
+//** @param(AEntries Scan results.)
+//**
+//** @returns(The TP-Link entries, in the same order.)
+//**
+//** @seealso(IsTapoMac)
+/// <summary>Keeps only the entries whose MAC has a TP-Link prefix.</summary>
+/// <param name="AEntries">Scan results.</param>
+/// <returns>The TP-Link entries, in the same order.</returns>
+/// <seealso cref="IsTapoMac"/>
 function FilterTapoDevices(const AEntries: TMacEntries): TMacEntries;
 
-/// ScanNetworkMacs + FilterTapoDevices.
+//** @abstract(Scans a subnet and returns the hosts with a TP-Link MAC. Blocks.)
+//**
+//** The same as @link(ScanNetworkMacs) followed by @link(FilterTapoDevices).
+//**
+//** @param(ANetwork Any address in the network, for example '192.168.1.0'.)
+//**
+//** @param(ASubnet The mask: '255.255.255.0', '/24' or '24'.)
+//**
+//** @returns(The TP-Link hosts found, in address order.)
+//**
+//** @raises(EArgumentException The network or mask is not valid.)
+//**
+//** @raises(ENotSupportedException The platform does not let apps read the ARP table.)
+//**
+//** @raises(EOSError The ARP table could not be read.)
+/// <summary>Scans a subnet and returns the hosts with a TP-Link MAC. Blocks.</summary>
+/// <param name="ANetwork">Any address in the network, for example '192.168.1.0'.</param>
+/// <param name="ASubnet">The mask: '255.255.255.0', '/24' or '24'.</param>
+/// <returns>The TP-Link hosts found, in address order.</returns>
+/// <exception cref="EArgumentException">The network or mask is not valid.</exception>
+/// <exception cref="ENotSupportedException">The platform does not let apps read the ARP table.</exception>
+/// <exception cref="EOSError">The ARP table could not be read.</exception>
+/// <remarks>The same as <see cref="ScanNetworkMacs"/> followed by <see cref="FilterTapoDevices"/>.</remarks>
 function ScanTapoDevices(const ANetwork, ASubnet: string): TMacEntries;
 
-/// Async version; AOnComplete and AOnProgress run on the main (UI) thread.
-/// The progress event's Found counts Tapo devices only.
+//** @abstract(Scans a subnet for hosts with a TP-Link MAC on a background thread.)
+//**
+//** Errors are not raised: they arrive in AOnComplete's ErrorMsg.
+//**
+//** @param(ANetwork Any address in the network, for example '192.168.1.0'.)
+//**
+//** @param(ASubnet The mask: '255.255.255.0', '/24' or '24'.)
+//**
+//** @param(AOnComplete Called on the main thread with the TP-Link hosts found, or with the error.)
+//**
+//** @param(AOnProgress Optional; called on the main thread. Its Found counts TP-Link hosts only.)
+//**
+//** @param(ASender Passed to AOnProgress as its Sender.)
+/// <summary>Scans a subnet for hosts with a TP-Link MAC on a background thread.</summary>
+/// <param name="ANetwork">Any address in the network, for example '192.168.1.0'.</param>
+/// <param name="ASubnet">The mask: '255.255.255.0', '/24' or '24'.</param>
+/// <param name="AOnComplete">Called on the main thread with the TP-Link hosts found, or with the error.</param>
+/// <param name="AOnProgress">Optional; called on the main thread. Its Found counts TP-Link hosts only.</param>
+/// <param name="ASender">Passed to AOnProgress as its Sender.</param>
+/// <remarks>Errors are not raised: they arrive in AOnComplete's ErrorMsg.</remarks>
 procedure ScanTapoDevicesAsync(const ANetwork, ASubnet: string;
   const AOnComplete: TMacScanCompleteProc;
   const AOnProgress: TMacScanProgressEvent = nil; ASender: TObject = nil);
 
-/// Adds an extra OUI (e.g. 'AABBCC' or 'AA:BB:CC') if IEEE registers a new
-/// TP-Link prefix. Call before scanning, not while a scan is running.
+//** @abstract(Adds a MAC prefix to the TP-Link table, for a prefix registered after this unit was
+//** written.)
+//**
+//** Call it before scanning, not while a scan is running.
+//**
+//** @param(AOui The prefix, for example 'AABBCC' or 'AA:BB:CC'.)
+//**
+//** @raises(EArgumentException AOui is not three hexadecimal bytes.)
+/// <summary>Adds a MAC prefix to the TP-Link table, for a prefix registered after this unit was written.</summary>
+/// <param name="AOui">The prefix, for example 'AABBCC' or 'AA:BB:CC'.</param>
+/// <exception cref="EArgumentException">AOui is not three hexadecimal bytes.</exception>
+/// <remarks>Call it before scanning, not while a scan is running.</remarks>
 procedure AddTapoOui(const AOui: string);
 
 implementation
@@ -229,8 +443,8 @@ begin
       'Subnet too large (%d hosts). Maximum supported is a /16.', [Count]);
 end;
 
-/// Accepts 'a4:2b:b0:1:2:3', 'A4-2B-B0-01-02-03' etc. Returns
-/// 'A4:2B:B0:01:02:03', or '' for invalid, all-zero or broadcast MACs.
+// Accepts 'a4:2b:b0:1:2:3', 'A4-2B-B0-01-02-03' etc. Returns
+// 'A4:2B:B0:01:02:03', or '' for invalid, all-zero or broadcast MACs.
 function NormalizeMac(const S: string): string;
 var
   Parts: TArray<string>;
@@ -274,9 +488,9 @@ begin
 end;
 
 type
-  /// nil = accept every MAC
+  // nil = accept every MAC
   TMacFilter = reference to function(const AMac: string): Boolean;
-  /// Called from worker threads; RunScanAsync marshals it to the UI thread.
+  // Called from worker threads; RunScanAsync marshals it to the UI thread.
   TScanProgressProc = reference to procedure(Processed, Found, Total: Integer);
 
 function MacMatches(const AMac: string; const AFilter: TMacFilter): Boolean;
@@ -311,7 +525,7 @@ end;
 function SendARP(DestIP, SrcIP: Cardinal; pMacAddr: Pointer;
   var PhyAddrLen: Cardinal): DWORD; stdcall; external 'iphlpapi.dll' name 'SendARP';
 
-/// Host byte order (a.b.c.d = a shl 24 ...) to network byte order.
+// Host byte order (a.b.c.d = a shl 24 ...) to network byte order.
 function HostToNet(A: Cardinal): Cardinal;
 begin
   Result := ((A and $000000FF) shl 24) or ((A and $0000FF00) shl 8) or
@@ -452,9 +666,9 @@ const
   RTF_LLINFO     = $400;
   RT_MSGHDR_SIZE = 92;   // sizeof(struct rt_msghdr) on macOS
 
-/// Adds the kernel's ARP entries to ATable. False if sysctl failed.
-/// AHidden counts entries whose MAC the system replaced with the privacy
-/// placeholder 02:00:00:00:00:00; those are left out.
+// Adds the kernel's ARP entries to ATable. False if sysctl failed.
+// AHidden counts entries whose MAC the system replaced with the privacy
+// placeholder 02:00:00:00:00:00; those are left out.
 function ReadArpTableSysctl(ATable: TDictionary<Cardinal, string>;
   out AHidden: Integer): Boolean;
 var
@@ -538,8 +752,8 @@ begin
 end;
 {$ENDIF}
 
-/// Adds the entries of a text ARP listing to ATable: "arp -an" output on
-/// macOS, /proc/net/arp on Linux. False if the source could not be opened.
+// Adds the entries of a text ARP listing to ATable: "arp -an" output on
+// macOS, /proc/net/arp on Linux. False if the source could not be opened.
 function ReadArpTableText(ATable: TDictionary<Cardinal, string>;
   out ALines: Integer): Boolean;
 var
@@ -607,7 +821,7 @@ var
   // What the last ReadArpTable saw, for error messages.
   ArpReadInfo: string;
 
-/// Returns IP (host order) -> normalised MAC for all complete ARP entries.
+// Returns IP (host order) -> normalised MAC for all complete ARP entries.
 function ReadArpTable: TDictionary<Cardinal, string>;
 var
   OK: Boolean;
@@ -650,8 +864,8 @@ begin
   end;
 end;
 
-/// Copies the current ARP table into Macs[Start..Start+N-1] and returns how
-/// many of those match the filter.
+// Copies the current ARP table into Macs[Start..Start+N-1] and returns how
+// many of those match the filter.
 function ApplyArpTable(First: Cardinal; Start, N: Integer;
   var Macs: TArray<string>; const AFilter: TMacFilter;
   var ATableSeen: Boolean): Integer;
@@ -959,7 +1173,7 @@ begin
 end;
 {$ENDIF}
 
-/// Separate routine so each queued call captures its own copy of the values.
+// Separate routine so each queued call captures its own copy of the values.
 procedure QueueProgress(const AEvent: TMacScanProgressEvent; ASender: TObject;
   AProcessed, AFound, ATotal: Integer);
 var
@@ -974,7 +1188,7 @@ begin
   TThread.Queue(nil, Proc);
 end;
 
-/// Queues the completion callback (separate routine, own copies of the values).
+// Queues the completion callback (separate routine, own copies of the values).
 procedure QueueComplete(const AOnComplete: TMacScanCompleteProc;
   const AEntries: TMacEntries; const AErrorMsg: string);
 var
@@ -1097,7 +1311,7 @@ const
 var
   TapoOuiSet: TDictionary<string, Boolean>;
 
-/// 'AA:BB:CC...', 'aa-bb-cc', 'AABBCC' -> 'AABBCC' (or '' if invalid).
+// 'AA:BB:CC...', 'aa-bb-cc', 'AABBCC' -> 'AABBCC' (or '' if invalid).
 function OuiKey(const S: string): string;
 var
   C: Char;

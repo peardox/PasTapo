@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Settings: Class TTapoDeviceStore</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoDeviceStore"></span><h1 class="cio">Class TTapoDeviceStore</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div><div class="one_section"><a class="section" href="#PasDoc-Properties">Properties</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Settings.html">Tapo.Settings</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoDeviceStore = class(TObject)</code></p>
+<h2 class="description">Description</h2>
+<p>
+The contents of devices.json, and the means to load them into a client.</p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="thisitem">TTapoDeviceStore</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>constructor <strong><a href="Tapo.Settings.TTapoDeviceStore.html#Create">Create</a></strong>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Settings.TTapoDeviceStore.html#FileName">FileName</a></strong>: string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Settings.TTapoDeviceStore.html#Exists">Exists</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Settings.TTapoDeviceStore.html#Load">Load</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Settings.TTapoDeviceStore.html#Save">Save</a></strong>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Settings.TTapoDeviceStore.html#IndexOfId-string-">IndexOfId</a></strong>(const ADeviceId: string): Integer;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Settings.TTapoDeviceStore.html#IndexOfHost-string-">IndexOfHost</a></strong>(const AHost: string): Integer;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Settings.TTapoDeviceStore.html#Merge-TTapoScanResult-">Merge</a></strong>(const AResult: <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a>): Integer;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Settings.TTapoDeviceStore.html#AddToClient-TTapoClient-TArraystring-">AddToClient</a></strong>(AClient: <a href="Tapo.Client.TTapoClient.html">TTapoClient</a>; out ASkipped: TArray&lt;string&gt;): TArray&lt;<a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>&gt;;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Settings.TTapoDeviceStore.html#CheckDevice-Integer-TTapoDevice-string-">CheckDevice</a></strong>(AIndex: Integer; ADevice: <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; out AMessage: string): <a href="Tapo.Settings.html#TTapoCheckStatus">TTapoCheckStatus</a>;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Properties"></span><h3 class="summary">Properties</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Settings.TTapoDeviceStore.html#Version">Version</a></strong>: Integer read FVersion write FVersion;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Settings.TTapoDeviceStore.html#Devices">Devices</a></strong>: TArray&lt;<a href="Tapo.Settings.TTapoStoredDevice.html">TTapoStoredDevice</a>&gt; read FDevices write FDevices;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Create"></span><code>constructor <strong>Create</strong>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Creates an empty store.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="FileName"></span><code>class function <strong>FileName</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The full path of devices.json.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">A path in the platform's per-user application data folder.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Exists"></span><code>class function <strong>Exists</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True if devices.json exists.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">False until a scan has found something.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Load"></span><code>function <strong>Load</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads devices.json into this object.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">False if the file does not exist or cannot be read; the store then stays as it was.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Save"></span><code>procedure <strong>Save</strong>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Writes this object to devices.json, creating the folder if needed.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><code>EInOutError</code></dt>
+<dd>The file could not be written.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="IndexOfId-string-"></span><code>function <strong>IndexOfId</strong>(const ADeviceId: string): Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The position of the device with an ID.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ADeviceId</dt>
+<dd>The device ID.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The index, or -1.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="IndexOfHost-string-"></span><code>function <strong>IndexOfHost</strong>(const AHost: string): Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The position of the device stored at an address.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AHost</dt>
+<dd>The address.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The index, or -1.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Merge-TTapoScanResult-"></span><code>function <strong>Merge</strong>(const AResult: <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a>): Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo devices of a scan; never removes any.</p>
+<p>
+
+
+<p>A device is matched by its ID first, then by address. A match has its address, MAC, model, name and class refreshed; anything else is added. Devices the scan did not find are kept as they are.
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AResult</dt>
+<dd>A scan result.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">How many devices were new.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="AddToClient-TTapoClient-TArraystring-"></span><code>function <strong>AddToClient</strong>(AClient: <a href="Tapo.Client.TTapoClient.html">TTapoClient</a>; out ASkipped: TArray&lt;string&gt;): TArray&lt;<a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds every stored device to a client, as its stored class.</p>
+<p>
+
+
+<p>Nothing is sent to the devices: each one logs in on its first request. <a class="normal" href="Tapo.Settings.TTapoDeviceStore.html#CheckDevice-Integer-TTapoDevice-string-">CheckDevice</a> is the quick check of one.
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AClient</dt>
+<dd>The client.</dd>
+<dt>ASkipped</dt>
+<dd>Receives one line per device that could not be added.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The devices, in store order; nil where a device could not be added.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="CheckDevice-Integer-TTapoDevice-string-"></span><code>function <strong>CheckDevice</strong>(AIndex: Integer; ADevice: <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; out AMessage: string): <a href="Tapo.Settings.html#TTapoCheckStatus">TTapoCheckStatus</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Checks that a stored device is still where it was. Do not call it on the main thread.</p>
+<p>
+
+
+<p>Logs in if needed and reads the device info: one or two requests. Records the result, the time and any new name in the store, but does not save it. Safe to call for several indexes from different threads at once.
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AIndex</dt>
+<dd>The device's position in <a class="normal" href="Tapo.Settings.TTapoDeviceStore.html#Devices">Devices</a>.</dd>
+<dt>ADevice</dt>
+<dd>The device object for it, from <a class="normal" href="Tapo.Settings.TTapoDeviceStore.html#AddToClient-TTapoClient-TArraystring-">AddToClient</a>; may be nil.</dd>
+<dt>AMessage</dt>
+<dd>Receives a short description of the result.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">What was found.</p></td></tr>
+</table>
+<h3 class="detail">Properties</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Version"></span><code>property <strong>Version</strong>: Integer read FVersion write FVersion;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The file format version; 1.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Devices"></span><code>property <strong>Devices</strong>: TArray&lt;<a href="Tapo.Settings.TTapoStoredDevice.html">TTapoStoredDevice</a>&gt; read FDevices write FDevices;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The stored devices.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

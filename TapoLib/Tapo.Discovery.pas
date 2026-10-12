@@ -1,3 +1,41 @@
+//** @abstract(On-demand discovery of Tapo devices on the local network.)
+//**
+//** @preformatted(
+//** The scan has two stages:
+//**   1. ARP stage: NetMacScan @(https://github.com/peardox/NetScan@) lists the
+//**      hosts that answer on the subnet with their MAC addresses. By default
+//**      only TP-Link MAC prefixes are kept; that list still holds routers,
+//**      range extenders, Deco units and other TP-Link kit.
+//**   2. Probe stage: each candidate is checked with AddDetected on a private
+//**      client with short timeouts. A real Tapo device is then added to your
+//**      client as the right class, already logged in. Anything else is
+//**      reported with the reason and left out.
+//** )
+//**
+//** If the ARP table cannot be read (macOS can hide it from an app), stage 1 is replaced by a TCP
+//** sweep: every address is tried on port 80 (plugs, lights, hubs) and, if something answers there
+//** with a refusal, on 443 (cameras). See TcpSweepFallback and LastArpError.
+//**
+//** A scan is slow (seconds for the ARP stage, plus a login per Tapo device), so it only runs when
+//** you ask for one. The devices it adds stay in the client, so later code uses Client.Find,
+//** Client.Devices[] or Scanner.Devices without scanning again.
+//**
+//** @preformatted(
+//** Scanner := TTapoScanner.Create@(Client@);
+//** Scanner.ScanAsync@('192.168.1.0', '/24',
+//**   procedure@(const R: TTapoScanResult; const Err: string@)
+//**   begin
+//**     for Dev in Scanner.Devices do
+//**       Memo1.Lines.Add@(Dev.Host + '  ' + Dev.ClassName@);
+//**   end@);
+//** )
+//**
+//** Devices are added by IP address. Give them DHCP reservations in the router so the addresses do
+//** not change between scans.
+//**
+//** Needs NetMacScan.pas from the NetScan repository on the search path. Windows, macOS and Linux
+//** only: Android and iOS do not let apps read the ARP table (CheckCandidates and CheckHosts work
+//** everywhere).
 unit Tapo.Discovery;
 
 {
@@ -48,136 +86,128 @@ uses
 type
   TTapoScanner = class;
 
-  (*** What a scan found at one address. *)
+  //** @abstract(What a scan found at one address.)
   /// <summary>What a scan found at one address.</summary>
   TTapoScanStatus = (
-    (*** A Tapo device, added to the client by this scan. *)
+    //** @abstract(A Tapo device, added to the client by this scan.)
     /// <summary>A Tapo device, added to the client by this scan.</summary>
     tssAdded,
-    (*** A device the client already had at this address. It was not probed again. *)
+    //** @abstract(A device the client already had at this address. It was not probed again.)
     /// <summary>A device the client already had at this address. It was not probed again.</summary>
     tssKnown,
-    (*** Nothing answered on port 80 or 443: not a Tapo device. *)
+    //** @abstract(Nothing answered on port 80 or 443: not a Tapo device.)
     /// <summary>Nothing answered on port 80 or 443: not a Tapo device.</summary>
     tssNoResponse,
-    (***
-      Something answered but did not log in as a Tapo device. Either it is not one (a router,
-      say), or it is one these credentials do not open. The reason is in
-      @link(TTapoScanEntry.Error).
-    *)
+    //** @abstract(Something answered but did not log in as a Tapo device. Either it is not one @(a
+    //** router, say@), or it is one these credentials do not open. The reason is in
+    //** @link(TTapoScanEntry.Error).)
     /// <summary>
     ///   Something answered but did not log in as a Tapo device. Either it is
     ///   not one (a router, say), or it is one these credentials do not open.
     ///   The reason is in <see cref="TTapoScanEntry.Error"/>.
     /// </summary>
     tssRejected,
-    (***
-      A Tapo device that rejected the account e-mail or password. If no device of the scan
-      accepted them either, the credentials are wrong.
-    *)
+    //** @abstract(A Tapo device that rejected the account e-mail or password. If no device of the
+    //** scan accepted them either, the credentials are wrong.)
     /// <summary>
     ///   A Tapo device that rejected the account e-mail or password. If no
     ///   device of the scan accepted them either, the credentials are wrong.
     /// </summary>
     tssBadCredentials,
-    (*** A Tapo device that logged in, of a model that is not supported. *)
+    //** @abstract(A Tapo device that logged in, of a model that is not supported.)
     /// <summary>A Tapo device that logged in, of a model that is not supported.</summary>
     tssUnsupported,
-    (*** A Tapo device that has locked itself after too many failed logins (error -2101). *)
+    //** @abstract(A Tapo device that has locked itself after too many failed logins @(error
+    //** -2101@).)
     /// <summary>A Tapo device that has locked itself after too many failed logins (error -2101).</summary>
     tssLockedOut,
-    (*** Not probed, because the scan was cancelled first. *)
+    //** @abstract(Not probed, because the scan was cancelled first.)
     /// <summary>Not probed, because the scan was cancelled first.</summary>
     tssCancelled);
 
-  (*** One candidate address and what the scan found there. *)
+  //** @abstract(One candidate address and what the scan found there.)
   /// <summary>One candidate address and what the scan found there.</summary>
   TTapoScanEntry = record
-    (*** The IPv4 address. *)
+    //** @abstract(The IPv4 address.)
     /// <summary>The IPv4 address.</summary>
     IP: string;
-    (***
-      The MAC address as 'AA:BB:CC:DD:EE:FF': from the ARP stage, or else the one a Tapo device
-      reports when it is added. Empty for other candidates found by the TCP sweep or CheckHosts.
-    *)
+    //** @abstract(The MAC address as 'AA:BB:CC:DD:EE:FF': from the ARP stage, or else the one a Tapo
+    //** device reports when it is added. Empty for other candidates found by the TCP sweep or
+    //** CheckHosts.)
     /// <summary>
     ///   The MAC address as 'AA:BB:CC:DD:EE:FF': from the ARP stage, or else
     ///   the one a Tapo device reports when it is added. Empty for other
     ///   candidates found by the TCP sweep or CheckHosts.
     /// </summary>
     MAC: string;
-    (*** What was found. *)
+    //** @abstract(What was found.)
     /// <summary>What was found.</summary>
     Status: TTapoScanStatus;
-    (***
-      The device, owned by the client, when Status is tssAdded or tssKnown; otherwise nil.
-    *)
+    //** @abstract(The device, owned by the client, when Status is tssAdded or tssKnown; otherwise
+    //** nil.)
     /// <summary>The device, owned by the client, when Status is tssAdded or tssKnown; otherwise nil.</summary>
     Device: TTapoDevice;
-    (*** The model the device reported, when Status is tssAdded or tssUnsupported. *)
+    //** @abstract(The model the device reported, when Status is tssAdded or tssUnsupported.)
     /// <summary>The model the device reported, when Status is tssAdded or tssUnsupported.</summary>
     Model: string;
-    (*** The device type the device reported, for example 'SMART.TAPOPLUG'. *)
+    //** @abstract(The device type the device reported, for example 'SMART.TAPOPLUG'.)
     /// <summary>The device type the device reported, for example 'SMART.TAPOPLUG'.</summary>
     DeviceType: string;
-    (*** The name given in the Tapo app. *)
+    //** @abstract(The name given in the Tapo app.)
     /// <summary>The name given in the Tapo app.</summary>
     Nickname: string;
-    (*** The device's own ID, when Status is tssAdded; stable across address changes. *)
+    //** @abstract(The device's own ID, when Status is tssAdded; stable across address changes.)
     /// <summary>The device's own ID, when Status is tssAdded; stable across address changes.</summary>
     DeviceId: string;
-    (*** Why the address was not added; empty for tssAdded and tssKnown. *)
+    //** @abstract(Why the address was not added; empty for tssAdded and tssKnown.)
     /// <summary>Why the address was not added; empty for tssAdded and tssKnown.</summary>
     Error: string;
-    (***
-      True if the address holds a usable Tapo device (tssAdded or tssKnown).
-
-      @returns(True when @link(Device) is set.)
-    *)
+    //** @abstract(True if the address holds a usable Tapo device @(tssAdded or tssKnown@).)
+    //**
+    //** @returns(True when @link(Device) is set.)
     /// <summary>True if the address holds a usable Tapo device (tssAdded or tssKnown).</summary>
     /// <returns>True when <see cref="Device"/> is set.</returns>
     function IsTapo: Boolean;
   end;
 
-  (*** The result of a scan: one entry per candidate, in address order. *)
+  //** @abstract(The result of a scan: one entry per candidate, in address order.)
   /// <summary>The result of a scan: one entry per candidate, in address order.</summary>
   TTapoScanResult = TArray<TTapoScanEntry>;
 
-  (*** The stage a progress report is about. *)
+  //** @abstract(The stage a progress report is about.)
   /// <summary>The stage a progress report is about.</summary>
   TTapoScanStage = (
-    (*** Finding hosts and their MAC addresses (NetMacScan). *)
+    //** @abstract(Finding hosts and their MAC addresses @(NetMacScan@).)
     /// <summary>Finding hosts and their MAC addresses (NetMacScan).</summary>
     tsgArp,
-    (***
-      Only when the ARP table cannot be read: finding hosts that accept a TCP connection on port
-      80 or 443.
-    *)
+    //** @abstract(Only when the ARP table cannot be read: finding hosts that accept a TCP connection
+    //** on port 80 or 443.)
     /// <summary>
     ///   Only when the ARP table cannot be read: finding hosts that accept a
     ///   TCP connection on port 80 or 443.
     /// </summary>
     tsgSweep,
-    (*** Checking each candidate for a Tapo device. *)
+    //** @abstract(Checking each candidate for a Tapo device.)
     /// <summary>Checking each candidate for a Tapo device.</summary>
     tsgProbe);
 
-  (***
-    Progress of a scan. Always called on the main (UI) thread.
-
-    Each stage starts with ADone = 0 and ends with ADone = ATotal, so a progress bar can take its
-    Max from the first call of each stage.
-
-    @param(Sender The scanner.)
-
-    @param(AStage The stage being reported.)
-
-    @param(ADone tsgArp and tsgSweep: addresses checked so far. tsgProbe: candidates checked so far.)
-
-    @param(ATotal tsgArp and tsgSweep: addresses in the subnet. tsgProbe: candidates from the ARP stage or the sweep.)
-
-    @param(AFound tsgArp and tsgSweep: candidates found so far. tsgProbe: Tapo devices found so far.)
-  *)
+  //** @abstract(Progress of a scan. Always called on the main @(UI@) thread.)
+  //**
+  //** Each stage starts with ADone = 0 and ends with ADone = ATotal, so a progress bar can take its
+  //** Max from the first call of each stage.
+  //**
+  //** @param(Sender The scanner.)
+  //**
+  //** @param(AStage The stage being reported.)
+  //**
+  //** @param(ADone tsgArp and tsgSweep: addresses checked so far. tsgProbe: candidates checked so
+  //** far.)
+  //**
+  //** @param(ATotal tsgArp and tsgSweep: addresses in the subnet. tsgProbe: candidates from the ARP
+  //** stage or the sweep.)
+  //**
+  //** @param(AFound tsgArp and tsgSweep: candidates found so far. tsgProbe: Tapo devices found so
+  //** far.)
   /// <summary>Progress of a scan. Always called on the main (UI) thread.</summary>
   /// <param name="Sender">The scanner.</param>
   /// <param name="AStage">The stage being reported.</param>
@@ -197,37 +227,31 @@ type
   TTapoScanProgressEvent = procedure(Sender: TObject; AStage: TTapoScanStage;
     ADone, ATotal, AFound: Integer) of object;
 
-  (***
-    A Tapo device was found. Always called on the main (UI) thread.
-
-    @param(Sender The scanner.)
-
-    @param(AEntry The device's entry; Status is tssAdded or tssKnown.)
-  *)
+  //** @abstract(A Tapo device was found. Always called on the main @(UI@) thread.)
+  //**
+  //** @param(Sender The scanner.)
+  //**
+  //** @param(AEntry The device's entry; Status is tssAdded or tssKnown.)
   /// <summary>A Tapo device was found. Always called on the main (UI) thread.</summary>
   /// <param name="Sender">The scanner.</param>
   /// <param name="AEntry">The device's entry; Status is tssAdded or tssKnown.</param>
   TTapoScanDeviceEvent = procedure(Sender: TObject; const AEntry: TTapoScanEntry) of object;
 
-  (***
-    Called on the main (UI) thread when an asynchronous scan ends.
-
-    @param(AResult The entries; partial if the scan was cancelled.)
-
-    @param(AError Empty on success; otherwise why the scan stopped.)
-  *)
+  //** @abstract(Called on the main @(UI@) thread when an asynchronous scan ends.)
+  //**
+  //** @param(AResult The entries; partial if the scan was cancelled.)
+  //**
+  //** @param(AError Empty on success; otherwise why the scan stopped.)
   /// <summary>Called on the main (UI) thread when an asynchronous scan ends.</summary>
   /// <param name="AResult">The entries; partial if the scan was cancelled.</param>
   /// <param name="AError">Empty on success; otherwise why the scan stopped.</param>
   TTapoScanCompleteProc = reference to procedure(const AResult: TTapoScanResult;
     const AError: string);
 
-  (***
-    Internal: shared between a scanner and the work it started.
-
-    Queued callbacks hold this, not the scanner, so a scanner freed while a scan is under way is
-    never called back.
-  *)
+  //** @abstract(Internal: shared between a scanner and the work it started.)
+  //**
+  //** Queued callbacks hold this, not the scanner, so a scanner freed while a scan is under way is
+  //** never called back.
   /// <summary>Internal: shared between a scanner and the work it started.</summary>
   /// <remarks>
   ///   Queued callbacks hold this, not the scanner, so a scanner freed while a
@@ -235,66 +259,58 @@ type
   /// </remarks>
   ITapoScanState = interface
     ['{BE24AA16-F637-4D83-9114-8FC8DC3D5739}']
-    (***
-      The scanner, valid only while @link(Alive) is True.
-
-      @returns(The scanner.)
-    *)
+    //** @abstract(The scanner, valid only while @link(Alive) is True.)
+    //**
+    //** @returns(The scanner.)
     /// <summary>The scanner, valid only while <see cref="Alive"/> is True.</summary>
     /// <returns>The scanner.</returns>
     function Owner: TTapoScanner;
-    (***
-      False once the scanner has been freed.
-
-      @returns(True while the scanner exists.)
-    *)
+    //** @abstract(False once the scanner has been freed.)
+    //**
+    //** @returns(True while the scanner exists.)
     /// <summary>False once the scanner has been freed.</summary>
     /// <returns>True while the scanner exists.</returns>
     function Alive: Boolean;
-    (***
-      True once the scan has been cancelled.
-
-      @returns(True after @link(Cancel).)
-    *)
+    //** @abstract(True once the scan has been cancelled.)
+    //**
+    //** @returns(True after @link(Cancel).)
     /// <summary>True once the scan has been cancelled.</summary>
     /// <returns>True after <see cref="Cancel"/>.</returns>
     function Cancelled: Boolean;
-    (*** Asks the scan to stop. *)
+    //** @abstract(Asks the scan to stop.)
     /// <summary>Asks the scan to stop.</summary>
     procedure Cancel;
-    (*** Marks the scanner as freed. *)
+    //** @abstract(Marks the scanner as freed.)
     /// <summary>Marks the scanner as freed.</summary>
     procedure Kill;
   end;
 
-  (***
-    Finds Tapo devices on the local network and adds them to a @link(TTapoClient).
-
-    Nothing happens until @link(ScanAsync) or @link(Scan) is called. Devices found are added to
-    the client and stay there, so the scan is needed only when devices are first set up or when
-    one has been added to the network.
-
-    Addresses the client already has are reported as tssKnown and not probed again, so rescanning
-    is cheap for devices already found.
-
-    One scan at a time per scanner. The scanner must be freed on the main thread; freeing it waits
-    for a probe stage under way to stop.
-
-    Example:
-    @longCode(#
-    FScanner := TTapoScanner.Create(FClient);
-    FScanner.OnProgress := ScanProgress;
-    FScanner.ScanAsync('192.168.1.0', '255.255.255.0',
-      procedure(const R: TTapoScanResult; const Err: string)
-      var
-        E: TTapoScanEntry;
-      begin
-        for E in R do
-          if E.IsTapo then
-            Memo1.Lines.Add(E.IP + '  ' + E.Device.ClassName + '  ' + E.Nickname);
-      end);
-    #)
-  *)
+  //** @abstract(Finds Tapo devices on the local network and adds them to a @link(TTapoClient).)
+  //**
+  //** Nothing happens until @link(ScanAsync) or @link(Scan) is called. Devices found are added to
+  //** the client and stay there, so the scan is needed only when devices are first set up or when
+  //** one has been added to the network.
+  //**
+  //** Addresses the client already has are reported as tssKnown and not probed again, so rescanning
+  //** is cheap for devices already found.
+  //**
+  //** One scan at a time per scanner. The scanner must be freed on the main thread; freeing it waits
+  //** for a probe stage under way to stop.
+  //**
+  //** Example:
+  //** @longCode(#
+  //** FScanner := TTapoScanner.Create(FClient);
+  //** FScanner.OnProgress := ScanProgress;
+  //** FScanner.ScanAsync('192.168.1.0', '255.255.255.0',
+  //**   procedure(const R: TTapoScanResult; const Err: string)
+  //**   var
+  //**     E: TTapoScanEntry;
+  //**   begin
+  //**     for E in R do
+  //**       if E.IsTapo then
+  //**         Memo1.Lines.Add(E.IP + '  ' + E.Device.ClassName + '  ' + E.Nickname);
+  //**   end);
+  //** #)
   /// <summary>
   ///   Finds Tapo devices on the local network and adds them to a
   ///   <see cref="Tapo.Client|TTapoClient"/>.
@@ -366,22 +382,18 @@ type
     procedure FinishAsync(const AState: ITapoScanState; const AResult: TTapoScanResult;
       const AError: string; const AOnComplete: TTapoScanCompleteProc);
   public
-    (***
-      Creates a scanner that adds the devices it finds to AClient.
-
-      @param(AClient The client; it must outlive the scanner.)
-
-      @raises(ETapoError AClient is nil.)
-    *)
+    //** @abstract(Creates a scanner that adds the devices it finds to AClient.)
+    //**
+    //** @param(AClient The client; it must outlive the scanner.)
+    //**
+    //** @raises(ETapoError AClient is nil.)
     /// <summary>Creates a scanner that adds the devices it finds to AClient.</summary>
     /// <param name="AClient">The client; it must outlive the scanner.</param>
     /// <exception cref="Tapo.Client|ETapoError">AClient is nil.</exception>
     constructor Create(AClient: TTapoClient);
-    (***
-      Cancels a scan under way and waits for its probe stage to stop.
-
-      Devices already added stay in the client. No callback runs after the scanner has been freed.
-    *)
+    //** @abstract(Cancels a scan under way and waits for its probe stage to stop.)
+    //**
+    //** Devices already added stay in the client. No callback runs after the scanner has been freed.
     /// <summary>Cancels a scan under way and waits for its probe stage to stop.</summary>
     /// <remarks>
     ///   Devices already added stay in the client. No callback runs after
@@ -389,35 +401,31 @@ type
     /// </remarks>
     destructor Destroy; override;
 
-    (***
-      True on platforms where the ARP stage can run (Windows, macOS, Linux).
-
-      @returns(False on Android and iOS, where only CheckHosts and CheckCandidates work.)
-    *)
+    //** @abstract(True on platforms where the ARP stage can run @(Windows, macOS, Linux@).)
+    //**
+    //** @returns(False on Android and iOS, where only CheckHosts and CheckCandidates work.)
     /// <summary>True on platforms where the ARP stage can run (Windows, macOS, Linux).</summary>
     /// <returns>False on Android and iOS, where only CheckHosts and CheckCandidates work.</returns>
     class function Supported: Boolean;
 
-    (***
-      Scans a subnet in the background and adds the Tapo devices found to the client.
-
-      Call it from the main thread. Progress, OnDeviceFound and AOnComplete all run on the main
-      thread. Errors (a bad subnet, an unsupported platform) arrive in AOnComplete's AError.
-
-      @link(LastResult) is set before AOnComplete is called.
-
-      @param(ANetwork Any address in the network, for example '192.168.1.0'.)
-
-      @param(ASubnet The mask: '255.255.255.0', '/24' or '24'.)
-
-      @param(AOnComplete Optional; called on the main thread when the scan ends.)
-
-      @raises(ETapoError A scan is already running.)
-
-      @seealso(Scan)
-
-      @seealso(Cancel)
-    *)
+    //** @abstract(Scans a subnet in the background and adds the Tapo devices found to the client.)
+    //**
+    //** Call it from the main thread. Progress, OnDeviceFound and AOnComplete all run on the main
+    //** thread. Errors (a bad subnet, an unsupported platform) arrive in AOnComplete's AError.
+    //**
+    //** @link(LastResult) is set before AOnComplete is called.
+    //**
+    //** @param(ANetwork Any address in the network, for example '192.168.1.0'.)
+    //**
+    //** @param(ASubnet The mask: '255.255.255.0', '/24' or '24'.)
+    //**
+    //** @param(AOnComplete Optional; called on the main thread when the scan ends.)
+    //**
+    //** @raises(ETapoError A scan is already running.)
+    //**
+    //** @seealso(Scan)
+    //**
+    //** @seealso(Cancel)
     /// <summary>Scans a subnet in the background and adds the Tapo devices found to the client.</summary>
     /// <param name="ANetwork">Any address in the network, for example '192.168.1.0'.</param>
     /// <param name="ASubnet">The mask: '255.255.255.0', '/24' or '24'.</param>
@@ -438,24 +446,22 @@ type
     procedure ScanAsync(const ANetwork, ASubnet: string;
       const AOnComplete: TTapoScanCompleteProc = nil);
 
-    (***
-      Scans a subnet and waits for the result. Do not call it on the main thread.
-
-      The events are still queued to the main thread. The ARP stage is reported only at its start
-      and end; ScanAsync reports it as it goes.
-
-      @param(ANetwork Any address in the network, for example '192.168.1.0'.)
-
-      @param(ASubnet The mask: '255.255.255.0', '/24' or '24'.)
-
-      @returns(One entry per candidate. Also stored in @link(LastResult).)
-
-      @raises(ETapoError A scan is already running.)
-
-      @raises(EArgumentException ANetwork or ASubnet is not valid.)
-
-      @raises(ENotSupportedException The platform cannot read the ARP table.)
-    *)
+    //** @abstract(Scans a subnet and waits for the result. Do not call it on the main thread.)
+    //**
+    //** The events are still queued to the main thread. The ARP stage is reported only at its start
+    //** and end; ScanAsync reports it as it goes.
+    //**
+    //** @param(ANetwork Any address in the network, for example '192.168.1.0'.)
+    //**
+    //** @param(ASubnet The mask: '255.255.255.0', '/24' or '24'.)
+    //**
+    //** @returns(One entry per candidate. Also stored in @link(LastResult).)
+    //**
+    //** @raises(ETapoError A scan is already running.)
+    //**
+    //** @raises(EArgumentException ANetwork or ASubnet is not valid.)
+    //**
+    //** @raises(ENotSupportedException The platform cannot read the ARP table.)
     /// <summary>Scans a subnet and waits for the result. Do not call it on the main thread.</summary>
     /// <param name="ANetwork">Any address in the network, for example '192.168.1.0'.</param>
     /// <param name="ASubnet">The mask: '255.255.255.0', '/24' or '24'.</param>
@@ -469,17 +475,15 @@ type
     /// </remarks>
     function Scan(const ANetwork, ASubnet: string): TTapoScanResult;
 
-    (***
-      Probes a list of candidates found by other means, in the background.
-
-      Only the probe stage runs, so it works on every platform.
-
-      @param(ACandidates Addresses @(and MACs@) to check, for example from NetMacScan.)
-
-      @param(AOnComplete Optional; called on the main thread when the checks end.)
-
-      @raises(ETapoError A scan is already running.)
-    *)
+    //** @abstract(Probes a list of candidates found by other means, in the background.)
+    //**
+    //** Only the probe stage runs, so it works on every platform.
+    //**
+    //** @param(ACandidates Addresses @(and MACs@) to check, for example from NetMacScan.)
+    //**
+    //** @param(AOnComplete Optional; called on the main thread when the checks end.)
+    //**
+    //** @raises(ETapoError A scan is already running.)
     /// <summary>Probes a list of candidates found by other means, in the background.</summary>
     /// <param name="ACandidates">Addresses (and MACs) to check, for example from NetMacScan.</param>
     /// <param name="AOnComplete">Optional; called on the main thread when the checks end.</param>
@@ -488,35 +492,33 @@ type
     procedure CheckCandidatesAsync(const ACandidates: TMacEntries;
       const AOnComplete: TTapoScanCompleteProc = nil);
 
-    (***
-      Probes a list of candidates and waits for the result. Do not call it on the main thread.
-
-      @param(ACandidates Addresses @(and MACs@) to check.)
-
-      @returns(One entry per candidate. Also stored in @link(LastResult).)
-
-      @raises(ETapoError A scan is already running.)
-    *)
+    //** @abstract(Probes a list of candidates and waits for the result. Do not call it on the main
+    //** thread.)
+    //**
+    //** @param(ACandidates Addresses @(and MACs@) to check.)
+    //**
+    //** @returns(One entry per candidate. Also stored in @link(LastResult).)
+    //**
+    //** @raises(ETapoError A scan is already running.)
     /// <summary>Probes a list of candidates and waits for the result. Do not call it on the main thread.</summary>
     /// <param name="ACandidates">Addresses (and MACs) to check.</param>
     /// <returns>One entry per candidate. Also stored in <see cref="LastResult"/>.</returns>
     /// <exception cref="Tapo.Client|ETapoError">A scan is already running.</exception>
     function CheckCandidates(const ACandidates: TMacEntries): TTapoScanResult;
 
-    (***
-      Probes a list of addresses and waits for the result. Do not call it on the main thread.
-
-      @param(AHosts IP addresses or host names to check.)
-
-      @returns(One entry per address. Also stored in @link(LastResult).)
-
-      @raises(ETapoError A scan is already running.)
-
-      Example:
-      @longCode(#
-      R := Scanner.CheckHosts(['192.168.1.50', '192.168.1.51']);
-      #)
-    *)
+    //** @abstract(Probes a list of addresses and waits for the result. Do not call it on the main
+    //** thread.)
+    //**
+    //** @param(AHosts IP addresses or host names to check.)
+    //**
+    //** @returns(One entry per address. Also stored in @link(LastResult).)
+    //**
+    //** @raises(ETapoError A scan is already running.)
+    //**
+    //** Example:
+    //** @longCode(#
+    //** R := Scanner.CheckHosts(['192.168.1.50', '192.168.1.51']);
+    //** #)
     /// <summary>Probes a list of addresses and waits for the result. Do not call it on the main thread.</summary>
     /// <param name="AHosts">IP addresses or host names to check.</param>
     /// <returns>One entry per address. Also stored in <see cref="LastResult"/>.</returns>
@@ -528,13 +530,11 @@ type
     /// </example>
     function CheckHosts(const AHosts: array of string): TTapoScanResult;
 
-    (***
-      Asks the scan under way to stop.
-
-      The ARP stage cannot be interrupted, so a scan cancelled during it stops when that stage
-      ends, before any probing. During the probe stage, logins already started finish and the rest
-      are skipped (tssCancelled). The scan then ends with AError 'Scan cancelled'.
-    *)
+    //** @abstract(Asks the scan under way to stop.)
+    //**
+    //** The ARP stage cannot be interrupted, so a scan cancelled during it stops when that stage
+    //** ends, before any probing. During the probe stage, logins already started finish and the rest
+    //** are skipped (tssCancelled). The scan then ends with AError 'Scan cancelled'.
     /// <summary>Asks the scan under way to stop.</summary>
     /// <remarks>
     ///   The ARP stage cannot be interrupted, so a scan cancelled during it
@@ -544,14 +544,12 @@ type
     /// </remarks>
     procedure Cancel;
 
-    (***
-      The Tapo devices in @link(LastResult) (tssAdded and tssKnown).
-
-      A device freed since the scan is still listed until the next scan. @code(Client.Devices[])
-      always reflects the current set.
-
-      @returns(The devices, owned by the client, in address order.)
-    *)
+    //** @abstract(The Tapo devices in @link(LastResult) @(tssAdded and tssKnown@).)
+    //**
+    //** A device freed since the scan is still listed until the next scan. @code(Client.Devices[])
+    //** always reflects the current set.
+    //**
+    //** @returns(The devices, owned by the client, in address order.)
     /// <summary>The Tapo devices in <see cref="LastResult"/> (tssAdded and tssKnown).</summary>
     /// <returns>The devices, owned by the client, in address order.</returns>
     /// <remarks>
@@ -560,40 +558,34 @@ type
     /// </remarks>
     function Devices: TArray<TTapoDevice>;
 
-    (*** The client devices are added to. *)
+    //** @abstract(The client devices are added to.)
     /// <summary>The client devices are added to.</summary>
     property Client: TTapoClient read FClient;
-    (*** True while a scan runs. *)
+    //** @abstract(True while a scan runs.)
     /// <summary>True while a scan runs.</summary>
     property Busy: Boolean read GetBusy;
-    (***
-      The entries of the last scan that reached the probe stage, including one cancelled during
-      probing. Empty until then.
-    *)
+    //** @abstract(The entries of the last scan that reached the probe stage, including one cancelled
+    //** during probing. Empty until then.)
     /// <summary>
     ///   The entries of the last scan that reached the probe stage, including
     ///   one cancelled during probing. Empty until then.
     /// </summary>
     property LastResult: TTapoScanResult read GetLastResult;
-    (***
-      True (the default) keeps only TP-Link MAC prefixes after the ARP stage. False probes every
-      host found, which is slower but also finds a device with a MAC prefix missing from
-      NetMacScan's table.
-    *)
+    //** @abstract(True @(the default@) keeps only TP-Link MAC prefixes after the ARP stage. False
+    //** probes every host found, which is slower but also finds a device with a MAC prefix missing
+    //** from NetMacScan's table.)
     /// <summary>
     ///   True (the default) keeps only TP-Link MAC prefixes after the ARP
     ///   stage. False probes every host found, which is slower but also
     ///   finds a device with a MAC prefix missing from NetMacScan's table.
     /// </summary>
     property TpLinkOnly: Boolean read FTpLinkOnly write FTpLinkOnly;
-    (***
-      True (the default): when the ARP table cannot be read, find candidates by trying TCP ports
-      80 and 443 on every address instead. Slower, and candidates then have no MAC, but every one
-      is still checked by logging in.
-
-      macOS can hide the ARP table from an app even when it may use the local network. The reason
-      the ARP stage failed is in @link(LastArpError).
-    *)
+    //** @abstract(True @(the default@): when the ARP table cannot be read, find candidates by trying
+    //** TCP ports 80 and 443 on every address instead. Slower, and candidates then have no MAC, but
+    //** every one is still checked by logging in.)
+    //**
+    //** macOS can hide the ARP table from an app even when it may use the local network. The reason
+    //** the ARP stage failed is in @link(LastArpError).
     /// <summary>
     ///   True (the default): when the ARP table cannot be read, find
     ///   candidates by trying TCP ports 80 and 443 on every address instead.
@@ -605,47 +597,39 @@ type
     ///   local network. The reason the ARP stage failed is in <see cref="LastArpError"/>.
     /// </remarks>
     property TcpSweepFallback: Boolean read FTcpSweepFallback write FTcpSweepFallback;
-    (*** How long the TCP sweep waits for each connection, in ms; the default is 1500. *)
+    //** @abstract(How long the TCP sweep waits for each connection, in ms; the default is 1500.)
     /// <summary>How long the TCP sweep waits for each connection, in ms; the default is 1500.</summary>
     property SweepTimeout: Integer read FSweepTimeout write FSweepTimeout;
-    (***
-      Why the ARP stage of the last scan failed, when the TCP sweep was used instead; empty when
-      the ARP stage worked.
-    *)
+    //** @abstract(Why the ARP stage of the last scan failed, when the TCP sweep was used instead;
+    //** empty when the ARP stage worked.)
     /// <summary>
     ///   Why the ARP stage of the last scan failed, when the TCP sweep was
     ///   used instead; empty when the ARP stage worked.
     /// </summary>
     property LastArpError: string read GetLastArpError;
-    (*** How many candidates are probed at once, 1 to 32. The default is 8. *)
+    //** @abstract(How many candidates are probed at once, 1 to 32. The default is 8.)
     /// <summary>How many candidates are probed at once, 1 to 32. The default is 8.</summary>
     property MaxParallel: Integer read FMaxParallel write FMaxParallel;
-    (***
-      The connection timeout while probing, in ms; the default is 2000. Only the probes use it:
-      devices added keep the client's own timeouts.
-    *)
+    //** @abstract(The connection timeout while probing, in ms; the default is 2000. Only the probes
+    //** use it: devices added keep the client's own timeouts.)
     /// <summary>
     ///   The connection timeout while probing, in ms; the default is 2000. Only
     ///   the probes use it: devices added keep the client's own timeouts.
     /// </summary>
     property ProbeConnectionTimeout: Integer read FProbeConnectionTimeout write FProbeConnectionTimeout;
-    (***
-      The response timeout while probing, in ms; the default is 8000. A TPAP login on a bulb can
-      take a few seconds, so do not set it too low.
-    *)
+    //** @abstract(The response timeout while probing, in ms; the default is 8000. A TPAP login on a
+    //** bulb can take a few seconds, so do not set it too low.)
     /// <summary>
     ///   The response timeout while probing, in ms; the default is 8000. A
     ///   TPAP login on a bulb can take a few seconds, so do not set it too low.
     /// </summary>
     property ProbeResponseTimeout: Integer read FProbeResponseTimeout write FProbeResponseTimeout;
-    (***
-      The connection timeout, in ms, of one more try for each candidate that gave no response at
-      first; the default is 6000. 0 turns the retry off.
-
-      Wi-Fi bulbs in power save can answer the ARP stage and still miss the short
-      @link(ProbeConnectionTimeout). The retry runs after all candidates have had their first try,
-      so it costs time only when something did not answer.
-    *)
+    //** @abstract(The connection timeout, in ms, of one more try for each candidate that gave no
+    //** response at first; the default is 6000. 0 turns the retry off.)
+    //**
+    //** Wi-Fi bulbs in power save can answer the ARP stage and still miss the short
+    //** @link(ProbeConnectionTimeout). The retry runs after all candidates have had their first try,
+    //** so it costs time only when something did not answer.
     /// <summary>
     ///   The connection timeout, in ms, of one more try for each candidate
     ///   that gave no response at first; the default is 6000. 0 turns the
@@ -658,21 +642,19 @@ type
     ///   something did not answer.
     /// </remarks>
     property RetryConnectionTimeout: Integer read FRetryConnectionTimeout write FRetryConnectionTimeout;
-    (*** Progress of both stages, on the main thread. *)
+    //** @abstract(Progress of both stages, on the main thread.)
     /// <summary>Progress of both stages, on the main thread.</summary>
     property OnProgress: TTapoScanProgressEvent read FOnProgress write FOnProgress;
-    (*** Called on the main thread for each Tapo device as soon as it is found. *)
+    //** @abstract(Called on the main thread for each Tapo device as soon as it is found.)
     /// <summary>Called on the main thread for each Tapo device as soon as it is found.</summary>
     property OnDeviceFound: TTapoScanDeviceEvent read FOnDeviceFound write FOnDeviceFound;
   end;
 
-(***
-  A short English description of a scan status, for logs and lists.
-
-  @param(AStatus The status.)
-
-  @returns(For example 'added' or 'no response'.)
-*)
+//** @abstract(A short English description of a scan status, for logs and lists.)
+//**
+//** @param(AStatus The status.)
+//**
+//** @returns(For example 'added' or 'no response'.)
 /// <summary>A short English description of a scan status, for logs and lists.</summary>
 /// <param name="AStatus">The status.</param>
 /// <returns>For example 'added' or 'no response'.</returns>

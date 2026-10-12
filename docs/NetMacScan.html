@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>NetMacScan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<h1 class="unit">Unit NetMacScan</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Cross-platform LAN MAC address scanner for Delphi (FMX).</p>
+<p>
+
+
+<p></p>
+
+<pre class="preformatted">
+How it works per platform:
+  Windows       : SendARP (iphlpapi.dll) for every host, run in parallel.
+                  SendARP issues a real ARP request, so devices that ignore
+                  ping are still found.
+  macOS / Linux : Sends a 1-byte UDP datagram to every host. This forces the
+                  OS to ARP-resolve each address. Then reads the kernel ARP
+                  table (macOS: sysctl, falling back to &quot;arp -an&quot;; Linux:
+                  /proc/net/arp). Hosts are processed in batches of 256 so
+                  large subnets don't overflow the kernel neighbour table.
+  Android / iOS : NOT POSSIBLE. Android 10+ and iOS 11+ block apps from
+                  reading the ARP table. ScanNetworkMacs raises
+                  ENotSupportedException there. Call MacScanSupported first.</pre>
+
+<p>
+
+<p>If the ARP table cannot be read (recent macOS versions hide it from apps, even ones allowed on the local network), the scan raises an error rather than reporting an empty network; Tapo.Discovery then finds devices by TCP.
+
+<p>ANetwork : any address inside the network, e.g. '192.168.1.0' or '192.168.1.42' ASubnet : '255.255.255.0', '/24' or '24'
+
+<p></p>
+
+<pre class="preformatted">
+Notes:
+  - The scanning machine's own MAC is not included on macOS/Linux
+    (the OS doesn't keep an ARP entry for itself).
+  - Phones and laptops often use randomised &quot;private&quot; MACs per WiFi network.
+  - macOS 15+: add NSLocalNetworkUsageDescription to the app's Info.plist
+    (Project Options &gt; Version Info), or local network traffic is blocked.
+  - Linux FMX requires FMXLinux. macOS/Linux use Indy (ships with Delphi).</pre>
+
+<p></p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="NetMacScan.TMacEntry.html"><code>TMacEntry</code></a></td>
+<td class="itemdesc">One host found on the network.</td>
+</tr>
+</table>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="NetMacScan.html#MacScanSupported">MacScanSupported</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="NetMacScan.html#MacScanDiagnostics-string-">MacScanDiagnostics</a></strong>(const AProbeHost: string = ''): string;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="NetMacScan.html#SubnetHosts-string-string-">SubnetHosts</a></strong>(const ANetwork, ASubnet: string): TArray&lt;string&gt;;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="NetMacScan.html#ScanNetworkMacs-string-string-">ScanNetworkMacs</a></strong>(const ANetwork, ASubnet: string): <a href="NetMacScan.html#TMacEntries">TMacEntries</a>;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="NetMacScan.html#ScanNetworkMacsAsync-string-string-TMacScanCompleteProc-TMacScanProgressEvent-TObject-">ScanNetworkMacsAsync</a></strong>(const ANetwork, ASubnet: string; const AOnComplete: <a href="NetMacScan.html#TMacScanCompleteProc">TMacScanCompleteProc</a>; const AOnProgress: <a href="NetMacScan.html#TMacScanProgressEvent">TMacScanProgressEvent</a> = nil; ASender: TObject = nil);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="NetMacScan.html#IsTapoMac-string-">IsTapoMac</a></strong>(const AMac: string): Boolean;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="NetMacScan.html#FilterTapoDevices-TMacEntries-">FilterTapoDevices</a></strong>(const AEntries: <a href="NetMacScan.html#TMacEntries">TMacEntries</a>): <a href="NetMacScan.html#TMacEntries">TMacEntries</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="NetMacScan.html#ScanTapoDevices-string-string-">ScanTapoDevices</a></strong>(const ANetwork, ASubnet: string): <a href="NetMacScan.html#TMacEntries">TMacEntries</a>;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="NetMacScan.html#ScanTapoDevicesAsync-string-string-TMacScanCompleteProc-TMacScanProgressEvent-TObject-">ScanTapoDevicesAsync</a></strong>(const ANetwork, ASubnet: string; const AOnComplete: <a href="NetMacScan.html#TMacScanCompleteProc">TMacScanCompleteProc</a>; const AOnProgress: <a href="NetMacScan.html#TMacScanProgressEvent">TMacScanProgressEvent</a> = nil; ASender: TObject = nil);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="NetMacScan.html#AddTapoOui-string-">AddTapoOui</a></strong>(const AOui: string);</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="NetMacScan.html#TMacEntries">TMacEntries</a></strong> = TArray&lt;<a href="NetMacScan.TMacEntry.html">TMacEntry</a>&gt;;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="NetMacScan.html#TMacScanCompleteProc">TMacScanCompleteProc</a></strong> = reference to procedure(const Entries: <a href="NetMacScan.html#TMacEntries">TMacEntries</a>;
+    const ErrorMsg: string);</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="NetMacScan.html#TMacScanProgressEvent">TMacScanProgressEvent</a></strong> = procedure(Sender: TObject; Processed, Found, Total: Integer) of object;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="MacScanSupported"></span><code>function <strong>MacScanSupported</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+True on platforms where MAC scanning is possible (Windows, macOS, Linux).</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">False on Android and iOS, which do not let apps read the ARP table.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="MacScanDiagnostics-string-"></span><code>function <strong>MacScanDiagnostics</strong>(const AProbeHost: string = ''): string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reports what the low-level calls the scan relies on return on this machine.</p>
+<p>
+
+
+<p>Covers popen, the ARP sysctl, &quot;arp -an&quot; and &quot;netstat&quot; on macOS, and /proc/net/arp on Linux; on Windows there is nothing to report. Use it to find out why a scan finds nothing. Takes up to a few seconds; safe on any thread.
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AProbeHost</dt>
+<dd>A host to try a TCP connection to (ports 80 and 53). Empty: the default gateway on macOS; nothing on other platforms.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">A multi-line report, for a log.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="SubnetHosts-string-string-"></span><code>function <strong>SubnetHosts</strong>(const ANetwork, ASubnet: string): TArray&lt;string&gt;;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The host addresses of a subnet, in order, without the network and broadcast addresses.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ANetwork</dt>
+<dd>Any address in the network, for example '192.168.1.0'.</dd>
+<dt>ASubnet</dt>
+<dd>The mask: '255.255.255.0', '/24' or '24'.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">For example 192.168.1.1 to 192.168.1.254 for ('192.168.1.0', '/24').</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><code>EArgumentException</code></dt>
+<dd>The network or mask is not valid, or the range is larger than a /16.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="ScanNetworkMacs-string-string-"></span><code>function <strong>ScanNetworkMacs</strong>(const ANetwork, ASubnet: string): <a href="NetMacScan.html#TMacEntries">TMacEntries</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Scans a subnet and returns every host that answered, with its MAC. Blocks.</p>
+<p>
+
+
+<p>Do not call it on the UI thread; use <a class="normal" href="NetMacScan.html#ScanNetworkMacsAsync-string-string-TMacScanCompleteProc-TMacScanProgressEvent-TObject-">ScanNetworkMacsAsync</a>. A typical /24 Wi-Fi network takes about 5 to 15 seconds.
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ANetwork</dt>
+<dd>Any address in the network, for example '192.168.1.0'.</dd>
+<dt>ASubnet</dt>
+<dd>The mask: '255.255.255.0', '/24' or '24'.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The hosts found, in address order.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><code>EArgumentException</code></dt>
+<dd>The network or mask is not valid.</dd>
+<dt><code>ENotSupportedException</code></dt>
+<dd>The platform does not let apps read the ARP table.</dd>
+<dt><code>EOSError</code></dt>
+<dd>The ARP table could not be read.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="ScanNetworkMacsAsync-string-string-TMacScanCompleteProc-TMacScanProgressEvent-TObject-"></span><code>procedure <strong>ScanNetworkMacsAsync</strong>(const ANetwork, ASubnet: string; const AOnComplete: <a href="NetMacScan.html#TMacScanCompleteProc">TMacScanCompleteProc</a>; const AOnProgress: <a href="NetMacScan.html#TMacScanProgressEvent">TMacScanProgressEvent</a> = nil; ASender: TObject = nil);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Scans a subnet on a background thread.</p>
+<p>
+
+
+<p>Errors are not raised: they arrive in AOnComplete's ErrorMsg.
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ANetwork</dt>
+<dd>Any address in the network, for example '192.168.1.0'.</dd>
+<dt>ASubnet</dt>
+<dd>The mask: '255.255.255.0', '/24' or '24'.</dd>
+<dt>AOnComplete</dt>
+<dd>Called on the main thread with the hosts found, or with the error.</dd>
+<dt>AOnProgress</dt>
+<dd>Optional; called on the main thread as the scan goes.</dd>
+<dt>ASender</dt>
+<dd>Passed to AOnProgress as its Sender.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="IsTapoMac-string-"></span><code>function <strong>IsTapoMac</strong>(const AMac: string): Boolean;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+True if a MAC address starts with a TP-Link (and so Tapo) prefix.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AMac</dt>
+<dd>The MAC, as 'AA:BB:CC:DD:EE:FF', 'aa-bb-cc-dd-ee-ff' or similar.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">True for one of the TP-Link OUIs; also true for TP-Link routers and range extenders.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="FilterTapoDevices-TMacEntries-"></span><code>function <strong>FilterTapoDevices</strong>(const AEntries: <a href="NetMacScan.html#TMacEntries">TMacEntries</a>): <a href="NetMacScan.html#TMacEntries">TMacEntries</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Keeps only the entries whose MAC has a TP-Link prefix.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AEntries</dt>
+<dd>Scan results.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The TP-Link entries, in the same order.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="NetMacScan.html#IsTapoMac-string-">IsTapoMac</a></dt>
+  <dd>True if a MAC address starts with a TP-Link (and so Tapo) prefix.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="ScanTapoDevices-string-string-"></span><code>function <strong>ScanTapoDevices</strong>(const ANetwork, ASubnet: string): <a href="NetMacScan.html#TMacEntries">TMacEntries</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Scans a subnet and returns the hosts with a TP-Link MAC. Blocks.</p>
+<p>
+
+
+<p>The same as <a class="normal" href="NetMacScan.html#ScanNetworkMacs-string-string-">ScanNetworkMacs</a> followed by <a class="normal" href="NetMacScan.html#FilterTapoDevices-TMacEntries-">FilterTapoDevices</a>.
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ANetwork</dt>
+<dd>Any address in the network, for example '192.168.1.0'.</dd>
+<dt>ASubnet</dt>
+<dd>The mask: '255.255.255.0', '/24' or '24'.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The TP-Link hosts found, in address order.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><code>EArgumentException</code></dt>
+<dd>The network or mask is not valid.</dd>
+<dt><code>ENotSupportedException</code></dt>
+<dd>The platform does not let apps read the ARP table.</dd>
+<dt><code>EOSError</code></dt>
+<dd>The ARP table could not be read.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="ScanTapoDevicesAsync-string-string-TMacScanCompleteProc-TMacScanProgressEvent-TObject-"></span><code>procedure <strong>ScanTapoDevicesAsync</strong>(const ANetwork, ASubnet: string; const AOnComplete: <a href="NetMacScan.html#TMacScanCompleteProc">TMacScanCompleteProc</a>; const AOnProgress: <a href="NetMacScan.html#TMacScanProgressEvent">TMacScanProgressEvent</a> = nil; ASender: TObject = nil);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Scans a subnet for hosts with a TP-Link MAC on a background thread.</p>
+<p>
+
+
+<p>Errors are not raised: they arrive in AOnComplete's ErrorMsg.
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ANetwork</dt>
+<dd>Any address in the network, for example '192.168.1.0'.</dd>
+<dt>ASubnet</dt>
+<dd>The mask: '255.255.255.0', '/24' or '24'.</dd>
+<dt>AOnComplete</dt>
+<dd>Called on the main thread with the TP-Link hosts found, or with the error.</dd>
+<dt>AOnProgress</dt>
+<dd>Optional; called on the main thread. Its Found counts TP-Link hosts only.</dd>
+<dt>ASender</dt>
+<dd>Passed to AOnProgress as its Sender.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="AddTapoOui-string-"></span><code>procedure <strong>AddTapoOui</strong>(const AOui: string);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Adds a MAC prefix to the TP-Link table, for a prefix registered after this unit was written.</p>
+<p>
+
+
+<p>Call it before scanning, not while a scan is running.
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AOui</dt>
+<dd>The prefix, for example 'AABBCC' or 'AA:BB:CC'.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><code>EArgumentException</code></dt>
+<dd>AOui is not three hexadecimal bytes.</dd>
+</dl>
+</td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TMacEntries"></span><code><strong>TMacEntries</strong> = TArray&lt;<a href="NetMacScan.TMacEntry.html">TMacEntry</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The hosts a scan found, in address order.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TMacScanCompleteProc"></span><code><strong>TMacScanCompleteProc</strong> = reference to procedure(const Entries: <a href="NetMacScan.html#TMacEntries">TMacEntries</a>;
+    const ErrorMsg: string);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Called on the main (UI) thread when an asynchronous scan ends.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Entries</dt>
+<dd>The hosts found; empty if the scan failed.</dd>
+<dt>ErrorMsg</dt>
+<dd>Empty on success; otherwise why the scan failed.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TMacScanProgressEvent"></span><code><strong>TMacScanProgressEvent</strong> = procedure(Sender: TObject; Processed, Found, Total: Integer) of object;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Progress of a scan, in TNotifyEvent style. Always called on the main (UI) thread.</p>
+<p>
+
+
+<p>The first call is (0, 0, Total), so a progress bar can take its Max there; the last call before the completion callback is (Total, Found, Total).
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Sender</dt>
+<dd>The ASender passed to the scan.</dd>
+<dt>Processed</dt>
+<dd>Addresses checked so far, 0 to Total.</dd>
+<dt>Found</dt>
+<dd>Matching hosts found so far: all hosts, or TP-Link hosts only for <a class="normal" href="NetMacScan.html#ScanTapoDevicesAsync-string-string-TMacScanCompleteProc-TMacScanProgressEvent-TObject-">ScanTapoDevicesAsync</a>.</dd>
+<dt>Total</dt>
+<dd>Addresses in the subnet, for example 254 for a /24.</dd>
+</dl>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

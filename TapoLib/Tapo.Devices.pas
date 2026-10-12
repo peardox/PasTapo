@@ -1,3 +1,31 @@
+//** @abstract(Tapo plugs, lights, light strips and power strips.)
+//**
+//** Authentication and sessions are handled by TTapoDevice / TTapoClient in Tapo.Client.
+//**
+//** @preformatted(
+//** TTapoDevice @(abstract, Tapo.Client@)
+//** |-- TTapoSwitchableDevice @(abstract@)    on/off, device usage
+//** |   |-- TTapoPlug @(abstract@)            plug info, timer, schedules
+//** |   |   |-- TTapoP100                   P100, P105, P125, P125M
+//** |   |   `-- TTapoP110                   P110, P110M, P115 @(+ energy monitoring@)
+//** |   `-- TTapoLight @(abstract@)           brightness
+//** |       |-- TTapoL510                   L510, L510B, L520, L610
+//** |       `-- TTapoColorLight @(abstract@)  colour, colour temperature
+//** |           |-- TTapoL530               L530, L530B, L535, L630
+//** |           `-- TTapoL900               L900 light strip
+//** |               `-- TTapoL920           L920, L930 @(+ lighting/segment effects@)
+//** `-- TTapoPowerStrip @(abstract@)          sockets
+//**     |-- TTapoP300                       P300, P306
+//**     `-- TTapoP304M                      P304M, P316M @(sockets with energy monitoring@)
+//** )
+//**
+//** @preformatted(
+//** TTapoChildDevice @(abstract, Tapo.Client@)
+//** `-- TTapoPowerStripOutlet               socket: on/off, info
+//**     `-- TTapoEnergyOutlet               + usage and energy monitoring
+//** )
+//**
+//** Capabilities follow the feature matrix of https://github.com/mihai-dinculescu/tapo.
 unit Tapo.Devices;
 
 {
@@ -39,214 +67,203 @@ uses
 type
   { --- usage, energy and power ------------------------------------------- }
 
-  (***
-    A value for today, the past 7 days and the past 30 days.
-
-    A value the device does not report is -1.
-  *)
+  //** @abstract(A value for today, the past 7 days and the past 30 days.)
+  //**
+  //** A value the device does not report is -1.
   /// <summary>A value for today, the past 7 days and the past 30 days.</summary>
   /// <remarks>A value the device does not report is -1.</remarks>
   TTapoUsageByPeriod = record
-    (*** Today's value. *)
+    //** @abstract(Today's value.)
     /// <summary>Today's value.</summary>
     Today: Int64;
-    (*** The value over the past 7 days. *)
+    //** @abstract(The value over the past 7 days.)
     /// <summary>The value over the past 7 days.</summary>
     Past7Days: Int64;
-    (*** The value over the past 30 days. *)
+    //** @abstract(The value over the past 30 days.)
     /// <summary>The value over the past 30 days.</summary>
     Past30Days: Int64;
   end;
 
-  (*** How long a device has been on, and the energy it used and saved (get_device_usage). *)
+  //** @abstract(How long a device has been on, and the energy it used and saved
+  //** @(get_device_usage@).)
   /// <summary>How long a device has been on, and the energy it used and saved (get_device_usage).</summary>
   TTapoDeviceUsage = record
-    (*** Minutes switched on. *)
+    //** @abstract(Minutes switched on.)
     /// <summary>Minutes switched on.</summary>
     TimeUsage: TTapoUsageByPeriod;
-    (*** Energy used in Wh (energy-monitoring devices and lights). *)
+    //** @abstract(Energy used in Wh @(energy-monitoring devices and lights@).)
     /// <summary>Energy used in Wh (energy-monitoring devices and lights).</summary>
     PowerUsage: TTapoUsageByPeriod;
-    (*** Energy saved in Wh, as the Tapo app reports it. *)
+    //** @abstract(Energy saved in Wh, as the Tapo app reports it.)
     /// <summary>Energy saved in Wh, as the Tapo app reports it.</summary>
     SavedPower: TTapoUsageByPeriod;
-    (*** The whole reply as formatted JSON. *)
+    //** @abstract(The whole reply as formatted JSON.)
     /// <summary>The whole reply as formatted JSON.</summary>
     Raw: string;
   end;
 
-  (*** Energy used today and this month, and the current power (get_energy_usage). *)
+  //** @abstract(Energy used today and this month, and the current power @(get_energy_usage@).)
   /// <summary>Energy used today and this month, and the current power (get_energy_usage).</summary>
   TTapoEnergyUsage = record
-    (*** Minutes switched on today. *)
+    //** @abstract(Minutes switched on today.)
     /// <summary>Minutes switched on today.</summary>
     TodayRuntimeMin: Int64;
-    (*** Minutes switched on this month. *)
+    //** @abstract(Minutes switched on this month.)
     /// <summary>Minutes switched on this month.</summary>
     MonthRuntimeMin: Int64;
-    (*** Energy used today in Wh. *)
+    //** @abstract(Energy used today in Wh.)
     /// <summary>Energy used today in Wh.</summary>
     TodayEnergyWh: Int64;
-    (*** Energy used this month in Wh. *)
+    //** @abstract(Energy used this month in Wh.)
     /// <summary>Energy used this month in Wh.</summary>
     MonthEnergyWh: Int64;
-    (*** True if the reply includes the current power. *)
+    //** @abstract(True if the reply includes the current power.)
     /// <summary>True if the reply includes the current power.</summary>
     HasCurrentPower: Boolean;
-    (***
-      The current power in milliwatts.
-
-      @seealso(CurrentPowerW)
-    *)
+    //** @abstract(The current power in milliwatts.)
+    //**
+    //** @seealso(CurrentPowerW)
     /// <summary>The current power in milliwatts.</summary>
     /// <seealso cref="CurrentPowerW"/>
     CurrentPowerMW: Int64;
-    (*** The device's local time, 'yyyy-mm-dd hh:nn:ss'. *)
+    //** @abstract(The device's local time, 'yyyy-mm-dd hh:nn:ss'.)
     /// <summary>The device's local time, 'yyyy-mm-dd hh:nn:ss'.</summary>
     LocalTime: string;
-    (***
-      Cost data using the tariff set in the Tapo app. Element 2 is this month's total; the meaning
-      of elements 0 and 1 is not documented.
-    *)
+    //** @abstract(Cost data using the tariff set in the Tapo app. Element 2 is this month's total;
+    //** the meaning of elements 0 and 1 is not documented.)
     /// <summary>
     ///   Cost data using the tariff set in the Tapo app. Element 2 is this
     ///   month's total; the meaning of elements 0 and 1 is not documented.
     /// </summary>
     ElectricityCharge: TArray<Int64>;
-    (*** The whole reply as formatted JSON. *)
+    //** @abstract(The whole reply as formatted JSON.)
     /// <summary>The whole reply as formatted JSON.</summary>
     Raw: string;
-    (*** The current power in watts. *)
+    //** @abstract(The current power in watts.)
     /// <summary>The current power in watts.</summary>
     function CurrentPowerW: Double;
-    (*** Energy used today in kWh. *)
+    //** @abstract(Energy used today in kWh.)
     /// <summary>Energy used today in kWh.</summary>
     function TodayEnergyKWh: Double;
-    (*** Energy used this month in kWh. *)
+    //** @abstract(Energy used this month in kWh.)
     /// <summary>Energy used this month in kWh.</summary>
     function MonthEnergyKWh: Double;
   end;
 
-  (*** One interval of energy data. *)
+  //** @abstract(One interval of energy data.)
   /// <summary>One interval of energy data.</summary>
   TTapoEnergyDataEntry = record
-    (*** The start of the interval, local time. *)
+    //** @abstract(The start of the interval, local time.)
     /// <summary>The start of the interval, local time.</summary>
     StartTime: TDateTime;
-    (*** Energy used in the interval, in Wh. *)
+    //** @abstract(Energy used in the interval, in Wh.)
     /// <summary>Energy used in the interval, in Wh.</summary>
     EnergyWh: Int64;
   end;
 
-  (*** Energy used per hour, day or month (get_energy_data). *)
+  //** @abstract(Energy used per hour, day or month @(get_energy_data@).)
   /// <summary>Energy used per hour, day or month (get_energy_data).</summary>
   TTapoEnergyData = record
-    (*** The device's local time when it answered. *)
+    //** @abstract(The device's local time when it answered.)
     /// <summary>The device's local time when it answered.</summary>
     LocalTime: string;
-    (*** The start of the first interval, local time. *)
+    //** @abstract(The start of the first interval, local time.)
     /// <summary>The start of the first interval, local time.</summary>
     StartTime: TDateTime;
-    (*** The interval length in minutes: 60 (hour), 1440 (day) or 43200 (month). *)
+    //** @abstract(The interval length in minutes: 60 @(hour@), 1440 @(day@) or 43200 @(month@).)
     /// <summary>The interval length in minutes: 60 (hour), 1440 (day) or 43200 (month).</summary>
     IntervalMinutes: Integer;
-    (*** One entry per interval, oldest first. *)
+    //** @abstract(One entry per interval, oldest first.)
     /// <summary>One entry per interval, oldest first.</summary>
     Entries: TArray<TTapoEnergyDataEntry>;
   end;
 
-  (*** One interval of power data. *)
+  //** @abstract(One interval of power data.)
   /// <summary>One interval of power data.</summary>
   TTapoPowerDataEntry = record
-    (*** The start of the interval, local time. *)
+    //** @abstract(The start of the interval, local time.)
     /// <summary>The start of the interval, local time.</summary>
     StartTime: TDateTime;
-    (*** False when the device has no reading for the interval. *)
+    //** @abstract(False when the device has no reading for the interval.)
     /// <summary>False when the device has no reading for the interval.</summary>
     HasValue: Boolean;
-    (*** The power in watts, when @link(HasValue) is True. *)
+    //** @abstract(The power in watts, when @link(HasValue) is True.)
     /// <summary>The power in watts, when <see cref="HasValue"/> is True.</summary>
     PowerW: Int64;
   end;
 
-  (*** Power every 5 minutes or every hour (get_power_data). *)
+  //** @abstract(Power every 5 minutes or every hour @(get_power_data@).)
   /// <summary>Power every 5 minutes or every hour (get_power_data).</summary>
   TTapoPowerData = record
-    (*** The start of the first interval, local time. *)
+    //** @abstract(The start of the first interval, local time.)
     /// <summary>The start of the first interval, local time.</summary>
     StartTime: TDateTime;
-    (*** The end of the data, local time. *)
+    //** @abstract(The end of the data, local time.)
     /// <summary>The end of the data, local time.</summary>
     EndTime: TDateTime;
-    (*** The interval length in minutes: 5 or 60. *)
+    //** @abstract(The interval length in minutes: 5 or 60.)
     /// <summary>The interval length in minutes: 5 or 60.</summary>
     IntervalMinutes: Integer;
-    (*** One entry per interval, oldest first. *)
+    //** @abstract(One entry per interval, oldest first.)
     /// <summary>One entry per interval, oldest first.</summary>
     Entries: TArray<TTapoPowerDataEntry>;
   end;
 
   { --- timers and schedules (plugs) ---------------------------------------- }
 
-  (***
-    A countdown timer. A plug holds at most one.
-
-    @seealso(TTapoPlug.SetTimer)
-  *)
+  //** @abstract(A countdown timer. A plug holds at most one.)
+  //**
+  //** @seealso(TTapoPlug.SetTimer)
   /// <summary>A countdown timer. A plug holds at most one.</summary>
   /// <seealso cref="TTapoPlug.SetTimer"/>
   TTapoTimer = record
-    (*** The id the device assigned. *)
+    //** @abstract(The id the device assigned.)
     /// <summary>The id the device assigned.</summary>
     Id: string;
-    (*** The countdown length in seconds. *)
+    //** @abstract(The countdown length in seconds.)
     /// <summary>The countdown length in seconds.</summary>
     DelaySeconds: Integer;
-    (*** Seconds left until the timer fires. *)
+    //** @abstract(Seconds left until the timer fires.)
     /// <summary>Seconds left until the timer fires.</summary>
     RemainingSeconds: Integer;
-    (*** The state the plug switches to when the timer fires. *)
+    //** @abstract(The state the plug switches to when the timer fires.)
     /// <summary>The state the plug switches to when the timer fires.</summary>
     DesiredOn: Boolean;
   end;
 
-  (*** A day of the week, for schedule rules. *)
+  //** @abstract(A day of the week, for schedule rules.)
   /// <summary>A day of the week, for schedule rules.</summary>
   TTapoWeekDay = (wdSun, wdMon, wdTue, wdWed, wdThu, wdFri, wdSat);
-  (***
-    A set of days of the week.
-
-    @seealso(TapoWeekdays)
-  *)
+  //** @abstract(A set of days of the week.)
+  //**
+  //** @seealso(TapoWeekdays)
   /// <summary>A set of days of the week.</summary>
   /// <seealso cref="TapoWeekdays"/>
   TTapoWeekDays = set of TTapoWeekDay;
 
-  (*** What a schedule rule's time is measured from. *)
+  //** @abstract(What a schedule rule's time is measured from.)
   /// <summary>What a schedule rule's time is measured from.</summary>
   TTapoScheduleTimeKind = (
-    (*** A clock time (Hour, Minute). *)
+    //** @abstract(A clock time @(Hour, Minute@).)
     /// <summary>A clock time (Hour, Minute).</summary>
     stkClock,
-    (*** An offset from sunrise (OffsetMinutes). *)
+    //** @abstract(An offset from sunrise @(OffsetMinutes@).)
     /// <summary>An offset from sunrise (OffsetMinutes).</summary>
     stkSunrise,
-    (*** An offset from sunset (OffsetMinutes). *)
+    //** @abstract(An offset from sunset @(OffsetMinutes@).)
     /// <summary>An offset from sunset (OffsetMinutes).</summary>
     stkSunset);
 
-  (***
-    A rule that switches a plug on or off at a set time.
-
-    Build rules with the class functions, which validate them. Sunrise and sunset times use the
-    location set in the Tapo app.
-
-    Example:
-    @longCode(#
-    Rule := Plug.AddScheduleRule(TTapoScheduleRule.ClockWeekly(7, 30, TapoWeekdays, True));
-    Plug.AddScheduleRule(TTapoScheduleRule.SunsetOnce(-15, False));
-    #)
-  *)
+  //** @abstract(A rule that switches a plug on or off at a set time.)
+  //**
+  //** Build rules with the class functions, which validate them. Sunrise and sunset times use the
+  //** location set in the Tapo app.
+  //**
+  //** Example:
+  //** @longCode(#
+  //** Rule := Plug.AddScheduleRule(TTapoScheduleRule.ClockWeekly(7, 30, TapoWeekdays, True));
+  //** Plug.AddScheduleRule(TTapoScheduleRule.SunsetOnce(-15, False));
+  //** #)
   /// <summary>A rule that switches a plug on or off at a set time.</summary>
   /// <remarks>
   ///   Build rules with the class functions, which validate them. Sunrise and
@@ -259,46 +276,44 @@ type
   ///   </code>
   /// </example>
   TTapoScheduleRule = record
-    (*** The id the device assigned; empty for a rule not yet added. *)
+    //** @abstract(The id the device assigned; empty for a rule not yet added.)
     /// <summary>The id the device assigned; empty for a rule not yet added.</summary>
     Id: string;
-    (*** False if the rule is switched off in the app. *)
+    //** @abstract(False if the rule is switched off in the app.)
     /// <summary>False if the rule is switched off in the app.</summary>
     Enabled: Boolean;
-    (*** What the time is measured from. *)
+    //** @abstract(What the time is measured from.)
     /// <summary>What the time is measured from.</summary>
     TimeKind: TTapoScheduleTimeKind;
-    (*** The hour, 0 to 23, for stkClock. *)
+    //** @abstract(The hour, 0 to 23, for stkClock.)
     /// <summary>The hour, 0 to 23, for stkClock.</summary>
     Hour: Integer;
-    (*** The minute, 0 to 59, for stkClock. *)
+    //** @abstract(The minute, 0 to 59, for stkClock.)
     /// <summary>The minute, 0 to 59, for stkClock.</summary>
     Minute: Integer;
-    (*** Minutes from sunrise or sunset, -360 to 360 (negative = before). *)
+    //** @abstract(Minutes from sunrise or sunset, -360 to 360 @(negative = before@).)
     /// <summary>Minutes from sunrise or sunset, -360 to 360 (negative = before).</summary>
     OffsetMinutes: Integer;
-    (*** True for a weekly rule; False for a rule that fires once. *)
+    //** @abstract(True for a weekly rule; False for a rule that fires once.)
     /// <summary>True for a weekly rule; False for a rule that fires once.</summary>
     Repeating: Boolean;
-    (*** The days a weekly rule fires on. *)
+    //** @abstract(The days a weekly rule fires on.)
     /// <summary>The days a weekly rule fires on.</summary>
     Days: TTapoWeekDays;
-    (*** The state the plug switches to. *)
+    //** @abstract(The state the plug switches to.)
     /// <summary>The state the plug switches to.</summary>
     DesiredOn: Boolean;
-    (***
-      A rule that fires at a clock time on the given days.
-
-      @param(AHour 0 to 23.)
-
-      @param(AMinute 0 to 59.)
-
-      @param(ADays At least one day.)
-
-      @param(ADesiredOn True to switch on, False to switch off.)
-
-      @raises(ETapoError A value is out of range.)
-    *)
+    //** @abstract(A rule that fires at a clock time on the given days.)
+    //**
+    //** @param(AHour 0 to 23.)
+    //**
+    //** @param(AMinute 0 to 59.)
+    //**
+    //** @param(ADays At least one day.)
+    //**
+    //** @param(ADesiredOn True to switch on, False to switch off.)
+    //**
+    //** @raises(ETapoError A value is out of range.)
     /// <summary>A rule that fires at a clock time on the given days.</summary>
     /// <param name="AHour">0 to 23.</param>
     /// <param name="AMinute">0 to 59.</param>
@@ -307,34 +322,30 @@ type
     /// <exception cref="ETapoError">A value is out of range.</exception>
     class function ClockWeekly(AHour, AMinute: Integer; ADays: TTapoWeekDays;
       ADesiredOn: Boolean): TTapoScheduleRule; static;
-    (***
-      A rule that fires once, at the next occurrence of a clock time.
-
-      @param(AHour 0 to 23.)
-
-      @param(AMinute 0 to 59.)
-
-      @param(ADesiredOn True to switch on, False to switch off.)
-
-      @raises(ETapoError A value is out of range.)
-    *)
+    //** @abstract(A rule that fires once, at the next occurrence of a clock time.)
+    //**
+    //** @param(AHour 0 to 23.)
+    //**
+    //** @param(AMinute 0 to 59.)
+    //**
+    //** @param(ADesiredOn True to switch on, False to switch off.)
+    //**
+    //** @raises(ETapoError A value is out of range.)
     /// <summary>A rule that fires once, at the next occurrence of a clock time.</summary>
     /// <param name="AHour">0 to 23.</param>
     /// <param name="AMinute">0 to 59.</param>
     /// <param name="ADesiredOn">True to switch on, False to switch off.</param>
     /// <exception cref="ETapoError">A value is out of range.</exception>
     class function ClockOnce(AHour, AMinute: Integer; ADesiredOn: Boolean): TTapoScheduleRule; static;
-    (***
-      A rule that fires at an offset from sunrise on the given days.
-
-      @param(AOffsetMinutes -360 to 360; negative is before sunrise.)
-
-      @param(ADays At least one day.)
-
-      @param(ADesiredOn True to switch on, False to switch off.)
-
-      @raises(ETapoError A value is out of range.)
-    *)
+    //** @abstract(A rule that fires at an offset from sunrise on the given days.)
+    //**
+    //** @param(AOffsetMinutes -360 to 360; negative is before sunrise.)
+    //**
+    //** @param(ADays At least one day.)
+    //**
+    //** @param(ADesiredOn True to switch on, False to switch off.)
+    //**
+    //** @raises(ETapoError A value is out of range.)
     /// <summary>A rule that fires at an offset from sunrise on the given days.</summary>
     /// <param name="AOffsetMinutes">-360 to 360; negative is before sunrise.</param>
     /// <param name="ADays">At least one day.</param>
@@ -342,31 +353,27 @@ type
     /// <exception cref="ETapoError">A value is out of range.</exception>
     class function SunriseWeekly(AOffsetMinutes: Integer; ADays: TTapoWeekDays;
       ADesiredOn: Boolean): TTapoScheduleRule; static;
-    (***
-      A rule that fires once, at an offset from the next sunrise.
-
-      @param(AOffsetMinutes -360 to 360; negative is before sunrise.)
-
-      @param(ADesiredOn True to switch on, False to switch off.)
-
-      @raises(ETapoError A value is out of range.)
-    *)
+    //** @abstract(A rule that fires once, at an offset from the next sunrise.)
+    //**
+    //** @param(AOffsetMinutes -360 to 360; negative is before sunrise.)
+    //**
+    //** @param(ADesiredOn True to switch on, False to switch off.)
+    //**
+    //** @raises(ETapoError A value is out of range.)
     /// <summary>A rule that fires once, at an offset from the next sunrise.</summary>
     /// <param name="AOffsetMinutes">-360 to 360; negative is before sunrise.</param>
     /// <param name="ADesiredOn">True to switch on, False to switch off.</param>
     /// <exception cref="ETapoError">A value is out of range.</exception>
     class function SunriseOnce(AOffsetMinutes: Integer; ADesiredOn: Boolean): TTapoScheduleRule; static;
-    (***
-      A rule that fires at an offset from sunset on the given days.
-
-      @param(AOffsetMinutes -360 to 360; negative is before sunset.)
-
-      @param(ADays At least one day.)
-
-      @param(ADesiredOn True to switch on, False to switch off.)
-
-      @raises(ETapoError A value is out of range.)
-    *)
+    //** @abstract(A rule that fires at an offset from sunset on the given days.)
+    //**
+    //** @param(AOffsetMinutes -360 to 360; negative is before sunset.)
+    //**
+    //** @param(ADays At least one day.)
+    //**
+    //** @param(ADesiredOn True to switch on, False to switch off.)
+    //**
+    //** @raises(ETapoError A value is out of range.)
     /// <summary>A rule that fires at an offset from sunset on the given days.</summary>
     /// <param name="AOffsetMinutes">-360 to 360; negative is before sunset.</param>
     /// <param name="ADays">At least one day.</param>
@@ -374,28 +381,24 @@ type
     /// <exception cref="ETapoError">A value is out of range.</exception>
     class function SunsetWeekly(AOffsetMinutes: Integer; ADays: TTapoWeekDays;
       ADesiredOn: Boolean): TTapoScheduleRule; static;
-    (***
-      A rule that fires once, at an offset from the next sunset.
-
-      @param(AOffsetMinutes -360 to 360; negative is before sunset.)
-
-      @param(ADesiredOn True to switch on, False to switch off.)
-
-      @raises(ETapoError A value is out of range.)
-    *)
+    //** @abstract(A rule that fires once, at an offset from the next sunset.)
+    //**
+    //** @param(AOffsetMinutes -360 to 360; negative is before sunset.)
+    //**
+    //** @param(ADesiredOn True to switch on, False to switch off.)
+    //**
+    //** @raises(ETapoError A value is out of range.)
     /// <summary>A rule that fires once, at an offset from the next sunset.</summary>
     /// <param name="AOffsetMinutes">-360 to 360; negative is before sunset.</param>
     /// <param name="ADesiredOn">True to switch on, False to switch off.</param>
     /// <exception cref="ETapoError">A value is out of range.</exception>
     class function SunsetOnce(AOffsetMinutes: Integer; ADesiredOn: Boolean): TTapoScheduleRule; static;
-    (*** Returns a copy of the rule, switched on or off. *)
+    //** @abstract(Returns a copy of the rule, switched on or off.)
     /// <summary>Returns a copy of the rule, switched on or off.</summary>
     function WithEnabled(AEnabled: Boolean): TTapoScheduleRule;
-    (***
-      Checks the rule's values.
-
-      @raises(ETapoError A value is out of range, or a weekly rule has no days.)
-    *)
+    //** @abstract(Checks the rule's values.)
+    //**
+    //** @raises(ETapoError A value is out of range, or a weekly rule has no days.)
     /// <summary>Checks the rule's values.</summary>
     /// <exception cref="ETapoError">A value is out of range, or a weekly rule has no days.</exception>
     procedure Validate;
@@ -403,12 +406,10 @@ type
 
   { --- lights ------------------------------------------------------------- }
 
-  (***
-    The colour presets of the Tapo app.
-
-    The whites set a colour temperature; the colours set a hue and saturation.
-    @link(TapoColorValues) gives the values.
-  *)
+  //** @abstract(The colour presets of the Tapo app.)
+  //**
+  //** The whites set a colour temperature; the colours set a hue and saturation.
+  //** @link(TapoColorValues) gives the values.
   /// <summary>The colour presets of the Tapo app.</summary>
   /// <remarks>
   ///   The whites set a colour temperature; the colours set a hue and
@@ -423,17 +424,15 @@ type
     tcNavyBlue, tcLightTurquoise, tcAquamarine, tcTurquoise, tcLightGreen,
     tcLime, tcForestGreen);
 
-  (***
-    Several light settings to send in one request.
-
-    Start from @link(New) and chain the With... functions; each returns a modified copy. Pass the
-    result to @link(TTapoColorLight.Apply).
-
-    Example:
-    @longCode(#
-    Bulb.Apply(TTapoLightState.New.TurnOn.WithBrightness(40).WithColor(tcCoral));
-    #)
-  *)
+  //** @abstract(Several light settings to send in one request.)
+  //**
+  //** Start from @link(New) and chain the With... functions; each returns a modified copy. Pass the
+  //** result to @link(TTapoColorLight.Apply).
+  //**
+  //** Example:
+  //** @longCode(#
+  //** Bulb.Apply(TTapoLightState.New.TurnOn.WithBrightness(40).WithColor(tcCoral));
+  //** #)
   /// <summary>Several light settings to send in one request.</summary>
   /// <remarks>
   ///   Start from <see cref="New"/> and chain the With... functions; each
@@ -443,139 +442,120 @@ type
   ///   <code>Bulb.Apply(TTapoLightState.New.TurnOn.WithBrightness(40).WithColor(tcCoral));</code>
   /// </example>
   TTapoLightState = record
-    (*** True if the power state is to be set. *)
+    //** @abstract(True if the power state is to be set.)
     /// <summary>True if the power state is to be set.</summary>
     HasOn: Boolean;
-    (*** The power state to set. *)
+    //** @abstract(The power state to set.)
     /// <summary>The power state to set.</summary>
     DeviceOn: Boolean;
-    (*** True if the brightness is to be set. *)
+    //** @abstract(True if the brightness is to be set.)
     /// <summary>True if the brightness is to be set.</summary>
     HasBrightness: Boolean;
-    (*** The brightness, 1 to 100. *)
+    //** @abstract(The brightness, 1 to 100.)
     /// <summary>The brightness, 1 to 100.</summary>
     Brightness: Integer;
-    (*** True if a hue and saturation are to be set. *)
+    //** @abstract(True if a hue and saturation are to be set.)
     /// <summary>True if a hue and saturation are to be set.</summary>
     HasHueSaturation: Boolean;
-    (*** The hue, 0 to 360. *)
+    //** @abstract(The hue, 0 to 360.)
     /// <summary>The hue, 0 to 360.</summary>
     Hue: Integer;
-    (*** The saturation, 1 to 100. *)
+    //** @abstract(The saturation, 1 to 100.)
     /// <summary>The saturation, 1 to 100.</summary>
     Saturation: Integer;
-    (*** True if a colour temperature is to be set. *)
+    //** @abstract(True if a colour temperature is to be set.)
     /// <summary>True if a colour temperature is to be set.</summary>
     HasColorTemp: Boolean;
-    (***
-      The colour temperature in kelvin, 2500 to 6500; 0 together with a hue and saturation.
-    *)
+    //** @abstract(The colour temperature in kelvin, 2500 to 6500; 0 together with a hue and
+    //** saturation.)
     /// <summary>The colour temperature in kelvin, 2500 to 6500; 0 together with a hue and saturation.</summary>
     ColorTemp: Integer;
-    (*** An empty state, to chain the With... functions from. *)
+    //** @abstract(An empty state, to chain the With... functions from.)
     /// <summary>An empty state, to chain the With... functions from.</summary>
     class function New: TTapoLightState; static;
-    (*** Also switches the light on. *)
+    //** @abstract(Also switches the light on.)
     /// <summary>Also switches the light on.</summary>
     function TurnOn: TTapoLightState;
-    (*** Also switches the light off. *)
+    //** @abstract(Also switches the light off.)
     /// <summary>Also switches the light off.</summary>
     function TurnOff: TTapoLightState;
-    (***
-      Also sets the brightness.
-
-      @param(AValue 1 to 100.)
-    *)
+    //** @abstract(Also sets the brightness.)
+    //**
+    //** @param(AValue 1 to 100.)
     /// <summary>Also sets the brightness.</summary>
     /// <param name="AValue">1 to 100.</param>
     function WithBrightness(AValue: Integer): TTapoLightState;
-    (*** Also sets a colour preset. *)
+    //** @abstract(Also sets a colour preset.)
     /// <summary>Also sets a colour preset.</summary>
     function WithColor(AColor: TTapoColor): TTapoLightState;
-    (***
-      Also sets a colour by hue and saturation.
-
-      @param(AHue 0 to 360.)
-
-      @param(ASaturation 1 to 100.)
-    *)
+    //** @abstract(Also sets a colour by hue and saturation.)
+    //**
+    //** @param(AHue 0 to 360.)
+    //**
+    //** @param(ASaturation 1 to 100.)
     /// <summary>Also sets a colour by hue and saturation.</summary>
     /// <param name="AHue">0 to 360.</param>
     /// <param name="ASaturation">1 to 100.</param>
     function WithHueSaturation(AHue, ASaturation: Integer): TTapoLightState;
-    (***
-      Also sets a white by colour temperature (and clears any hue and saturation).
-
-      @param(AKelvin 2500 to 6500.)
-    *)
+    //** @abstract(Also sets a white by colour temperature @(and clears any hue and saturation@).)
+    //**
+    //** @param(AKelvin 2500 to 6500.)
     /// <summary>Also sets a white by colour temperature (and clears any hue and saturation).</summary>
     /// <param name="AKelvin">2500 to 6500.</param>
     function WithColorTemperature(AKelvin: Integer): TTapoLightState;
-    (***
-      Checks the values.
-
-      @raises(ETapoError Nothing is set, or a value is out of range.)
-    *)
+    //** @abstract(Checks the values.)
+    //**
+    //** @raises(ETapoError Nothing is set, or a value is out of range.)
     /// <summary>Checks the values.</summary>
     /// <exception cref="ETapoError">Nothing is set, or a value is out of range.</exception>
     procedure Validate;
-    (***
-      Validates the state and returns the set_device_info fields.
-
-      @returns(A new object; the caller frees it or passes it on.)
-    *)
+    //** @abstract(Validates the state and returns the set_device_info fields.)
+    //**
+    //** @returns(A new object; the caller frees it or passes it on.)
     /// <summary>Validates the state and returns the set_device_info fields.</summary>
     /// <returns>A new object; the caller frees it or passes it on.</returns>
     function ToJSON: TJSONObject;
   end;
 
-  (***
-    A colour as hue, saturation and brightness, for light effects.
-
-    @seealso(HSB)
-  *)
+  //** @abstract(A colour as hue, saturation and brightness, for light effects.)
+  //**
+  //** @seealso(HSB)
   /// <summary>A colour as hue, saturation and brightness, for light effects.</summary>
   /// <seealso cref="HSB"/>
   TTapoHSB = record
-    (*** Hue 0 to 360, saturation 0 to 100, brightness 0 to 100. *)
+    //** @abstract(Hue 0 to 360, saturation 0 to 100, brightness 0 to 100.)
     /// <summary>Hue 0 to 360, saturation 0 to 100, brightness 0 to 100.</summary>
     Hue, Saturation, Brightness: Integer;
   end;
 
-  (***
-    A segment colour as hue, saturation, brightness and colour temperature.
-
-    @seealso(HSBK)
-  *)
+  //** @abstract(A segment colour as hue, saturation, brightness and colour temperature.)
+  //**
+  //** @seealso(HSBK)
   /// <summary>A segment colour as hue, saturation, brightness and colour temperature.</summary>
   /// <seealso cref="HSBK"/>
   TTapoHSBK = record
-    (***
-      Hue 0 to 360, saturation 0 to 100, brightness 0 to 100, colour temperature in kelvin (0 for
-      a colour).
-    *)
+    //** @abstract(Hue 0 to 360, saturation 0 to 100, brightness 0 to 100, colour temperature in
+    //** kelvin @(0 for a colour@).)
     /// <summary>Hue 0 to 360, saturation 0 to 100, brightness 0 to 100, colour temperature in kelvin (0 for a colour).</summary>
     Hue, Saturation, Brightness, Kelvin: Integer;
   end;
 
-  (*** How a lighting effect moves through its colours. *)
+  //** @abstract(How a lighting effect moves through its colours.)
   /// <summary>How a lighting effect moves through its colours.</summary>
   TTapoLightingEffectType = (letSequence, letRandom, letPulse, letStatic);
 
-  (***
-    A lighting effect for the L920 and L930 light strips.
-
-    Start from a preset (@link(Preset)), from scratch (@link(New)) or from JSON, then adjust with
-    the With... functions; each returns a modified copy. The field names and meanings are those of
-    the Tapo app.
-
-    @seealso(TTapoL920.SetLightingEffect)
-
-    Example:
-    @longCode(#
-    Strip.SetLightingEffect(TTapoLightingEffect.Preset(lepAurora).WithBrightness(60));
-    #)
-  *)
+  //** @abstract(A lighting effect for the L920 and L930 light strips.)
+  //**
+  //** Start from a preset (@link(Preset)), from scratch (@link(New)) or from JSON, then adjust with
+  //** the With... functions; each returns a modified copy. The field names and meanings are those of
+  //** the Tapo app.
+  //**
+  //** @seealso(TTapoL920.SetLightingEffect)
+  //**
+  //** Example:
+  //** @longCode(#
+  //** Strip.SetLightingEffect(TTapoLightingEffect.Preset(lepAurora).WithBrightness(60));
+  //** #)
   /// <summary>A lighting effect for the L920 and L930 light strips.</summary>
   /// <remarks>
   ///   Start from a preset (<see cref="Preset"/>), from scratch (<see cref="New"/>)
@@ -591,23 +571,21 @@ type
     FJson: string;
     function Patch(const AKey: string; AValue: TJSONValue): TTapoLightingEffect;
   public
-    (***
-      A new effect.
-
-      The effect gets a new random id.
-
-      @param(AName The name shown in the Tapo app.)
-
-      @param(AType How the effect moves through its colours.)
-
-      @param(AIsCustom True for an effect of your own.)
-
-      @param(AEnabled True to run the effect.)
-
-      @param(ABrightness 0 to 100.)
-
-      @param(ADisplayColors The colours shown for the effect in the app.)
-    *)
+    //** @abstract(A new effect.)
+    //**
+    //** The effect gets a new random id.
+    //**
+    //** @param(AName The name shown in the Tapo app.)
+    //**
+    //** @param(AType How the effect moves through its colours.)
+    //**
+    //** @param(AIsCustom True for an effect of your own.)
+    //**
+    //** @param(AEnabled True to run the effect.)
+    //**
+    //** @param(ABrightness 0 to 100.)
+    //**
+    //** @param(ADisplayColors The colours shown for the effect in the app.)
     /// <summary>A new effect.</summary>
     /// <param name="AName">The name shown in the Tapo app.</param>
     /// <param name="AType">How the effect moves through its colours.</param>
@@ -619,118 +597,114 @@ type
     class function New(const AName: string; AType: TTapoLightingEffectType;
       AIsCustom, AEnabled: Boolean; ABrightness: Integer;
       const ADisplayColors: array of TTapoHSB): TTapoLightingEffect; static;
-    (*** One of the Tapo app's lighting-effect presets. *)
+    //** @abstract(One of the Tapo app's lighting-effect presets.)
     /// <summary>One of the Tapo app's lighting-effect presets.</summary>
     class function Preset(APreset: TTapoLightingEffectPreset): TTapoLightingEffect; static;
-    (*** An effect from its JSON, for example from a device's default state. *)
+    //** @abstract(An effect from its JSON, for example from a device's default state.)
     /// <summary>An effect from its JSON, for example from a device's default state.</summary>
     class function FromJSON(const AJson: string): TTapoLightingEffect; static;
-    (*** Sets the brightness, 0 to 100. *)
+    //** @abstract(Sets the brightness, 0 to 100.)
     /// <summary>Sets the brightness, 0 to 100.</summary>
     function WithBrightness(AValue: Integer): TTapoLightingEffect;
-    (*** Marks the effect as custom or preset. *)
+    //** @abstract(Marks the effect as custom or preset.)
     /// <summary>Marks the effect as custom or preset.</summary>
     function WithIsCustom(AValue: Boolean): TTapoLightingEffect;
-    (*** Runs or stops the effect. *)
+    //** @abstract(Runs or stops the effect.)
     /// <summary>Runs or stops the effect.</summary>
     function WithEnabled(AValue: Boolean): TTapoLightingEffect;
-    (*** Sets the id. *)
+    //** @abstract(Sets the id.)
     /// <summary>Sets the id.</summary>
     function WithId(const AValue: string): TTapoLightingEffect;
-    (*** Sets the name shown in the app. *)
+    //** @abstract(Sets the name shown in the app.)
     /// <summary>Sets the name shown in the app.</summary>
     function WithName(const AValue: string): TTapoLightingEffect;
-    (*** Sets how the effect moves through its colours. *)
+    //** @abstract(Sets how the effect moves through its colours.)
     /// <summary>Sets how the effect moves through its colours.</summary>
     function WithType(AValue: TTapoLightingEffectType): TTapoLightingEffect;
-    (*** Sets the colours shown for the effect in the app. *)
+    //** @abstract(Sets the colours shown for the effect in the app.)
     /// <summary>Sets the colours shown for the effect in the app.</summary>
     function WithDisplayColors(const AValue: array of TTapoHSB): TTapoLightingEffect;
-    (*** Sets the background colours (random effects). *)
+    //** @abstract(Sets the background colours @(random effects@).)
     /// <summary>Sets the background colours (random effects).</summary>
     function WithBackgrounds(const AValue: array of TTapoHSB): TTapoLightingEffect;
-    (*** Sets the brightness range (random effects). *)
+    //** @abstract(Sets the brightness range @(random effects@).)
     /// <summary>Sets the brightness range (random effects).</summary>
     function WithBrightnessRange(AMin, AMax: Integer): TTapoLightingEffect;
-    (*** Sets the direction of movement (sequence effects). *)
+    //** @abstract(Sets the direction of movement @(sequence effects@).)
     /// <summary>Sets the direction of movement (sequence effects).</summary>
     function WithDirection(AValue: Integer): TTapoLightingEffect;
-    (*** Sets the duration in milliseconds. *)
+    //** @abstract(Sets the duration in milliseconds.)
     /// <summary>Sets the duration in milliseconds.</summary>
     function WithDuration(AValue: Int64): TTapoLightingEffect;
-    (*** Sets the expansion strategy. *)
+    //** @abstract(Sets the expansion strategy.)
     /// <summary>Sets the expansion strategy.</summary>
     function WithExpansionStrategy(AValue: Integer): TTapoLightingEffect;
-    (*** Sets the fade-off time in milliseconds. *)
+    //** @abstract(Sets the fade-off time in milliseconds.)
     /// <summary>Sets the fade-off time in milliseconds.</summary>
     function WithFadeOff(AValue: Integer): TTapoLightingEffect;
-    (*** Sets the hue range (random effects). *)
+    //** @abstract(Sets the hue range @(random effects@).)
     /// <summary>Sets the hue range (random effects).</summary>
     function WithHueRange(AMin, AMax: Integer): TTapoLightingEffect;
-    (*** Sets the initial states (random effects). *)
+    //** @abstract(Sets the initial states @(random effects@).)
     /// <summary>Sets the initial states (random effects).</summary>
     function WithInitStates(const AValue: array of TTapoHSB): TTapoLightingEffect;
-    (*** Sets the random seed (random effects). *)
+    //** @abstract(Sets the random seed @(random effects@).)
     /// <summary>Sets the random seed (random effects).</summary>
     function WithRandomSeed(AValue: Int64): TTapoLightingEffect;
-    (*** Sets how many times the effect repeats; 0 repeats for ever. *)
+    //** @abstract(Sets how many times the effect repeats; 0 repeats for ever.)
     /// <summary>Sets how many times the effect repeats; 0 repeats for ever.</summary>
     function WithRepeatTimes(AValue: Integer): TTapoLightingEffect;
-    (*** Sets the run time. *)
+    //** @abstract(Sets the run time.)
     /// <summary>Sets the run time.</summary>
     function WithRunTime(AValue: Int64): TTapoLightingEffect;
-    (*** Sets the saturation range (random effects). *)
+    //** @abstract(Sets the saturation range @(random effects@).)
     /// <summary>Sets the saturation range (random effects).</summary>
     function WithSaturationRange(AMin, AMax: Integer): TTapoLightingEffect;
-    (*** Sets the segment length. *)
+    //** @abstract(Sets the segment length.)
     /// <summary>Sets the segment length.</summary>
     function WithSegmentLength(AValue: Integer): TTapoLightingEffect;
-    (*** Sets the segments the effect runs on. *)
+    //** @abstract(Sets the segments the effect runs on.)
     /// <summary>Sets the segments the effect runs on.</summary>
     function WithSegments(const AValue: array of Integer): TTapoLightingEffect;
-    (*** Sets the colour sequence (sequence effects). *)
+    //** @abstract(Sets the colour sequence @(sequence effects@).)
     /// <summary>Sets the colour sequence (sequence effects).</summary>
     function WithSequence(const AValue: array of TTapoHSB): TTapoLightingEffect;
-    (*** Sets the spread. *)
+    //** @abstract(Sets the spread.)
     /// <summary>Sets the spread.</summary>
     function WithSpread(AValue: Integer): TTapoLightingEffect;
-    (*** Sets the transition time in milliseconds. *)
+    //** @abstract(Sets the transition time in milliseconds.)
     /// <summary>Sets the transition time in milliseconds.</summary>
     function WithTransition(AValue: Integer): TTapoLightingEffect;
-    (*** Sets the transition time range (random effects). *)
+    //** @abstract(Sets the transition time range @(random effects@).)
     /// <summary>Sets the transition time range (random effects).</summary>
     function WithTransitionRange(AMin, AMax: Integer): TTapoLightingEffect;
-    (*** Sets the transition time for each step of the sequence. *)
+    //** @abstract(Sets the transition time for each step of the sequence.)
     /// <summary>Sets the transition time for each step of the sequence.</summary>
     function WithTransitionSequence(const AValue: array of Integer): TTapoLightingEffect;
-    (***
-      The effect as the JSON the strip takes.
-
-      @raises(ETapoError The effect is empty.)
-    *)
+    //** @abstract(The effect as the JSON the strip takes.)
+    //**
+    //** @raises(ETapoError The effect is empty.)
     /// <summary>The effect as the JSON the strip takes.</summary>
     /// <exception cref="ETapoError">The effect is empty.</exception>
     function ToJSON: string;
   end;
 
-  (*** How a segment effect animates. *)
+  //** @abstract(How a segment effect animates.)
   /// <summary>How a segment effect animates.</summary>
   TTapoSegmentEffectType = (setCirculating, setBreathe, setChasing, setFlicker,
     setBloom, setStacking, setNone);
 
-  (***
-    A segment effect for the L920 and L930 light strips.
-
-    Start from a preset (@link(Preset)), from scratch (@link(New)) or from JSON, then adjust with
-    the With... functions. A custom effect needs segments, states and a type.
-
-    @seealso(TTapoL920.SetSegmentEffect)
-
-    Example:
-    @longCode(#
-    Strip.SetSegmentEffect(sepSunny);
-    #)
-  *)
+  //** @abstract(A segment effect for the L920 and L930 light strips.)
+  //**
+  //** Start from a preset (@link(Preset)), from scratch (@link(New)) or from JSON, then adjust with
+  //** the With... functions. A custom effect needs segments, states and a type.
+  //**
+  //** @seealso(TTapoL920.SetSegmentEffect)
+  //**
+  //** Example:
+  //** @longCode(#
+  //** Strip.SetSegmentEffect(sepSunny);
+  //** #)
   /// <summary>A segment effect for the L920 and L930 light strips.</summary>
   /// <remarks>
   ///   Start from a preset (<see cref="Preset"/>), from scratch (<see cref="New"/>)
@@ -746,21 +720,19 @@ type
     FJson: string;
     function Patch(const AKey: string; AValue: TJSONValue): TTapoSegmentEffect;
   public
-    (***
-      A new segment effect.
-
-      @param(AName The name shown in the Tapo app.)
-
-      @param(AType How the effect animates.)
-
-      @param(AIsCustom True for an effect of your own @(device type 'strip' is set@).)
-
-      @param(AEnabled True to run the effect.)
-
-      @param(ABrightness 0 to 100.)
-
-      @param(ADisplayColors The colours shown for the effect in the app.)
-    *)
+    //** @abstract(A new segment effect.)
+    //**
+    //** @param(AName The name shown in the Tapo app.)
+    //**
+    //** @param(AType How the effect animates.)
+    //**
+    //** @param(AIsCustom True for an effect of your own @(device type 'strip' is set@).)
+    //**
+    //** @param(AEnabled True to run the effect.)
+    //**
+    //** @param(ABrightness 0 to 100.)
+    //**
+    //** @param(ADisplayColors The colours shown for the effect in the app.)
     /// <summary>A new segment effect.</summary>
     /// <param name="AName">The name shown in the Tapo app.</param>
     /// <param name="AType">How the effect animates.</param>
@@ -771,338 +743,324 @@ type
     class function New(const AName: string; AType: TTapoSegmentEffectType;
       AIsCustom, AEnabled: Boolean; ABrightness: Integer;
       const ADisplayColors: array of TTapoHSBK): TTapoSegmentEffect; static;
-    (*** One of the Tapo app's segment-effect presets. *)
+    //** @abstract(One of the Tapo app's segment-effect presets.)
     /// <summary>One of the Tapo app's segment-effect presets.</summary>
     class function Preset(APreset: TTapoSegmentEffectPreset): TTapoSegmentEffect; static;
-    (*** An effect from its JSON. *)
+    //** @abstract(An effect from its JSON.)
     /// <summary>An effect from its JSON.</summary>
     class function FromJSON(const AJson: string): TTapoSegmentEffect; static;
-    (*** Sets the brightness, 0 to 100. *)
+    //** @abstract(Sets the brightness, 0 to 100.)
     /// <summary>Sets the brightness, 0 to 100.</summary>
     function WithBrightness(AValue: Integer): TTapoSegmentEffect;
-    (*** Marks the effect as custom or preset. *)
+    //** @abstract(Marks the effect as custom or preset.)
     /// <summary>Marks the effect as custom or preset.</summary>
     function WithIsCustom(AValue: Boolean): TTapoSegmentEffect;
-    (*** Runs or stops the effect. *)
+    //** @abstract(Runs or stops the effect.)
     /// <summary>Runs or stops the effect.</summary>
     function WithEnabled(AValue: Boolean): TTapoSegmentEffect;
-    (*** Sets the id. *)
+    //** @abstract(Sets the id.)
     /// <summary>Sets the id.</summary>
     function WithId(const AValue: string): TTapoSegmentEffect;
-    (*** Sets the name shown in the app. *)
+    //** @abstract(Sets the name shown in the app.)
     /// <summary>Sets the name shown in the app.</summary>
     function WithName(const AValue: string): TTapoSegmentEffect;
-    (*** Sets how the effect animates. *)
+    //** @abstract(Sets how the effect animates.)
     /// <summary>Sets how the effect animates.</summary>
     function WithType(AValue: TTapoSegmentEffectType): TTapoSegmentEffect;
-    (*** Sets the device type, 'strip' for custom effects. *)
+    //** @abstract(Sets the device type, 'strip' for custom effects.)
     /// <summary>Sets the device type, 'strip' for custom effects.</summary>
     function WithDeviceType(const AValue: string): TTapoSegmentEffect;
-    (*** Sets the colours shown for the effect in the app. *)
+    //** @abstract(Sets the colours shown for the effect in the app.)
     /// <summary>Sets the colours shown for the effect in the app.</summary>
     function WithDisplayColors(const AValue: array of TTapoHSBK): TTapoSegmentEffect;
-    (*** Sets the segments the states apply to. *)
+    //** @abstract(Sets the segments the states apply to.)
     /// <summary>Sets the segments the states apply to.</summary>
     function WithSegments(const AValue: array of Integer): TTapoSegmentEffect;
-    (*** Sets the colour of each segment. *)
+    //** @abstract(Sets the colour of each segment.)
     /// <summary>Sets the colour of each segment.</summary>
     function WithStates(const AValue: array of TTapoHSBK): TTapoSegmentEffect;
-    (***
-      Checks that a custom effect has segments, states and a type.
-
-      @raises(ETapoError Something required is missing.)
-    *)
+    //** @abstract(Checks that a custom effect has segments, states and a type.)
+    //**
+    //** @raises(ETapoError Something required is missing.)
     /// <summary>Checks that a custom effect has segments, states and a type.</summary>
     /// <exception cref="ETapoError">Something required is missing.</exception>
     procedure Validate;
-    (*** Validates the effect and returns the JSON the strip takes. *)
+    //** @abstract(Validates the effect and returns the JSON the strip takes.)
     /// <summary>Validates the effect and returns the JSON the strip takes.</summary>
     function ToJSON: string;
   end;
 
   { --- device info records ------------------------------------------------- }
 
-  (*** Device info of a plug. *)
+  //** @abstract(Device info of a plug.)
   /// <summary>Device info of a plug.</summary>
   TTapoPlugInfo = record
-    (*** The fields every device reports. *)
+    //** @abstract(The fields every device reports.)
     /// <summary>The fields every device reports.</summary>
     Info: TTapoDeviceInfo;
-    (*** True if the plug is on. *)
+    //** @abstract(True if the plug is on.)
     /// <summary>True if the plug is on.</summary>
     DeviceOn: Boolean;
-    (*** Seconds since the plug was switched on. *)
+    //** @abstract(Seconds since the plug was switched on.)
     /// <summary>Seconds since the plug was switched on.</summary>
     OnTime: Int64;
-    (*** 'normal' or 'lifted' (energy-monitoring plugs). *)
+    //** @abstract('normal' or 'lifted' @(energy-monitoring plugs@).)
     /// <summary>'normal' or 'lifted' (energy-monitoring plugs).</summary>
     OvercurrentStatus: string;
-    (*** 'normal', 'cool_down' or 'overheated'; empty if not reported. *)
+    //** @abstract('normal', 'cool_down' or 'overheated'; empty if not reported.)
     /// <summary>'normal', 'cool_down' or 'overheated'; empty if not reported.</summary>
     OverheatStatus: string;
-    (*** 'normal' or 'overloaded' (energy-monitoring plugs). *)
+    //** @abstract('normal' or 'overloaded' @(energy-monitoring plugs@).)
     /// <summary>'normal' or 'overloaded' (energy-monitoring plugs).</summary>
     PowerProtectionStatus: string;
-    (*** 'normal' or 'finished' (energy-monitoring plugs). *)
+    //** @abstract('normal' or 'finished' @(energy-monitoring plugs@).)
     /// <summary>'normal' or 'finished' (energy-monitoring plugs).</summary>
     ChargingStatus: string;
-    (*** The state after a power cut: 'custom' (see @link(DefaultOn)) or 'last_states'. *)
+    //** @abstract(The state after a power cut: 'custom' @(see @link(DefaultOn)@) or 'last_states'.)
     /// <summary>The state after a power cut: 'custom' (see <see cref="DefaultOn"/>) or 'last_states'.</summary>
     DefaultStateType: string;
-    (*** The state after a power cut when DefaultStateType is 'custom'. *)
+    //** @abstract(The state after a power cut when DefaultStateType is 'custom'.)
     /// <summary>The state after a power cut when DefaultStateType is 'custom'.</summary>
     DefaultOn: Boolean;
   end;
 
-  (*** Device info of a light. *)
+  //** @abstract(Device info of a light.)
   /// <summary>Device info of a light.</summary>
   TTapoLightInfo = record
-    (*** The fields every device reports. *)
+    //** @abstract(The fields every device reports.)
     /// <summary>The fields every device reports.</summary>
     Info: TTapoDeviceInfo;
-    (*** True if the light is on. *)
+    //** @abstract(True if the light is on.)
     /// <summary>True if the light is on.</summary>
     DeviceOn: Boolean;
-    (*** Seconds since the light was switched on. *)
+    //** @abstract(Seconds since the light was switched on.)
     /// <summary>Seconds since the light was switched on.</summary>
     OnTime: Int64;
-    (*** The brightness, 1 to 100. *)
+    //** @abstract(The brightness, 1 to 100.)
     /// <summary>The brightness, 1 to 100.</summary>
     Brightness: Integer;
-    (*** True if the light has overheated. *)
+    //** @abstract(True if the light has overheated.)
     /// <summary>True if the light has overheated.</summary>
     Overheated: Boolean;
-    (*** The brightness after a power cut: 'custom' or 'last_states' (L510 family). *)
+    //** @abstract(The brightness after a power cut: 'custom' or 'last_states' @(L510 family@).)
     /// <summary>The brightness after a power cut: 'custom' or 'last_states' (L510 family).</summary>
     DefaultBrightnessType: string;
-    (***
-      The brightness after a power cut when DefaultBrightnessType is 'custom' (L510 family).
-    *)
+    //** @abstract(The brightness after a power cut when DefaultBrightnessType is 'custom' @(L510
+    //** family@).)
     /// <summary>The brightness after a power cut when DefaultBrightnessType is 'custom' (L510 family).</summary>
     DefaultBrightness: Integer;
-    (*** 'always_on' or 'last_states' (L510 family). *)
+    //** @abstract('always_on' or 'last_states' @(L510 family@).)
     /// <summary>'always_on' or 'last_states' (L510 family).</summary>
     RePowerType: string;
   end;
 
-  (*** Device info of a colour light or light strip. *)
+  //** @abstract(Device info of a colour light or light strip.)
   /// <summary>Device info of a colour light or light strip.</summary>
   TTapoColorLightInfo = record
-    (*** The fields common to lights. *)
+    //** @abstract(The fields common to lights.)
     /// <summary>The fields common to lights.</summary>
     Light: TTapoLightInfo;
-    (*** True if the light reports a hue and saturation. *)
+    //** @abstract(True if the light reports a hue and saturation.)
     /// <summary>True if the light reports a hue and saturation.</summary>
     HasHueSaturation: Boolean;
-    (*** The hue, 0 to 360. *)
+    //** @abstract(The hue, 0 to 360.)
     /// <summary>The hue, 0 to 360.</summary>
     Hue: Integer;
-    (*** The saturation, 0 to 100. *)
+    //** @abstract(The saturation, 0 to 100.)
     /// <summary>The saturation, 0 to 100.</summary>
     Saturation: Integer;
-    (*** The colour temperature in kelvin; 0 while a colour (hue and saturation) is shown. *)
+    //** @abstract(The colour temperature in kelvin; 0 while a colour @(hue and saturation@) is
+    //** shown.)
     /// <summary>The colour temperature in kelvin; 0 while a colour (hue and saturation) is shown.</summary>
     ColorTemp: Integer;
-    (*** The lowest colour temperature the light supports. *)
+    //** @abstract(The lowest colour temperature the light supports.)
     /// <summary>The lowest colour temperature the light supports.</summary>
     ColorTempMin: Integer;
-    (*** The highest colour temperature the light supports. *)
+    //** @abstract(The highest colour temperature the light supports.)
     /// <summary>The highest colour temperature the light supports.</summary>
     ColorTempMax: Integer;
-    (*** True while a dynamic effect runs. *)
+    //** @abstract(True while a dynamic effect runs.)
     /// <summary>True while a dynamic effect runs.</summary>
     DynamicLightEffectEnable: Boolean;
-    (*** The id of the running dynamic effect. *)
+    //** @abstract(The id of the running dynamic effect.)
     /// <summary>The id of the running dynamic effect.</summary>
     DynamicLightEffectId: string;
-    (*** The state after a power cut: 'custom' or 'last_states'. *)
+    //** @abstract(The state after a power cut: 'custom' or 'last_states'.)
     /// <summary>The state after a power cut: 'custom' or 'last_states'.</summary>
     DefaultStateType: string;
-    (*** The brightness after a power cut. *)
+    //** @abstract(The brightness after a power cut.)
     /// <summary>The brightness after a power cut.</summary>
     DefaultBrightness: Integer;
-    (*** The hue after a power cut. *)
+    //** @abstract(The hue after a power cut.)
     /// <summary>The hue after a power cut.</summary>
     DefaultHue: Integer;
-    (*** The saturation after a power cut. *)
+    //** @abstract(The saturation after a power cut.)
     /// <summary>The saturation after a power cut.</summary>
     DefaultSaturation: Integer;
-    (*** The colour temperature after a power cut. *)
+    //** @abstract(The colour temperature after a power cut.)
     /// <summary>The colour temperature after a power cut.</summary>
     DefaultColorTemp: Integer;
-    (***
-      The lighting effect after a power cut, as JSON (L920, L930); empty if none.
-
-      @seealso(TTapoLightingEffect.FromJSON)
-    *)
+    //** @abstract(The lighting effect after a power cut, as JSON @(L920, L930@); empty if none.)
+    //**
+    //** @seealso(TTapoLightingEffect.FromJSON)
     /// <summary>The lighting effect after a power cut, as JSON (L920, L930); empty if none.</summary>
     /// <seealso cref="TTapoLightingEffect.FromJSON"/>
     DefaultLightingEffectJSON: string;
   end;
 
-  (*** Device info of a power-strip socket. *)
+  //** @abstract(Device info of a power-strip socket.)
   /// <summary>Device info of a power-strip socket.</summary>
   TTapoOutletInfo = record
-    (*** The socket's device id. *)
+    //** @abstract(The socket's device id.)
     /// <summary>The socket's device id.</summary>
     DeviceId: string;
-    (*** The device id the socket had originally. *)
+    //** @abstract(The device id the socket had originally.)
     /// <summary>The device id the socket had originally.</summary>
     OriginalDeviceId: string;
-    (*** The name given in the Tapo app. *)
+    //** @abstract(The name given in the Tapo app.)
     /// <summary>The name given in the Tapo app.</summary>
     Nickname: string;
-    (*** The strip's model. *)
+    //** @abstract(The strip's model.)
     /// <summary>The strip's model.</summary>
     Model: string;
-    (*** The device type. *)
+    //** @abstract(The device type.)
     /// <summary>The device type.</summary>
     DeviceType: string;
-    (*** The device category. *)
+    //** @abstract(The device category.)
     /// <summary>The device category.</summary>
     Category: string;
-    (*** The firmware version. *)
+    //** @abstract(The firmware version.)
     /// <summary>The firmware version.</summary>
     FirmwareVersion: string;
-    (*** The hardware version. *)
+    //** @abstract(The hardware version.)
     /// <summary>The hardware version.</summary>
     HardwareVersion: string;
-    (*** The MAC address. *)
+    //** @abstract(The MAC address.)
     /// <summary>The MAC address.</summary>
     Mac: string;
-    (*** The socket's position on the strip, 1 for the first. *)
+    //** @abstract(The socket's position on the strip, 1 for the first.)
     /// <summary>The socket's position on the strip, 1 for the first.</summary>
     Position: Integer;
-    (*** The number of sockets on the strip. *)
+    //** @abstract(The number of sockets on the strip.)
     /// <summary>The number of sockets on the strip.</summary>
     SlotNumber: Integer;
-    (*** True for the USB ports. *)
+    //** @abstract(True for the USB ports.)
     /// <summary>True for the USB ports.</summary>
     IsUsb: Boolean;
-    (*** True if the socket is on. *)
+    //** @abstract(True if the socket is on.)
     /// <summary>True if the socket is on.</summary>
     DeviceOn: Boolean;
-    (*** Seconds since the socket was switched on. *)
+    //** @abstract(Seconds since the socket was switched on.)
     /// <summary>Seconds since the socket was switched on.</summary>
     OnTime: Int64;
-    (*** 'on' or 'off': whether the auto-off timer is set. *)
+    //** @abstract('on' or 'off': whether the auto-off timer is set.)
     /// <summary>'on' or 'off': whether the auto-off timer is set.</summary>
     AutoOffStatus: string;
-    (*** Seconds left on the auto-off timer. *)
+    //** @abstract(Seconds left on the auto-off timer.)
     /// <summary>Seconds left on the auto-off timer.</summary>
     AutoOffRemainTime: Int64;
-    (*** The bind count. *)
+    //** @abstract(The bind count.)
     /// <summary>The bind count.</summary>
     BindCount: Integer;
-    (*** The status-follow-edge setting. *)
+    //** @abstract(The status-follow-edge setting.)
     /// <summary>The status-follow-edge setting.</summary>
     StatusFollowEdge: Boolean;
-    (*** 'normal' or 'lifted' (energy-monitoring strips). *)
+    //** @abstract('normal' or 'lifted' @(energy-monitoring strips@).)
     /// <summary>'normal' or 'lifted' (energy-monitoring strips).</summary>
     OvercurrentStatus: string;
-    (*** 'normal', 'cool_down' or 'overheated'; empty if not reported. *)
+    //** @abstract('normal', 'cool_down' or 'overheated'; empty if not reported.)
     /// <summary>'normal', 'cool_down' or 'overheated'; empty if not reported.</summary>
     OverheatStatus: string;
-    (*** 'normal' or 'overloaded' (energy-monitoring strips). *)
+    //** @abstract('normal' or 'overloaded' @(energy-monitoring strips@).)
     /// <summary>'normal' or 'overloaded' (energy-monitoring strips).</summary>
     PowerProtectionStatus: string;
-    (*** 'normal' or 'finished' (energy-monitoring strips). *)
+    //** @abstract('normal' or 'finished' @(energy-monitoring strips@).)
     /// <summary>'normal' or 'finished' (energy-monitoring strips).</summary>
     ChargingStatus: string;
-    (*** The state after a power cut: 'custom' or 'last_states'. *)
+    //** @abstract(The state after a power cut: 'custom' or 'last_states'.)
     /// <summary>The state after a power cut: 'custom' or 'last_states'.</summary>
     DefaultStateType: string;
-    (*** The state after a power cut when DefaultStateType is 'custom'. *)
+    //** @abstract(The state after a power cut when DefaultStateType is 'custom'.)
     /// <summary>The state after a power cut when DefaultStateType is 'custom'.</summary>
     DefaultOn: Boolean;
-    (*** The whole reply as formatted JSON. *)
+    //** @abstract(The whole reply as formatted JSON.)
     /// <summary>The whole reply as formatted JSON.</summary>
     Raw: string;
   end;
 
   { --- devices ------------------------------------------------------------- }
 
-  (*** A device with a power state and usage statistics: the plugs and lights. *)
+  //** @abstract(A device with a power state and usage statistics: the plugs and lights.)
   /// <summary>A device with a power state and usage statistics: the plugs and lights.</summary>
   TTapoSwitchableDevice = class abstract(TTapoDevice)
   public
-    (*** Switches the device on. *)
+    //** @abstract(Switches the device on.)
     /// <summary>Switches the device on.</summary>
     procedure TurnOn;
-    (*** Switches the device off. *)
+    //** @abstract(Switches the device off.)
     /// <summary>Switches the device off.</summary>
     procedure TurnOff;
-    (***
-      Switches the device on or off.
-
-      @param(AOn True for on.)
-    *)
+    //** @abstract(Switches the device on or off.)
+    //**
+    //** @param(AOn True for on.)
     /// <summary>Switches the device on or off.</summary>
     /// <param name="AOn">True for on.</param>
     procedure SetOn(AOn: Boolean);
-    (***
-      Reads the power state from the device.
-
-      @returns(True if the device is on.)
-    *)
+    //** @abstract(Reads the power state from the device.)
+    //**
+    //** @returns(True if the device is on.)
     /// <summary>Reads the power state from the device.</summary>
     /// <returns>True if the device is on.</returns>
     function IsOn: Boolean;
-    (*** Reads how long the device has been on, and the energy it used. *)
+    //** @abstract(Reads how long the device has been on, and the energy it used.)
     /// <summary>Reads how long the device has been on, and the energy it used.</summary>
     function GetDeviceUsage: TTapoDeviceUsage;
   end;
 
-  (*** The features common to all plugs: plug info, countdown timer and schedule rules. *)
+  //** @abstract(The features common to all plugs: plug info, countdown timer and schedule rules.)
   /// <summary>The features common to all plugs: plug info, countdown timer and schedule rules.</summary>
   TTapoPlug = class abstract(TTapoSwitchableDevice)
   public
-    (*** Reads the plug's device info. *)
+    //** @abstract(Reads the plug's device info.)
     /// <summary>Reads the plug's device info.</summary>
     function GetPlugInfo: TTapoPlugInfo;
 
-    (***
-      Sets the countdown timer, replacing any existing one.
-
-      @param(ADelaySeconds 1 to 86400 @(24 hours@).)
-
-      @param(ADesiredOn The state to switch to when the timer fires.)
-
-      @returns(The timer, with the id the device assigned.)
-
-      @raises(ETapoError ADelaySeconds is out of range.)
-    *)
+    //** @abstract(Sets the countdown timer, replacing any existing one.)
+    //**
+    //** @param(ADelaySeconds 1 to 86400 @(24 hours@).)
+    //**
+    //** @param(ADesiredOn The state to switch to when the timer fires.)
+    //**
+    //** @returns(The timer, with the id the device assigned.)
+    //**
+    //** @raises(ETapoError ADelaySeconds is out of range.)
     /// <summary>Sets the countdown timer, replacing any existing one.</summary>
     /// <param name="ADelaySeconds">1 to 86400 (24 hours).</param>
     /// <param name="ADesiredOn">The state to switch to when the timer fires.</param>
     /// <returns>The timer, with the id the device assigned.</returns>
     /// <exception cref="ETapoError">ADelaySeconds is out of range.</exception>
     function SetTimer(ADelaySeconds: Integer; ADesiredOn: Boolean): TTapoTimer;
-    (***
-      Reads the countdown timer.
-
-      @param(ATimer Receives the timer, if one is set.)
-
-      @returns(False if no timer is set.)
-    *)
+    //** @abstract(Reads the countdown timer.)
+    //**
+    //** @param(ATimer Receives the timer, if one is set.)
+    //**
+    //** @returns(False if no timer is set.)
     /// <summary>Reads the countdown timer.</summary>
     /// <param name="ATimer">Receives the timer, if one is set.</param>
     /// <returns>False if no timer is set.</returns>
     function GetTimer(out ATimer: TTapoTimer): Boolean;
-    (*** Removes the countdown timer, if any. *)
+    //** @abstract(Removes the countdown timer, if any.)
     /// <summary>Removes the countdown timer, if any.</summary>
     procedure ClearTimer;
 
-    (***
-      Adds a schedule rule.
-
-      @param(ARule The rule, built with the TTapoScheduleRule class functions.)
-
-      @returns(The rule with the id the device assigned.)
-
-      @raises(ETapoError The rule is invalid, the device's rule list is full @(-1802@), or the
-      rule conflicts with another @(-1803@).)
-    *)
+    //** @abstract(Adds a schedule rule.)
+    //**
+    //** @param(ARule The rule, built with the TTapoScheduleRule class functions.)
+    //**
+    //** @returns(The rule with the id the device assigned.)
+    //**
+    //** @raises(ETapoError The rule is invalid, the device's rule list is full @(-1802@), or the
+    //** rule conflicts with another @(-1803@).)
     /// <summary>Adds a schedule rule.</summary>
     /// <param name="ARule">The rule, built with the TTapoScheduleRule class functions.</param>
     /// <returns>The rule with the id the device assigned.</returns>
@@ -1111,56 +1069,48 @@ type
     ///   rule conflicts with another (-1803).
     /// </exception>
     function AddScheduleRule(const ARule: TTapoScheduleRule): TTapoScheduleRule;
-    (***
-      Changes an existing schedule rule.
-
-      @param(ARule The changed rule, with its Id set @(for example from
-      @link(GetScheduleRules)@).)
-
-      @raises(ETapoError The rule has no id or is invalid.)
-    *)
+    //** @abstract(Changes an existing schedule rule.)
+    //**
+    //** @param(ARule The changed rule, with its Id set @(for example from
+    //** @link(GetScheduleRules)@).)
+    //**
+    //** @raises(ETapoError The rule has no id or is invalid.)
     /// <summary>Changes an existing schedule rule.</summary>
     /// <param name="ARule">The changed rule, with its Id set (for example from <see cref="GetScheduleRules"/>).</param>
     /// <exception cref="ETapoError">The rule has no id or is invalid.</exception>
     procedure EditScheduleRule(const ARule: TTapoScheduleRule);
-    (***
-      Reads every schedule rule.
-
-      A rule of a kind this class cannot represent is skipped.
-    *)
+    //** @abstract(Reads every schedule rule.)
+    //**
+    //** A rule of a kind this class cannot represent is skipped.
     /// <summary>Reads every schedule rule.</summary>
     /// <remarks>A rule of a kind this class cannot represent is skipped.</remarks>
     function GetScheduleRules: TArray<TTapoScheduleRule>;
-    (*** Reads the largest number of schedule rules the plug can hold. *)
+    //** @abstract(Reads the largest number of schedule rules the plug can hold.)
     /// <summary>Reads the largest number of schedule rules the plug can hold.</summary>
     function GetMaxScheduleRules: Integer;
-    (***
-      Removes one schedule rule.
-
-      @param(AId The rule's id.)
-    *)
+    //** @abstract(Removes one schedule rule.)
+    //**
+    //** @param(AId The rule's id.)
     /// <summary>Removes one schedule rule.</summary>
     /// <param name="AId">The rule's id.</param>
     procedure RemoveScheduleRule(const AId: string);
-    (*** Removes every schedule rule. *)
+    //** @abstract(Removes every schedule rule.)
     /// <summary>Removes every schedule rule.</summary>
     procedure RemoveAllScheduleRules;
   end;
 
-  (*** Tapo P100, P105, P125 and P125M smart plug. *)
+  //** @abstract(Tapo P100, P105, P125 and P125M smart plug.)
   /// <summary>Tapo P100, P105, P125 and P125M smart plug.</summary>
   TTapoP100 = class(TTapoPlug);
 
-  (***
-    Tapo P110, P110M and P115 energy-monitoring smart plug.
-
-    Example:
-    @longCode(#
-    Plug := Client.Add(P110, '192.168.1.50');
-    Usage := Plug.GetEnergyUsage;
-    Label1.Text := Format('%.1f W, today %.3f kWh', [Usage.CurrentPowerW, Usage.TodayEnergyKWh]);
-    #)
-  *)
+  //** @abstract(Tapo P110, P110M and P115 energy-monitoring smart plug.)
+  //**
+  //** Example:
+  //** @longCode(#
+  //** Plug := Client.Add(P110, '192.168.1.50');
+  //** Usage := Plug.GetEnergyUsage;
+  //** Label1.Text := Format('%.1f W, today %.3f kWh', [Usage.CurrentPowerW, Usage.TodayEnergyKWh]);
+  //** #)
   /// <summary>Tapo P110, P110M and P115 energy-monitoring smart plug.</summary>
   /// <example>
   ///   <code>
@@ -1171,179 +1121,155 @@ type
   /// </example>
   TTapoP110 = class(TTapoPlug)
   public
-    (***
-      Reads the power being drawn now.
-
-      @returns(The power in watts.)
-    *)
+    //** @abstract(Reads the power being drawn now.)
+    //**
+    //** @returns(The power in watts.)
     /// <summary>Reads the power being drawn now.</summary>
     /// <returns>The power in watts.</returns>
     function GetCurrentPower: Double;
-    (*** Reads today's and this month's energy use and the current power. *)
+    //** @abstract(Reads today's and this month's energy use and the current power.)
     /// <summary>Reads today's and this month's energy use and the current power.</summary>
     function GetEnergyUsage: TTapoEnergyUsage;
-    (***
-      Reads energy use per hour.
-
-      @param(AStartDate The first day.)
-
-      @param(AEndDate The last day, at most 8 days after AStartDate.)
-
-      @raises(ETapoError The dates are out of order or too far apart.)
-    *)
+    //** @abstract(Reads energy use per hour.)
+    //**
+    //** @param(AStartDate The first day.)
+    //**
+    //** @param(AEndDate The last day, at most 8 days after AStartDate.)
+    //**
+    //** @raises(ETapoError The dates are out of order or too far apart.)
     /// <summary>Reads energy use per hour.</summary>
     /// <param name="AStartDate">The first day.</param>
     /// <param name="AEndDate">The last day, at most 8 days after AStartDate.</param>
     /// <exception cref="ETapoError">The dates are out of order or too far apart.</exception>
     function GetEnergyDataHourly(AStartDate, AEndDate: TDate): TTapoEnergyData;
-    (***
-      Reads energy use per day for a quarter.
-
-      @param(AQuarterStart The first day of a quarter: 1 January, 1 April, 1 July or 1 October.)
-
-      @raises(ETapoError AQuarterStart is not the first day of a quarter.)
-    *)
+    //** @abstract(Reads energy use per day for a quarter.)
+    //**
+    //** @param(AQuarterStart The first day of a quarter: 1 January, 1 April, 1 July or 1 October.)
+    //**
+    //** @raises(ETapoError AQuarterStart is not the first day of a quarter.)
     /// <summary>Reads energy use per day for a quarter.</summary>
     /// <param name="AQuarterStart">The first day of a quarter: 1 January, 1 April, 1 July or 1 October.</param>
     /// <exception cref="ETapoError">AQuarterStart is not the first day of a quarter.</exception>
     function GetEnergyDataDaily(AQuarterStart: TDate): TTapoEnergyData;
-    (***
-      Reads energy use per month for a year.
-
-      @param(AYearStart 1 January of the year.)
-
-      @raises(ETapoError AYearStart is not 1 January.)
-    *)
+    //** @abstract(Reads energy use per month for a year.)
+    //**
+    //** @param(AYearStart 1 January of the year.)
+    //**
+    //** @raises(ETapoError AYearStart is not 1 January.)
     /// <summary>Reads energy use per month for a year.</summary>
     /// <param name="AYearStart">1 January of the year.</param>
     /// <exception cref="ETapoError">AYearStart is not 1 January.</exception>
     function GetEnergyDataMonthly(AYearStart: TDate): TTapoEnergyData;
-    (***
-      Reads the power every 5 minutes.
-
-      @param(AStart The start, local time; rounded up to the next 5-minute mark.)
-
-      @param(AEnd The end, local time. The device returns at most 12 hours.)
-    *)
+    //** @abstract(Reads the power every 5 minutes.)
+    //**
+    //** @param(AStart The start, local time; rounded up to the next 5-minute mark.)
+    //**
+    //** @param(AEnd The end, local time. The device returns at most 12 hours.)
     /// <summary>Reads the power every 5 minutes.</summary>
     /// <param name="AStart">The start, local time; rounded up to the next 5-minute mark.</param>
     /// <param name="AEnd">The end, local time. The device returns at most 12 hours.</param>
     function GetPowerData5Min(AStart, AEnd: TDateTime): TTapoPowerData;
-    (***
-      Reads the power every hour.
-
-      @param(AStart The start, local time; rounded up to the next hour.)
-
-      @param(AEnd The end, local time. The device returns at most 6 days.)
-    *)
+    //** @abstract(Reads the power every hour.)
+    //**
+    //** @param(AStart The start, local time; rounded up to the next hour.)
+    //**
+    //** @param(AEnd The end, local time. The device returns at most 6 days.)
     /// <summary>Reads the power every hour.</summary>
     /// <param name="AStart">The start, local time; rounded up to the next hour.</param>
     /// <param name="AEnd">The end, local time. The device returns at most 6 days.</param>
     function GetPowerDataHourly(AStart, AEnd: TDateTime): TTapoPowerData;
   end;
 
-  (*** The features common to all lights: brightness. *)
+  //** @abstract(The features common to all lights: brightness.)
   /// <summary>The features common to all lights: brightness.</summary>
   TTapoLight = class abstract(TTapoSwitchableDevice)
   public
-    (***
-      Sets the brightness.
-
-      @param(ABrightness 1 to 100.)
-
-      @raises(ETapoError ABrightness is out of range.)
-    *)
+    //** @abstract(Sets the brightness.)
+    //**
+    //** @param(ABrightness 1 to 100.)
+    //**
+    //** @raises(ETapoError ABrightness is out of range.)
     /// <summary>Sets the brightness.</summary>
     /// <param name="ABrightness">1 to 100.</param>
     /// <exception cref="ETapoError">ABrightness is out of range.</exception>
     procedure SetBrightness(ABrightness: Integer);
-    (*** Reads the light's device info. *)
+    //** @abstract(Reads the light's device info.)
     /// <summary>Reads the light's device info.</summary>
     function GetLightInfo: TTapoLightInfo;
   end;
 
-  (*** Tapo L510, L510B, L520 and L610 dimmable white light. *)
+  //** @abstract(Tapo L510, L510B, L520 and L610 dimmable white light.)
   /// <summary>Tapo L510, L510B, L520 and L610 dimmable white light.</summary>
   TTapoL510 = class(TTapoLight);
 
-  (*** The features common to the colour lights and light strips. *)
+  //** @abstract(The features common to the colour lights and light strips.)
   /// <summary>The features common to the colour lights and light strips.</summary>
   TTapoColorLight = class abstract(TTapoLight)
   public
-    (*** Shows a colour preset. *)
+    //** @abstract(Shows a colour preset.)
     /// <summary>Shows a colour preset.</summary>
     procedure SetColor(AColor: TTapoColor);
-    (***
-      Shows a colour by hue and saturation.
-
-      @param(AHue 0 to 360.)
-
-      @param(ASaturation 1 to 100.)
-
-      @raises(ETapoError A value is out of range.)
-    *)
+    //** @abstract(Shows a colour by hue and saturation.)
+    //**
+    //** @param(AHue 0 to 360.)
+    //**
+    //** @param(ASaturation 1 to 100.)
+    //**
+    //** @raises(ETapoError A value is out of range.)
     /// <summary>Shows a colour by hue and saturation.</summary>
     /// <param name="AHue">0 to 360.</param>
     /// <param name="ASaturation">1 to 100.</param>
     /// <exception cref="ETapoError">A value is out of range.</exception>
     procedure SetHueSaturation(AHue, ASaturation: Integer);
-    (***
-      Shows a white by colour temperature.
-
-      @param(AKelvin 2500 to 6500.)
-
-      @raises(ETapoError AKelvin is out of range.)
-    *)
+    //** @abstract(Shows a white by colour temperature.)
+    //**
+    //** @param(AKelvin 2500 to 6500.)
+    //**
+    //** @raises(ETapoError AKelvin is out of range.)
     /// <summary>Shows a white by colour temperature.</summary>
     /// <param name="AKelvin">2500 to 6500.</param>
     /// <exception cref="ETapoError">AKelvin is out of range.</exception>
     procedure SetColorTemperature(AKelvin: Integer);
-    (***
-      Sends several settings in one request.
-
-      @seealso(TTapoLightState)
-    *)
+    //** @abstract(Sends several settings in one request.)
+    //**
+    //** @seealso(TTapoLightState)
     /// <summary>Sends several settings in one request.</summary>
     /// <seealso cref="TTapoLightState"/>
     procedure Apply(const AState: TTapoLightState);
-    (*** Reads the light's device info, including its colour. *)
+    //** @abstract(Reads the light's device info, including its colour.)
     /// <summary>Reads the light's device info, including its colour.</summary>
     function GetColorLightInfo: TTapoColorLightInfo;
   end;
 
-  (*** Tapo L530, L530B, L535 and L630 multicolour light. *)
+  //** @abstract(Tapo L530, L530B, L535 and L630 multicolour light.)
   /// <summary>Tapo L530, L530B, L535 and L630 multicolour light.</summary>
   TTapoL530 = class(TTapoColorLight);
 
-  (*** Tapo L900 RGB light strip. *)
+  //** @abstract(Tapo L900 RGB light strip.)
   /// <summary>Tapo L900 RGB light strip.</summary>
   TTapoL900 = class(TTapoColorLight);
 
-  (*** Tapo L920 and L930 RGBIC light strip, whose segments can show different colours. *)
+  //** @abstract(Tapo L920 and L930 RGBIC light strip, whose segments can show different colours.)
   /// <summary>Tapo L920 and L930 RGBIC light strip, whose segments can show different colours.</summary>
   TTapoL920 = class(TTapoL900)
   public
-    (*** Runs a lighting-effect preset. *)
+    //** @abstract(Runs a lighting-effect preset.)
     /// <summary>Runs a lighting-effect preset.</summary>
     procedure SetLightingEffect(APreset: TTapoLightingEffectPreset); overload;
-    (***
-      Runs a lighting effect.
-
-      @seealso(TTapoLightingEffect)
-    *)
+    //** @abstract(Runs a lighting effect.)
+    //**
+    //** @seealso(TTapoLightingEffect)
     /// <summary>Runs a lighting effect.</summary>
     /// <seealso cref="TTapoLightingEffect"/>
     procedure SetLightingEffect(const AEffect: TTapoLightingEffect); overload;
-    (*** Applies a segment-effect preset. *)
+    //** @abstract(Applies a segment-effect preset.)
     /// <summary>Applies a segment-effect preset.</summary>
     procedure SetSegmentEffect(APreset: TTapoSegmentEffectPreset); overload;
-    (***
-      Applies a segment effect.
-
-      @raises(ETapoError A custom effect lacks segments, states or a type.)
-
-      @seealso(TTapoSegmentEffect)
-    *)
+    //** @abstract(Applies a segment effect.)
+    //**
+    //** @raises(ETapoError A custom effect lacks segments, states or a type.)
+    //**
+    //** @seealso(TTapoSegmentEffect)
     /// <summary>Applies a segment effect.</summary>
     /// <exception cref="ETapoError">A custom effect lacks segments, states or a type.</exception>
     /// <seealso cref="TTapoSegmentEffect"/>
@@ -1352,183 +1278,167 @@ type
 
   // Model names that share a class
 
-  (*** Tapo P105: the same as @link(TTapoP100). *)
+  //** @abstract(Tapo P105: the same as @link(TTapoP100).)
   /// <summary>Tapo P105: the same as <see cref="TTapoP100"/>.</summary>
   TTapoP105 = TTapoP100;
-  (*** Tapo P125: the same as @link(TTapoP100). *)
+  //** @abstract(Tapo P125: the same as @link(TTapoP100).)
   /// <summary>Tapo P125: the same as <see cref="TTapoP100"/>.</summary>
   TTapoP125 = TTapoP100;
-  (*** Tapo P125M: the same as @link(TTapoP100). *)
+  //** @abstract(Tapo P125M: the same as @link(TTapoP100).)
   /// <summary>Tapo P125M: the same as <see cref="TTapoP100"/>.</summary>
   TTapoP125M = TTapoP100;
-  (*** Tapo P110M: the same as @link(TTapoP110). *)
+  //** @abstract(Tapo P110M: the same as @link(TTapoP110).)
   /// <summary>Tapo P110M: the same as <see cref="TTapoP110"/>.</summary>
   TTapoP110M = TTapoP110;
-  (*** Tapo P115: the same as @link(TTapoP110). *)
+  //** @abstract(Tapo P115: the same as @link(TTapoP110).)
   /// <summary>Tapo P115: the same as <see cref="TTapoP110"/>.</summary>
   TTapoP115 = TTapoP110;
-  (*** Tapo L510B: the same as @link(TTapoL510). *)
+  //** @abstract(Tapo L510B: the same as @link(TTapoL510).)
   /// <summary>Tapo L510B: the same as <see cref="TTapoL510"/>.</summary>
   TTapoL510B = TTapoL510;
-  (*** Tapo L520: the same as @link(TTapoL510). *)
+  //** @abstract(Tapo L520: the same as @link(TTapoL510).)
   /// <summary>Tapo L520: the same as <see cref="TTapoL510"/>.</summary>
   TTapoL520 = TTapoL510;
-  (*** Tapo L610: the same as @link(TTapoL510). *)
+  //** @abstract(Tapo L610: the same as @link(TTapoL510).)
   /// <summary>Tapo L610: the same as <see cref="TTapoL510"/>.</summary>
   TTapoL610 = TTapoL510;
-  (*** Tapo L530B: the same as @link(TTapoL530). *)
+  //** @abstract(Tapo L530B: the same as @link(TTapoL530).)
   /// <summary>Tapo L530B: the same as <see cref="TTapoL530"/>.</summary>
   TTapoL530B = TTapoL530;
-  (*** Tapo L535: the same as @link(TTapoL530). *)
+  //** @abstract(Tapo L535: the same as @link(TTapoL530).)
   /// <summary>Tapo L535: the same as <see cref="TTapoL530"/>.</summary>
   TTapoL535 = TTapoL530;
-  (*** Tapo L630: the same as @link(TTapoL530). *)
+  //** @abstract(Tapo L630: the same as @link(TTapoL530).)
   /// <summary>Tapo L630: the same as <see cref="TTapoL530"/>.</summary>
   TTapoL630 = TTapoL530;
-  (*** Tapo L930: the same as @link(TTapoL920). *)
+  //** @abstract(Tapo L930: the same as @link(TTapoL920).)
   /// <summary>Tapo L930: the same as <see cref="TTapoL920"/>.</summary>
   TTapoL930 = TTapoL920;
 
   { --- power strips -------------------------------------------------------- }
 
-  (***
-    One socket of a power strip.
-
-    Obtain sockets from the strip (@link(TTapoPowerStrip.Outlet)), which owns them.
-  *)
+  //** @abstract(One socket of a power strip.)
+  //**
+  //** Obtain sockets from the strip (@link(TTapoPowerStrip.Outlet)), which owns them.
   /// <summary>One socket of a power strip.</summary>
   /// <remarks>Obtain sockets from the strip (<see cref="TTapoPowerStrip.Outlet"/>), which owns them.</remarks>
   TTapoPowerStripOutlet = class(TTapoChildDevice)
   public
-    (*** Switches the socket on. *)
+    //** @abstract(Switches the socket on.)
     /// <summary>Switches the socket on.</summary>
     procedure TurnOn;
-    (*** Switches the socket off. *)
+    //** @abstract(Switches the socket off.)
     /// <summary>Switches the socket off.</summary>
     procedure TurnOff;
-    (***
-      Switches the socket on or off.
-
-      @param(AOn True for on.)
-    *)
+    //** @abstract(Switches the socket on or off.)
+    //**
+    //** @param(AOn True for on.)
     /// <summary>Switches the socket on or off.</summary>
     /// <param name="AOn">True for on.</param>
     procedure SetOn(AOn: Boolean);
-    (***
-      Reads the socket's power state.
-
-      @returns(True if the socket is on.)
-    *)
+    //** @abstract(Reads the socket's power state.)
+    //**
+    //** @returns(True if the socket is on.)
     /// <summary>Reads the socket's power state.</summary>
     /// <returns>True if the socket is on.</returns>
     function IsOn: Boolean;
-    (*** Reads the socket's device info. *)
+    //** @abstract(Reads the socket's device info.)
     /// <summary>Reads the socket's device info.</summary>
     function GetOutletInfo: TTapoOutletInfo;
   end;
 
-  (*** A socket of an energy-monitoring power strip (P304M, P316M). *)
+  //** @abstract(A socket of an energy-monitoring power strip @(P304M, P316M@).)
   /// <summary>A socket of an energy-monitoring power strip (P304M, P316M).</summary>
   TTapoEnergyOutlet = class(TTapoPowerStripOutlet)
   public
-    (*** Reads how long the socket has been on, and the energy it used. *)
+    //** @abstract(Reads how long the socket has been on, and the energy it used.)
     /// <summary>Reads how long the socket has been on, and the energy it used.</summary>
     function GetDeviceUsage: TTapoDeviceUsage;
-    (*** Reads the power being drawn now, in watts. *)
+    //** @abstract(Reads the power being drawn now, in watts.)
     /// <summary>Reads the power being drawn now, in watts.</summary>
     function GetCurrentPower: Double;
-    (*** Reads today's and this month's energy use and the current power. *)
+    //** @abstract(Reads today's and this month's energy use and the current power.)
     /// <summary>Reads today's and this month's energy use and the current power.</summary>
     function GetEnergyUsage: TTapoEnergyUsage;
-    (*** Reads energy use per hour; see @link(TTapoP110.GetEnergyDataHourly). *)
+    //** @abstract(Reads energy use per hour; see @link(TTapoP110.GetEnergyDataHourly).)
     /// <summary>Reads energy use per hour; see <see cref="TTapoP110.GetEnergyDataHourly"/>.</summary>
     function GetEnergyDataHourly(AStartDate, AEndDate: TDate): TTapoEnergyData;
-    (*** Reads energy use per day for a quarter; see @link(TTapoP110.GetEnergyDataDaily). *)
+    //** @abstract(Reads energy use per day for a quarter; see @link(TTapoP110.GetEnergyDataDaily).)
     /// <summary>Reads energy use per day for a quarter; see <see cref="TTapoP110.GetEnergyDataDaily"/>.</summary>
     function GetEnergyDataDaily(AQuarterStart: TDate): TTapoEnergyData;
-    (*** Reads energy use per month for a year; see @link(TTapoP110.GetEnergyDataMonthly). *)
+    //** @abstract(Reads energy use per month for a year; see @link(TTapoP110.GetEnergyDataMonthly).)
     /// <summary>Reads energy use per month for a year; see <see cref="TTapoP110.GetEnergyDataMonthly"/>.</summary>
     function GetEnergyDataMonthly(AYearStart: TDate): TTapoEnergyData;
-    (*** Reads the power every 5 minutes; see @link(TTapoP110.GetPowerData5Min). *)
+    //** @abstract(Reads the power every 5 minutes; see @link(TTapoP110.GetPowerData5Min).)
     /// <summary>Reads the power every 5 minutes; see <see cref="TTapoP110.GetPowerData5Min"/>.</summary>
     function GetPowerData5Min(AStart, AEnd: TDateTime): TTapoPowerData;
-    (*** Reads the power every hour; see @link(TTapoP110.GetPowerDataHourly). *)
+    //** @abstract(Reads the power every hour; see @link(TTapoP110.GetPowerDataHourly).)
     /// <summary>Reads the power every hour; see <see cref="TTapoP110.GetPowerDataHourly"/>.</summary>
     function GetPowerDataHourly(AStart, AEnd: TDateTime): TTapoPowerData;
   end;
 
-  (***
-    The features common to the power strips: their sockets.
-
-    The strip itself has no power state; switch the sockets.
-  *)
+  //** @abstract(The features common to the power strips: their sockets.)
+  //**
+  //** The strip itself has no power state; switch the sockets.
   /// <summary>The features common to the power strips: their sockets.</summary>
   /// <remarks>The strip itself has no power state; switch the sockets.</remarks>
   TTapoPowerStrip = class abstract(TTapoDevice)
   protected
-    (*** The class of the strip's socket objects. *)
+    //** @abstract(The class of the strip's socket objects.)
     /// <summary>The class of the strip's socket objects.</summary>
     class function OutletClass: TTapoChildDeviceClass; virtual;
   public
-    (*** Reads every socket and its state, in position order. *)
+    //** @abstract(Reads every socket and its state, in position order.)
     /// <summary>Reads every socket and its state, in position order.</summary>
     function GetChildDeviceList: TArray<TTapoOutletInfo>;
-    (*** Reads the first page of the socket list as formatted JSON. *)
+    //** @abstract(Reads the first page of the socket list as formatted JSON.)
     /// <summary>Reads the first page of the socket list as formatted JSON.</summary>
     function GetChildDeviceListJSON: string;
-    (*** Reads the sockets' components as formatted JSON. *)
+    //** @abstract(Reads the sockets' components as formatted JSON.)
     /// <summary>Reads the sockets' components as formatted JSON.</summary>
     function GetChildDeviceComponentListJSON: string;
 
-    (***
-      A socket by its position.
-
-      @param(APosition 1 for the first socket.)
-
-      @returns(The socket, owned by the strip.)
-
-      @raises(ETapoError There is no socket at APosition.)
-    *)
+    //** @abstract(A socket by its position.)
+    //**
+    //** @param(APosition 1 for the first socket.)
+    //**
+    //** @returns(The socket, owned by the strip.)
+    //**
+    //** @raises(ETapoError There is no socket at APosition.)
     /// <summary>A socket by its position.</summary>
     /// <param name="APosition">1 for the first socket.</param>
     /// <returns>The socket, owned by the strip.</returns>
     /// <exception cref="ETapoError">There is no socket at APosition.</exception>
     function Outlet(APosition: Integer): TTapoPowerStripOutlet;
-    (***
-      A socket by the name given in the Tapo app (case-insensitive).
-
-      @raises(ETapoError No socket has that name.)
-    *)
+    //** @abstract(A socket by the name given in the Tapo app @(case-insensitive@).)
+    //**
+    //** @raises(ETapoError No socket has that name.)
     /// <summary>A socket by the name given in the Tapo app (case-insensitive).</summary>
     /// <exception cref="ETapoError">No socket has that name.</exception>
     function OutletByNickname(const ANickname: string): TTapoPowerStripOutlet;
-    (***
-      A socket by its device id.
-
-      @raises(ETapoError No socket has that id.)
-    *)
+    //** @abstract(A socket by its device id.)
+    //**
+    //** @raises(ETapoError No socket has that id.)
     /// <summary>A socket by its device id.</summary>
     /// <exception cref="ETapoError">No socket has that id.</exception>
     function OutletById(const ADeviceId: string): TTapoPowerStripOutlet;
-    (*** Every socket, in position order, owned by the strip. *)
+    //** @abstract(Every socket, in position order, owned by the strip.)
     /// <summary>Every socket, in position order, owned by the strip.</summary>
     function Outlets: TArray<TTapoPowerStripOutlet>;
   end;
 
-  (*** Tapo P300 and P306 power strip. *)
+  //** @abstract(Tapo P300 and P306 power strip.)
   /// <summary>Tapo P300 and P306 power strip.</summary>
   TTapoP300 = class(TTapoPowerStrip);
 
-  (***
-    Tapo P304M and P316M energy-monitoring power strip.
-
-    Example:
-    @longCode(#
-    Strip := Client.Add(P304M, '192.168.1.52');
-    for Socket in Strip.Outlets do
-      Memo1.Lines.Add(Format('%s: %.1f W', [Socket.GetOutletInfo.Nickname, Socket.GetCurrentPower]));
-    #)
-  *)
+  //** @abstract(Tapo P304M and P316M energy-monitoring power strip.)
+  //**
+  //** Example:
+  //** @longCode(#
+  //** Strip := Client.Add(P304M, '192.168.1.52');
+  //** for Socket in Strip.Outlets do
+  //**   Memo1.Lines.Add(Format('%s: %.1f W', [Socket.GetOutletInfo.Nickname, Socket.GetCurrentPower]));
+  //** #)
   /// <summary>Tapo P304M and P316M energy-monitoring power strip.</summary>
   /// <example>
   ///   <code>
@@ -1539,63 +1449,61 @@ type
   /// </example>
   TTapoP304M = class(TTapoPowerStrip)
   protected
-    (*** Returns @link(TTapoEnergyOutlet). *)
+    //** @abstract(Returns @link(TTapoEnergyOutlet).)
     /// <summary>Returns <see cref="TTapoEnergyOutlet"/>.</summary>
     class function OutletClass: TTapoChildDeviceClass; override;
   public
-    (*** A socket by its position (1 for the first), with energy monitoring. *)
+    //** @abstract(A socket by its position @(1 for the first@), with energy monitoring.)
     /// <summary>A socket by its position (1 for the first), with energy monitoring.</summary>
     function Outlet(APosition: Integer): TTapoEnergyOutlet; reintroduce;
-    (*** A socket by the name given in the Tapo app, with energy monitoring. *)
+    //** @abstract(A socket by the name given in the Tapo app, with energy monitoring.)
     /// <summary>A socket by the name given in the Tapo app, with energy monitoring.</summary>
     function OutletByNickname(const ANickname: string): TTapoEnergyOutlet; reintroduce;
-    (*** A socket by its device id, with energy monitoring. *)
+    //** @abstract(A socket by its device id, with energy monitoring.)
     /// <summary>A socket by its device id, with energy monitoring.</summary>
     function OutletById(const ADeviceId: string): TTapoEnergyOutlet; reintroduce;
-    (*** Every socket, in position order, with energy monitoring. *)
+    //** @abstract(Every socket, in position order, with energy monitoring.)
     /// <summary>Every socket, in position order, with energy monitoring.</summary>
     function Outlets: TArray<TTapoEnergyOutlet>; reintroduce;
   end;
 
-  (*** Tapo P306: the same as @link(TTapoP300). *)
+  //** @abstract(Tapo P306: the same as @link(TTapoP300).)
   /// <summary>Tapo P306: the same as <see cref="TTapoP300"/>.</summary>
   TTapoP306 = TTapoP300;
-  (*** Tapo P316M: the same as @link(TTapoP304M). *)
+  //** @abstract(Tapo P316M: the same as @link(TTapoP304M).)
   /// <summary>Tapo P316M: the same as <see cref="TTapoP304M"/>.</summary>
   TTapoP316M = TTapoP304M;
 
 const
-  (*** Monday to Friday. *)
+  //** @abstract(Monday to Friday.)
   /// <summary>Monday to Friday.</summary>
   TapoWeekdays: TTapoWeekDays = [wdMon, wdTue, wdWed, wdThu, wdFri];
-  (*** Saturday and Sunday. *)
+  //** @abstract(Saturday and Sunday.)
   /// <summary>Saturday and Sunday.</summary>
   TapoWeekend: TTapoWeekDays = [wdSat, wdSun];
-  (*** Every day of the week. *)
+  //** @abstract(Every day of the week.)
   /// <summary>Every day of the week.</summary>
   TapoEveryDay: TTapoWeekDays = [wdSun, wdMon, wdTue, wdWed, wdThu, wdFri, wdSat];
 
-(***
-  Gives the hue, saturation and colour temperature of a colour preset.
-
-  @param(AColor The preset.)
-
-  @param(AHue Receives the hue, 0 to 360.)
-
-  @param(ASaturation Receives the saturation.)
-
-  @param(AColorTemp Receives the colour temperature; 0 for a colour.)
-*)
+//** @abstract(Gives the hue, saturation and colour temperature of a colour preset.)
+//**
+//** @param(AColor The preset.)
+//**
+//** @param(AHue Receives the hue, 0 to 360.)
+//**
+//** @param(ASaturation Receives the saturation.)
+//**
+//** @param(AColorTemp Receives the colour temperature; 0 for a colour.)
 /// <summary>Gives the hue, saturation and colour temperature of a colour preset.</summary>
 /// <param name="AColor">The preset.</param>
 /// <param name="AHue">Receives the hue, 0 to 360.</param>
 /// <param name="ASaturation">Receives the saturation.</param>
 /// <param name="AColorTemp">Receives the colour temperature; 0 for a colour.</param>
 procedure TapoColorValues(AColor: TTapoColor; out AHue, ASaturation, AColorTemp: Integer);
-(*** Makes a @link(TTapoHSB). *)
+//** @abstract(Makes a @link(TTapoHSB).)
 /// <summary>Makes a <see cref="TTapoHSB"/>.</summary>
 function HSB(AHue, ASaturation, ABrightness: Integer): TTapoHSB;
-(*** Makes a @link(TTapoHSBK). *)
+//** @abstract(Makes a @link(TTapoHSBK).)
 /// <summary>Makes a <see cref="TTapoHSBK"/>.</summary>
 function HSBK(AHue, ASaturation, ABrightness, AKelvin: Integer): TTapoHSBK;
 

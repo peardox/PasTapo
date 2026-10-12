@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Devices: Class TTapoP110</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoP110"></span><h1 class="cio">Class TTapoP110</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Devices.html">Tapo.Devices</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoP110 = class(<a class="normal" href="Tapo.Devices.TTapoPlug.html">TTapoPlug</a>)</code></p>
+<h2 class="description">Description</h2>
+<p>
+Tapo P110, P110M and P115 energy-monitoring smart plug.</p>
+<p>
+
+
+<p>Example: </p>
+
+<pre class="longcode">
+Plug := Client.Add(P110, <span class="pascal_string">'192.168.1.50'</span>);
+Usage := Plug.GetEnergyUsage;
+Label1.Text := Format(<span class="pascal_string">'%.1f W, today %.3f kWh'</span>, [Usage.CurrentPowerW, Usage.TodayEnergyKWh]);</pre>
+
+<p></p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoEndpoint.html">TTapoEndpoint</a></li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoDevice.html">TTapoDevice</a></li>
+<li class="ancestor"><a class="normal" href="Tapo.Devices.TTapoSwitchableDevice.html">TTapoSwitchableDevice</a></li>
+<li class="ancestor"><a class="normal" href="Tapo.Devices.TTapoPlug.html">TTapoPlug</a></li>
+<li class="thisitem">TTapoP110</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoP110.html#GetCurrentPower">GetCurrentPower</a></strong>: Double;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoP110.html#GetEnergyUsage">GetEnergyUsage</a></strong>: <a href="Tapo.Devices.TTapoEnergyUsage.html">TTapoEnergyUsage</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoP110.html#GetEnergyDataHourly-TDate-TDate-">GetEnergyDataHourly</a></strong>(AStartDate, AEndDate: TDate): <a href="Tapo.Devices.TTapoEnergyData.html">TTapoEnergyData</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoP110.html#GetEnergyDataDaily-TDate-">GetEnergyDataDaily</a></strong>(AQuarterStart: TDate): <a href="Tapo.Devices.TTapoEnergyData.html">TTapoEnergyData</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoP110.html#GetEnergyDataMonthly-TDate-">GetEnergyDataMonthly</a></strong>(AYearStart: TDate): <a href="Tapo.Devices.TTapoEnergyData.html">TTapoEnergyData</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoP110.html#GetPowerData5Min-TDateTime-TDateTime-">GetPowerData5Min</a></strong>(AStart, AEnd: TDateTime): <a href="Tapo.Devices.TTapoPowerData.html">TTapoPowerData</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoP110.html#GetPowerDataHourly-TDateTime-TDateTime-">GetPowerDataHourly</a></strong>(AStart, AEnd: TDateTime): <a href="Tapo.Devices.TTapoPowerData.html">TTapoPowerData</a>;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetCurrentPower"></span><code>function <strong>GetCurrentPower</strong>: Double;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the power being drawn now.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The power in watts.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetEnergyUsage"></span><code>function <strong>GetEnergyUsage</strong>: <a href="Tapo.Devices.TTapoEnergyUsage.html">TTapoEnergyUsage</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads today's and this month's energy use and the current power.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetEnergyDataHourly-TDate-TDate-"></span><code>function <strong>GetEnergyDataHourly</strong>(AStartDate, AEndDate: TDate): <a href="Tapo.Devices.TTapoEnergyData.html">TTapoEnergyData</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads energy use per hour.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AStartDate</dt>
+<dd>The first day.</dd>
+<dt>AEndDate</dt>
+<dd>The last day, at most 8 days after AStartDate.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>The dates are out of order or too far apart.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetEnergyDataDaily-TDate-"></span><code>function <strong>GetEnergyDataDaily</strong>(AQuarterStart: TDate): <a href="Tapo.Devices.TTapoEnergyData.html">TTapoEnergyData</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads energy use per day for a quarter.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AQuarterStart</dt>
+<dd>The first day of a quarter: 1 January, 1 April, 1 July or 1 October.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AQuarterStart is not the first day of a quarter.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetEnergyDataMonthly-TDate-"></span><code>function <strong>GetEnergyDataMonthly</strong>(AYearStart: TDate): <a href="Tapo.Devices.TTapoEnergyData.html">TTapoEnergyData</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads energy use per month for a year.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AYearStart</dt>
+<dd>1 January of the year.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AYearStart is not 1 January.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetPowerData5Min-TDateTime-TDateTime-"></span><code>function <strong>GetPowerData5Min</strong>(AStart, AEnd: TDateTime): <a href="Tapo.Devices.TTapoPowerData.html">TTapoPowerData</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the power every 5 minutes.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AStart</dt>
+<dd>The start, local time; rounded up to the next 5-minute mark.</dd>
+<dt>AEnd</dt>
+<dd>The end, local time. The device returns at most 12 hours.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetPowerDataHourly-TDateTime-TDateTime-"></span><code>function <strong>GetPowerDataHourly</strong>(AStart, AEnd: TDateTime): <a href="Tapo.Devices.TTapoPowerData.html">TTapoPowerData</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the power every hour.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AStart</dt>
+<dd>The start, local time; rounded up to the next hour.</dd>
+<dt>AEnd</dt>
+<dd>The end, local time. The device returns at most 6 days.</dd>
+</dl>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

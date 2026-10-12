@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.LightEffects</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<h1 class="unit">Unit Tapo.LightEffects</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Lighting-effect (L920/L930) and segment-effect presets of the Tapo app, as the JSON that set_lighting_effect / apply_segment_effect_rule take.</p>
+<p>
+
+
+<p>GENERATED from tapo/src/requests/set_device_info/lighting_effect.rs and segment_effect.rs of <a href="https://github.com/mihai-dinculescu/tapo">https://github.com/mihai-dinculescu/tapo</a> - do not edit.</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.LightEffects.html#LightingEffectPresetJSON-TTapoLightingEffectPreset-">LightingEffectPresetJSON</a></strong>(APreset: <a href="Tapo.LightEffects.html#TTapoLightingEffectPreset">TTapoLightingEffectPreset</a>): string;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.LightEffects.html#SegmentEffectPresetJSON-TTapoSegmentEffectPreset-">SegmentEffectPresetJSON</a></strong>(APreset: <a href="Tapo.LightEffects.html#TTapoSegmentEffectPreset">TTapoSegmentEffectPreset</a>): string;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.LightEffects.html#TTapoLightingEffectPreset">TTapoLightingEffectPreset</a></strong> = (...);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.LightEffects.html#TTapoSegmentEffectPreset">TTapoSegmentEffectPreset</a></strong> = (...);</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="LightingEffectPresetJSON-TTapoLightingEffectPreset-"></span><code>function <strong>LightingEffectPresetJSON</strong>(APreset: <a href="Tapo.LightEffects.html#TTapoLightingEffectPreset">TTapoLightingEffectPreset</a>): string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The JSON the strip takes for a lighting-effect preset.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>APreset</dt>
+<dd>The preset.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">A JSON object as text, for set_lighting_effect.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="SegmentEffectPresetJSON-TTapoSegmentEffectPreset-"></span><code>function <strong>SegmentEffectPresetJSON</strong>(APreset: <a href="Tapo.LightEffects.html#TTapoSegmentEffectPreset">TTapoSegmentEffectPreset</a>): string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The JSON the strip takes for a segment-effect preset.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>APreset</dt>
+<dd>The preset.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">A JSON object as text, for apply_segment_effect_rule.</p></td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoLightingEffectPreset"></span><code><strong>TTapoLightingEffectPreset</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The lighting-effect presets of the Tapo app, for the L920 and L930 light strips.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Devices.TTapoL920.html#SetLightingEffect-TTapoLightingEffect-">TTapoL920.SetLightingEffect</a></dt>
+  <dd>Runs a lighting effect.</dd>
+</dl>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="lepAurora">lepAurora</span>: The 'Aurora' preset.</li>
+<li>
+<span id="lepBubblingCauldron">lepBubblingCauldron</span>: The 'Bubbling Cauldron' preset.</li>
+<li>
+<span id="lepCandyCane">lepCandyCane</span>: The 'Candy Cane' preset.</li>
+<li>
+<span id="lepChristmas">lepChristmas</span>: The 'Christmas' preset.</li>
+<li>
+<span id="lepFlicker">lepFlicker</span>: The 'Flicker' preset.</li>
+<li>
+<span id="lepGrandmasChristmasLights">lepGrandmasChristmasLights</span>: The 'Grandma's Christmas Lights' preset.</li>
+<li>
+<span id="lepHanukkah">lepHanukkah</span>: The 'Hanukkah' preset.</li>
+<li>
+<span id="lepHauntedMansion">lepHauntedMansion</span>: The 'Haunted Mansion' preset.</li>
+<li>
+<span id="lepIcicle">lepIcicle</span>: The 'Icicle' preset.</li>
+<li>
+<span id="lepLightning">lepLightning</span>: The 'Lightning' preset.</li>
+<li>
+<span id="lepOcean">lepOcean</span>: The 'Ocean' preset.</li>
+<li>
+<span id="lepRainbow">lepRainbow</span>: The 'Rainbow' preset.</li>
+<li>
+<span id="lepRaindrop">lepRaindrop</span>: The 'Raindrop' preset.</li>
+<li>
+<span id="lepSpring">lepSpring</span>: The 'Spring' preset.</li>
+<li>
+<span id="lepSunrise">lepSunrise</span>: The 'Sunrise' preset.</li>
+<li>
+<span id="lepSunset">lepSunset</span>: The 'Sunset' preset.</li>
+<li>
+<span id="lepValentines">lepValentines</span>: The 'Valentines' preset.</li>
+</ul>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoSegmentEffectPreset"></span><code><strong>TTapoSegmentEffectPreset</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The segment-effect presets of the Tapo app, for the L920 and L930 light strips.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Devices.TTapoL920.html#SetSegmentEffect-TTapoSegmentEffect-">TTapoL920.SetSegmentEffect</a></dt>
+  <dd>Applies a segment effect.</dd>
+</dl>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="sepBirthday">sepBirthday</span>: The 'birthday' preset.</li>
+<li>
+<span id="sepBlue">sepBlue</span>: The 'blue' preset.</li>
+<li>
+<span id="sepBonfire">sepBonfire</span>: The 'bonfire' preset.</li>
+<li>
+<span id="sepCandlelight">sepCandlelight</span>: The 'candlelight' preset.</li>
+<li>
+<span id="sepCarnival">sepCarnival</span>: The 'carnival' preset.</li>
+<li>
+<span id="sepCyan">sepCyan</span>: The 'cyan' preset.</li>
+<li>
+<span id="sepDancing">sepDancing</span>: The 'dancing' preset.</li>
+<li>
+<span id="sepDating">sepDating</span>: The 'dating' preset.</li>
+<li>
+<span id="sepDisco">sepDisco</span>: The 'disco' preset.</li>
+<li>
+<span id="sepDreamland">sepDreamland</span>: The 'dreamland' preset.</li>
+<li>
+<span id="sepElectroDance">sepElectroDance</span>: The 'electro_dance' preset.</li>
+<li>
+<span id="sepEnergetic">sepEnergetic</span>: The 'energetic' preset.</li>
+<li>
+<span id="sepExcited">sepExcited</span>: The 'excited' preset.</li>
+<li>
+<span id="sepFall">sepFall</span>: The 'fall' preset.</li>
+<li>
+<span id="sepFamily">sepFamily</span>: The 'family' preset.</li>
+<li>
+<span id="sepFireworks">sepFireworks</span>: The 'fireworks' preset.</li>
+<li>
+<span id="sepFlowerField">sepFlowerField</span>: The 'flower_field' preset.</li>
+<li>
+<span id="sepForest">sepForest</span>: The 'forest' preset.</li>
+<li>
+<span id="sepGame">sepGame</span>: The 'game' preset.</li>
+<li>
+<span id="sepGreen">sepGreen</span>: The 'green' preset.</li>
+<li>
+<span id="sepHalloween">sepHalloween</span>: The 'halloween' preset.</li>
+<li>
+<span id="sepHappy">sepHappy</span>: The 'happy' preset.</li>
+<li>
+<span id="sepJazz">sepJazz</span>: The 'jazz' preset.</li>
+<li>
+<span id="sepLake">sepLake</span>: The 'lake' preset.</li>
+<li>
+<span id="sepLightGreen">sepLightGreen</span>: The 'light_green' preset.</li>
+<li>
+<span id="sepLyric">sepLyric</span>: The 'lyric' preset.</li>
+<li>
+<span id="sepMoonlight">sepMoonlight</span>: The 'moonlight' preset.</li>
+<li>
+<span id="sepMorning">sepMorning</span>: The 'morning' preset.</li>
+<li>
+<span id="sepMovie">sepMovie</span>: The 'movie' preset.</li>
+<li>
+<span id="sepNewYear">sepNewYear</span>: The 'new_year' preset.</li>
+<li>
+<span id="sepNight">sepNight</span>: The 'night' preset.</li>
+<li>
+<span id="sepOrange">sepOrange</span>: The 'orange' preset.</li>
+<li>
+<span id="sepPink">sepPink</span>: The 'pink' preset.</li>
+<li>
+<span id="sepPurple">sepPurple</span>: The 'purple' preset.</li>
+<li>
+<span id="sepQuiet">sepQuiet</span>: The 'quiet' preset.</li>
+<li>
+<span id="sepRed">sepRed</span>: The 'red' preset.</li>
+<li>
+<span id="sepRelaxed">sepRelaxed</span>: The 'relaxed' preset.</li>
+<li>
+<span id="sepRock">sepRock</span>: The 'rock' preset.</li>
+<li>
+<span id="sepSiren">sepSiren</span>: The 'siren' preset.</li>
+<li>
+<span id="sepSleep">sepSleep</span>: The 'sleep' preset.</li>
+<li>
+<span id="sepSnow">sepSnow</span>: The 'snow' preset.</li>
+<li>
+<span id="sepStar">sepStar</span>: The 'star' preset.</li>
+<li>
+<span id="sepStudy">sepStudy</span>: The 'study' preset.</li>
+<li>
+<span id="sepSummer">sepSummer</span>: The 'summer' preset.</li>
+<li>
+<span id="sepSunny">sepSunny</span>: The 'sunny' preset.</li>
+<li>
+<span id="sepSweet">sepSweet</span>: The 'sweet' preset.</li>
+<li>
+<span id="sepTense">sepTense</span>: The 'tense' preset.</li>
+<li>
+<span id="sepThinking">sepThinking</span>: The 'thinking' preset.</li>
+<li>
+<span id="sepUniverse">sepUniverse</span>: The 'universe' preset.</li>
+<li>
+<span id="sepVolcano">sepVolcano</span>: The 'volcano' preset.</li>
+<li>
+<span id="sepWarm">sepWarm</span>: The 'warm' preset.</li>
+<li>
+<span id="sepWhite">sepWhite</span>: The 'white' preset.</li>
+<li>
+<span id="sepWinter">sepWinter</span>: The 'winter' preset.</li>
+<li>
+<span id="sepWork">sepWork</span>: The 'work' preset.</li>
+<li>
+<span id="sepYellow">sepYellow</span>: The 'yellow' preset.</li>
+</ul>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Hubs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<h1 class="unit">Unit Tapo.Hubs</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div><div class="one_section"><a class="section" href="#PasDoc-Constants">Constants</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Tapo hubs and the devices paired to them.</p>
+<p>
+
+
+<p></p>
+
+<pre class="preformatted">
+TTapoDevice (abstract, Tapo.Client)
+`-- TTapoHub (abstract)             child list and child lookup
+    |-- TTapoH100                   H100 (+ alarm)
+    `-- TTapoCameraHub              H200, H500 (+ paired cameras, recordings)</pre>
+
+<p>
+
+<p></p>
+
+<pre class="preformatted">
+TTapoChildDevice (abstract, Tapo.Client)
+`-- TTapoHubChild (abstract)        common child info
+    |-- TTapoKE100                  radiator valve (TRV)
+    |-- TTapoS210                   light switch (on/off, usage)
+    |-- TTapoT31x                   T310, T315 temperature/humidity sensor
+    `-- TTapoTriggerSensor (abstract)   trigger logs
+        |-- TTapoS200               S200B, S200D button / dimmer
+        |-- TTapoT100               motion sensor
+        |-- TTapoT110               contact sensor
+        `-- TTapoT300               water leak sensor</pre>
+
+<p>
+
+<p>Children are obtained from the hub (Hub.T31x('Kitchen')) and owned by it. Capabilities follow the feature matrix of <a href="https://github.com/mihai-dinculescu/tapo">https://github.com/mihai-dinculescu/tapo</a>. Recording download from camera hubs is not included (it uses a separate encrypted media stream, not the control API).</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoHubChildInfo.html"><code>TTapoHubChildInfo</code></a></td>
+<td class="itemdesc">The fields every device paired to a hub reports.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoKE100Info.html"><code>TTapoKE100Info</code></a></td>
+<td class="itemdesc">Device info of a KE100 radiator valve.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoS210Info.html"><code>TTapoS210Info</code></a></td>
+<td class="itemdesc">Device info of an S210 light switch.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoT100Info.html"><code>TTapoT100Info</code></a></td>
+<td class="itemdesc">Device info of a T100 motion sensor.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoT110Info.html"><code>TTapoT110Info</code></a></td>
+<td class="itemdesc">Device info of a T110 contact sensor.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoT300Info.html"><code>TTapoT300Info</code></a></td>
+<td class="itemdesc">Device info of a T300 water leak sensor.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoT31xInfo.html"><code>TTapoT31xInfo</code></a></td>
+<td class="itemdesc">Device info of a T310 or T315 temperature and humidity sensor.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoTriggerLog.html"><code>TTapoTriggerLog</code></a></td>
+<td class="itemdesc">One entry of a sensor's trigger log.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoTriggerLogs.html"><code>TTapoTriggerLogs</code></a></td>
+<td class="itemdesc">A page of a sensor's trigger log.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoTempHumidityRecord.html"><code>TTapoTempHumidityRecord</code></a></td>
+<td class="itemdesc">One 15-minute reading of a T310 or T315.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoTempHumidityRecords.html"><code>TTapoTempHumidityRecords</code></a></td>
+<td class="itemdesc">The last 24 hours of a T310 or T315, one reading every 15 minutes.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoHubChild.html"><code>TTapoHubChild</code></a></td>
+<td class="itemdesc">A sensor or switch paired to a hub.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoTriggerSensor.html"><code>TTapoTriggerSensor</code></a></td>
+<td class="itemdesc">A sensor that keeps a log of what triggered it.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoKE100.html"><code>TTapoKE100</code></a></td>
+<td class="itemdesc">Tapo KE100 smart radiator valve.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoS200.html"><code>TTapoS200</code></a></td>
+<td class="itemdesc">Tapo S200B smart button and S200D remote dimmer.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoS210.html"><code>TTapoS210</code></a></td>
+<td class="itemdesc">Tapo S210 smart light switch.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoT100.html"><code>TTapoT100</code></a></td>
+<td class="itemdesc">Tapo T100 motion sensor.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoT110.html"><code>TTapoT110</code></a></td>
+<td class="itemdesc">Tapo T110 contact sensor.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoT300.html"><code>TTapoT300</code></a></td>
+<td class="itemdesc">Tapo T300 water leak sensor.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoT31x.html"><code>TTapoT31x</code></a></td>
+<td class="itemdesc">Tapo T310 and T315 temperature and humidity sensor.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoHub.html"><code>TTapoHub</code></a></td>
+<td class="itemdesc">The features common to the hubs: the sensors and switches paired to them.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoH100.html"><code>TTapoH100</code></a></td>
+<td class="itemdesc">Tapo H100 hub.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoHubCameraInfo.html"><code>TTapoHubCameraInfo</code></a></td>
+<td class="itemdesc">A camera paired to an H200 or H500.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoHubTimezone.html"><code>TTapoHubTimezone</code></a></td>
+<td class="itemdesc">A camera hub's time zone.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Hubs.TTapoRecording.html"><code>TTapoRecording</code></a></td>
+<td class="itemdesc">A recording stored on a camera hub.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Hubs.TTapoCameraHub.html"><code>TTapoCameraHub</code></a></td>
+<td class="itemdesc">Tapo H200 and H500 camera hub.</td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Hubs.html#TTapoS200B">TTapoS200B</a></strong> = <a href="Tapo.Hubs.TTapoS200.html">TTapoS200</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Hubs.html#TTapoS200D">TTapoS200D</a></strong> = <a href="Tapo.Hubs.TTapoS200.html">TTapoS200</a>;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Hubs.html#TTapoT310">TTapoT310</a></strong> = <a href="Tapo.Hubs.TTapoT31x.html">TTapoT31x</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Hubs.html#TTapoT315">TTapoT315</a></strong> = <a href="Tapo.Hubs.TTapoT31x.html">TTapoT31x</a>;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Hubs.html#TTapoAlarmRingtone">TTapoAlarmRingtone</a></strong> = (...);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Hubs.html#TTapoAlarmVolume">TTapoAlarmVolume</a></strong> = (...);</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Hubs.html#TTapoH200">TTapoH200</a></strong> = <a href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Hubs.html#TTapoH500">TTapoH500</a></strong> = <a href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Constants"></span><h3 class="summary">Constants</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Hubs.html#TapoAlarmContinuous">TapoAlarmContinuous</a></strong> = -1;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Hubs.html#TapoAlarmOnce">TapoAlarmOnce</a></strong> = 0;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Types</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoS200B"></span><code><strong>TTapoS200B</strong> = <a href="Tapo.Hubs.TTapoS200.html">TTapoS200</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo S200B: the same as <a class="normal" href="Tapo.Hubs.TTapoS200.html">TTapoS200</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoS200D"></span><code><strong>TTapoS200D</strong> = <a href="Tapo.Hubs.TTapoS200.html">TTapoS200</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo S200D: the same as <a class="normal" href="Tapo.Hubs.TTapoS200.html">TTapoS200</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoT310"></span><code><strong>TTapoT310</strong> = <a href="Tapo.Hubs.TTapoT31x.html">TTapoT31x</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo T310: the same as <a class="normal" href="Tapo.Hubs.TTapoT31x.html">TTapoT31x</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoT315"></span><code><strong>TTapoT315</strong> = <a href="Tapo.Hubs.TTapoT31x.html">TTapoT31x</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo T315: the same as <a class="normal" href="Tapo.Hubs.TTapoT31x.html">TTapoT31x</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoAlarmRingtone"></span><code><strong>TTapoAlarmRingtone</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The sounds an H100 can play.</p>
+<p>
+
+
+<p>arDefault leaves the choice to the hub's settings.</p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="arDefault">arDefault</span></li>
+<li>
+<span id="arAlarm1">arAlarm1</span></li>
+<li>
+<span id="arAlarm2">arAlarm2</span></li>
+<li>
+<span id="arAlarm3">arAlarm3</span></li>
+<li>
+<span id="arAlarm4">arAlarm4</span></li>
+<li>
+<span id="arAlarm5">arAlarm5</span></li>
+<li>
+<span id="arConnection1">arConnection1</span></li>
+<li>
+<span id="arConnection2">arConnection2</span></li>
+<li>
+<span id="arDoorbellRing1">arDoorbellRing1</span></li>
+<li>
+<span id="arDoorbellRing2">arDoorbellRing2</span></li>
+<li>
+<span id="arDoorbellRing3">arDoorbellRing3</span></li>
+<li>
+<span id="arDoorbellRing4">arDoorbellRing4</span></li>
+<li>
+<span id="arDoorbellRing5">arDoorbellRing5</span></li>
+<li>
+<span id="arDoorbellRing6">arDoorbellRing6</span></li>
+<li>
+<span id="arDoorbellRing7">arDoorbellRing7</span></li>
+<li>
+<span id="arDoorbellRing8">arDoorbellRing8</span></li>
+<li>
+<span id="arDoorbellRing9">arDoorbellRing9</span></li>
+<li>
+<span id="arDoorbellRing10">arDoorbellRing10</span></li>
+<li>
+<span id="arDrippingTap">arDrippingTap</span></li>
+<li>
+<span id="arPhoneRing">arPhoneRing</span></li>
+</ul>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoAlarmVolume"></span><code><strong>TTapoAlarmVolume</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The volume of an H100 alarm. avDefault leaves it to the hub's settings.</p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="avDefault">avDefault</span></li>
+<li>
+<span id="avMute">avMute</span></li>
+<li>
+<span id="avLow">avLow</span></li>
+<li>
+<span id="avNormal">avNormal</span></li>
+<li>
+<span id="avHigh">avHigh</span></li>
+</ul>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoH200"></span><code><strong>TTapoH200</strong> = <a href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo H200: the same as <a class="normal" href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoH500"></span><code><strong>TTapoH500</strong> = <a href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo H500: the same as <a class="normal" href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>.</p>
+</td></tr>
+</table>
+<h3 class="detail">Constants</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoAlarmContinuous"></span><code><strong>TapoAlarmContinuous</strong> = -1;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Alarm duration: until <a class="normal" href="Tapo.Hubs.TTapoH100.html#StopAlarm">TTapoH100.StopAlarm</a> is called.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoAlarmOnce"></span><code><strong>TapoAlarmOnce</strong> = 0;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Alarm duration: play the sound once.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

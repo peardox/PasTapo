@@ -1,3 +1,30 @@
+//** @abstract(Tapo local-network client: account credentials, device registry and the abstract
+//** device base class that handles authentication.)
+//**
+//** @preformatted(
+//** TTapoClient       - holds the Tapo account e-mail and password @(given once@)
+//**                     and owns the devices created from it.
+//** TTapoEndpoint     - anything that accepts Tapo requests.
+//** TTapoDevice       - abstract device reached by IP address. Picks the
+//**                     protocol, logs in on first use, keeps the session and
+//**                     logs in again only when the device ends it.
+//** TTapoChildDevice  - abstract device reached through a parent device: a
+//**                     power-strip socket or a hub sensor/switch.
+//** )
+//**
+//** @preformatted(
+//** Protocols @(chosen per device family, as the Rust crate does@):
+//**   plugs, bulbs, strips, H100  - TPAP if the device announces it, else KLAP
+//**   cameras                     - TPAP over HTTPS, else AES SSL
+//**   camera hubs @(H200, H500@)    - AES SSL, as the local "admin" account
+//** )
+//**
+//** Concrete device classes are in Tapo.Devices, Tapo.Hubs and Tapo.Cameras; Tapo.Models adds
+//** Client.Add(P110, '192.168.1.50').
+//**
+//** Protocol code ported from https://github.com/mihai-dinculescu/tapo. All calls are blocking
+//** network I/O; call them from a background thread (TTask.Run) in an FMX app. Each device
+//** serialises its own requests, so one device object may be shared between threads.
 unit Tapo.Client;
 
 {
@@ -38,12 +65,10 @@ uses
   System.Net.HttpClient, Tapo.Crypto;
 
 type
-  (***
-    Raised for every failure reported by a Tapo device or found while talking to one.
-
-    @link(ErrorCode) identifies the failure. Network failures (no route, refused connection,
-    time-out) are raised by the RTL as @code(ENetHTTPClientException) instead.
-  *)
+  //** @abstract(Raised for every failure reported by a Tapo device or found while talking to one.)
+  //**
+  //** @link(ErrorCode) identifies the failure. Network failures (no route, refused connection,
+  //** time-out) are raised by the RTL as @code(ENetHTTPClientException) instead.
   /// <summary>
   ///   Raised for every failure reported by a Tapo device or found while
   ///   talking to one.
@@ -57,24 +82,20 @@ type
   private
     FErrorCode: Integer;
   public
-    (***
-      Creates the exception with an error code.
-
-      @param(ACode The device error_code, an HTTP status, or -1.)
-
-      @param(AMsg The message.)
-    *)
+    //** @abstract(Creates the exception with an error code.)
+    //**
+    //** @param(ACode The device error_code, an HTTP status, or -1.)
+    //**
+    //** @param(AMsg The message.)
     /// <summary>Creates the exception with an error code.</summary>
     /// <param name="ACode">The device error_code, an HTTP status, or -1.</param>
     /// <param name="AMsg">The message.</param>
     constructor CreateCode(ACode: Integer; const AMsg: string);
-    (***
-      The device's error_code (negative, for example -1501 for a login failure or -2101 for a
-      device locked after failed logins), an HTTP status (positive, for example 403), or -1 for a
-      failure found locally.
-
-      @seealso(TapoErrorName)
-    *)
+    //** @abstract(The device's error_code @(negative, for example -1501 for a login failure or -2101
+    //** for a device locked after failed logins@), an HTTP status @(positive, for example 403@), or
+    //** -1 for a failure found locally.)
+    //**
+    //** @seealso(TapoErrorName)
     /// <summary>
     ///   The device's error_code (negative, for example -1501 for a login
     ///   failure or -2101 for a device locked after failed logins), an HTTP
@@ -84,12 +105,10 @@ type
     property ErrorCode: Integer read FErrorCode;
   end;
 
-  (***
-    Raised internally when a device no longer knows the session.
-
-    The request is retried once after a fresh login, so this exception only reaches your code if
-    the second attempt fails as well.
-  *)
+  //** @abstract(Raised internally when a device no longer knows the session.)
+  //**
+  //** The request is retried once after a fresh login, so this exception only reaches your code if
+  //** the second attempt fails as well.
   /// <summary>
   ///   Raised internally when a device no longer knows the session.
   /// </summary>
@@ -99,12 +118,10 @@ type
   /// </remarks>
   ETapoSessionExpired = class(ETapoError);
 
-  (***
-    Raised when a device rejects the Tapo account e-mail or password.
-
-    Raised by every login type (KLAP, TPAP, AES SSL). Do not retry in a loop: devices lock
-    themselves after too many failed logins.
-  *)
+  //** @abstract(Raised when a device rejects the Tapo account e-mail or password.)
+  //**
+  //** Raised by every login type (KLAP, TPAP, AES SSL). Do not retry in a loop: devices lock
+  //** themselves after too many failed logins.
   /// <summary>Raised when a device rejects the Tapo account e-mail or password.</summary>
   /// <remarks>
   ///   Raised by every login type (KLAP, TPAP, AES SSL). Do not retry in a
@@ -112,58 +129,53 @@ type
   /// </remarks>
   ETapoAuthError = class(ETapoError);
 
-  (*** The local protocol a device is spoken to with. *)
+  //** @abstract(The local protocol a device is spoken to with.)
   /// <summary>The local protocol a device is spoken to with.</summary>
   TTapoProtocol = (
-    (*** Pick the protocol for each device (the default). *)
+    //** @abstract(Pick the protocol for each device @(the default@).)
     /// <summary>Pick the protocol for each device (the default).</summary>
     tpAuto,
-    (*** KLAP: older firmware, or any firmware with Third-Party Compatibility on. *)
+    //** @abstract(KLAP: older firmware, or any firmware with Third-Party Compatibility on.)
     /// <summary>KLAP: older firmware, or any firmware with Third-Party Compatibility on.</summary>
     tpKlap,
-    (***
-      TPAP: SPAKE2+ login and AES-CCM session; current firmware with Third-Party Compatibility
-      off.
-    *)
+    //** @abstract(TPAP: SPAKE2+ login and AES-CCM session; current firmware with Third-Party
+    //** Compatibility off.)
     /// <summary>TPAP: SPAKE2+ login and AES-CCM session; current firmware with Third-Party Compatibility off.</summary>
     tpTpap,
-    (*** AES SSL: cameras and camera hubs. *)
+    //** @abstract(AES SSL: cameras and camera hubs.)
     /// <summary>AES SSL: cameras and camera hubs.</summary>
     tpAesSsl);
 
-  (*** The request format a device family uses. *)
+  //** @abstract(The request format a device family uses.)
   /// <summary>The request format a device family uses.</summary>
   TTapoDeviceFamily = (
-    (*** Plugs, lights, light strips, power strips and the H100 hub. *)
+    //** @abstract(Plugs, lights, light strips, power strips and the H100 hub.)
     /// <summary>Plugs, lights, light strips, power strips and the H100 hub.</summary>
     dfSmart,
-    (***
-      Cameras and camera hubs (H200, H500): every request is wrapped in a multipleRequest.
-    *)
+    //** @abstract(Cameras and camera hubs @(H200, H500@): every request is wrapped in a
+    //** multipleRequest.)
     /// <summary>Cameras and camera hubs (H200, H500): every request is wrapped in a multipleRequest.</summary>
     dfSmartCam);
 
-  (*** How a device class logs in. *)
+  //** @abstract(How a device class logs in.)
   /// <summary>How a device class logs in.</summary>
   TTapoAuthMode = (
-    (*** Ask the device: TPAP if it announces it, otherwise KLAP. *)
+    //** @abstract(Ask the device: TPAP if it announces it, otherwise KLAP.)
     /// <summary>Ask the device: TPAP if it announces it, otherwise KLAP.</summary>
     amNegotiate,
-    (*** TPAP over HTTPS, otherwise AES SSL (cameras). *)
+    //** @abstract(TPAP over HTTPS, otherwise AES SSL @(cameras@).)
     /// <summary>TPAP over HTTPS, otherwise AES SSL (cameras).</summary>
     amCamera,
-    (*** AES SSL as the hub's local "admin" account (H200, H500). *)
+    //** @abstract(AES SSL as the hub's local "admin" account @(H200, H500@).)
     /// <summary>AES SSL as the hub's local "admin" account (H200, H500).</summary>
     amCameraHub);
 
-  (***
-    The fields every Tapo device reports in its device info.
-
-    Nickname and SSID are decoded from the Base64 the device sends. Cameras report some fields
-    under other names (dev_id, sw_version, device_model, device_alias); @link(FromJSON) reads
-    either. Fields a device does not report are empty or 0. @link(Raw) holds the whole reply for
-    anything else.
-  *)
+  //** @abstract(The fields every Tapo device reports in its device info.)
+  //**
+  //** Nickname and SSID are decoded from the Base64 the device sends. Cameras report some fields
+  //** under other names (dev_id, sw_version, device_model, device_alias); @link(FromJSON) reads
+  //** either. Fields a device does not report are empty or 0. @link(Raw) holds the whole reply for
+  //** anything else.
   /// <summary>
   ///   The fields every Tapo device reports in its device info.
   /// </summary>
@@ -175,94 +187,92 @@ type
   ///   the whole reply for anything else.
   /// </remarks>
   TTapoDeviceInfo = record
-    (*** The device id, unique per device. *)
+    //** @abstract(The device id, unique per device.)
     /// <summary>The device id, unique per device.</summary>
     DeviceId: string;
-    (*** The model as the device reports it, for example 'P110'. *)
+    //** @abstract(The model as the device reports it, for example 'P110'.)
     /// <summary>The model as the device reports it, for example 'P110'.</summary>
     Model: string;
-    (*** The device type, for example 'SMART.TAPOPLUG'. *)
+    //** @abstract(The device type, for example 'SMART.TAPOPLUG'.)
     /// <summary>The device type, for example 'SMART.TAPOPLUG'.</summary>
     DeviceType: string;
-    (*** The name given in the Tapo app. *)
+    //** @abstract(The name given in the Tapo app.)
     /// <summary>The name given in the Tapo app.</summary>
     Nickname: string;
-    (*** The device name (cameras and camera hubs). *)
+    //** @abstract(The device name @(cameras and camera hubs@).)
     /// <summary>The device name (cameras and camera hubs).</summary>
     DeviceName: string;
-    (*** The firmware version. *)
+    //** @abstract(The firmware version.)
     /// <summary>The firmware version.</summary>
     FirmwareVersion: string;
-    (*** The hardware version. *)
+    //** @abstract(The hardware version.)
     /// <summary>The hardware version.</summary>
     HardwareVersion: string;
-    (*** The firmware id. *)
+    //** @abstract(The firmware id.)
     /// <summary>The firmware id.</summary>
     FirmwareId: string;
-    (*** The hardware id. *)
+    //** @abstract(The hardware id.)
     /// <summary>The hardware id.</summary>
     HardwareId: string;
-    (*** The OEM id. *)
+    //** @abstract(The OEM id.)
     /// <summary>The OEM id.</summary>
     OemId: string;
-    (*** The MAC address. *)
+    //** @abstract(The MAC address.)
     /// <summary>The MAC address.</summary>
     Mac: string;
-    (*** The IP address the device reports for itself. *)
+    //** @abstract(The IP address the device reports for itself.)
     /// <summary>The IP address the device reports for itself.</summary>
     IP: string;
-    (*** The Wi-Fi network the device is on. *)
+    //** @abstract(The Wi-Fi network the device is on.)
     /// <summary>The Wi-Fi network the device is on.</summary>
     SSID: string;
-    (*** The Wi-Fi signal strength in dBm. *)
+    //** @abstract(The Wi-Fi signal strength in dBm.)
     /// <summary>The Wi-Fi signal strength in dBm.</summary>
     RSSI: Integer;
-    (*** The Wi-Fi signal level, 0 to 3. *)
+    //** @abstract(The Wi-Fi signal level, 0 to 3.)
     /// <summary>The Wi-Fi signal level, 0 to 3.</summary>
     SignalLevel: Integer;
-    (*** The region code. *)
+    //** @abstract(The region code.)
     /// <summary>The region code.</summary>
     Region: string;
-    (*** The language code. *)
+    //** @abstract(The language code.)
     /// <summary>The language code.</summary>
     Lang: string;
-    (*** The hardware specification code. *)
+    //** @abstract(The hardware specification code.)
     /// <summary>The hardware specification code.</summary>
     Specs: string;
-    (*** The icon chosen in the Tapo app. *)
+    //** @abstract(The icon chosen in the Tapo app.)
     /// <summary>The icon chosen in the Tapo app.</summary>
     Avatar: string;
-    (*** The device's offset from UTC in minutes. *)
+    //** @abstract(The device's offset from UTC in minutes.)
     /// <summary>The device's offset from UTC in minutes.</summary>
     TimeDiff: Int64;
-    (*** The latitude set in the Tapo app, in units of 1/10000 degree. *)
+    //** @abstract(The latitude set in the Tapo app, in units of 1/10000 degree.)
     /// <summary>The latitude set in the Tapo app, in units of 1/10000 degree.</summary>
     Latitude: Int64;
-    (*** The longitude set in the Tapo app, in units of 1/10000 degree. *)
+    //** @abstract(The longitude set in the Tapo app, in units of 1/10000 degree.)
     /// <summary>The longitude set in the Tapo app, in units of 1/10000 degree.</summary>
     Longitude: Int64;
-    (*** True if a location has been set in the Tapo app. *)
+    //** @abstract(True if a location has been set in the Tapo app.)
     /// <summary>True if a location has been set in the Tapo app.</summary>
     HasSetLocationInfo: Boolean;
-    (*** True if the device reports a power state (False for hubs and power strips). *)
+    //** @abstract(True if the device reports a power state @(False for hubs and power strips@).)
     /// <summary>True if the device reports a power state (False for hubs and power strips).</summary>
     HasDeviceOn: Boolean;
-    (*** The power state, when @link(HasDeviceOn) is True. *)
+    //** @abstract(The power state, when @link(HasDeviceOn) is True.)
     /// <summary>The power state, when <see cref="HasDeviceOn"/> is True.</summary>
     DeviceOn: Boolean;
-    (*** Seconds since the device was switched on. *)
+    //** @abstract(Seconds since the device was switched on.)
     /// <summary>Seconds since the device was switched on.</summary>
     OnTime: Int64;
-    (*** The whole device info reply as formatted JSON. *)
+    //** @abstract(The whole device info reply as formatted JSON.)
     /// <summary>The whole device info reply as formatted JSON.</summary>
     Raw: string;
-    (***
-      Reads device info from a get_device_info / getDeviceInfo reply.
-
-      @param(Obj The reply's result object. May be nil.)
-
-      @returns(The decoded fields.)
-    *)
+    //** @abstract(Reads device info from a get_device_info / getDeviceInfo reply.)
+    //**
+    //** @param(Obj The reply's result object. May be nil.)
+    //**
+    //** @returns(The decoded fields.)
     /// <summary>Reads device info from a get_device_info / getDeviceInfo reply.</summary>
     /// <param name="Obj">The reply's result object. May be nil.</param>
     /// <returns>The decoded fields.</returns>
@@ -272,13 +282,11 @@ type
   TTapoClient = class;
   TTapoDevice = class;
 
-  (***
-    Anything that accepts Tapo requests: a device reached by IP address (@link(TTapoDevice)) or a
-    device reached through another one (@link(TTapoChildDevice)).
-
-    The typed methods of the device classes cover everything the devices are known to support.
-    @link(Execute) gives raw access to any other method.
-  *)
+  //** @abstract(Anything that accepts Tapo requests: a device reached by IP address
+  //** @(@link(TTapoDevice)@) or a device reached through another one @(@link(TTapoChildDevice)@).)
+  //**
+  //** The typed methods of the device classes cover everything the devices are known to support.
+  //** @link(Execute) gives raw access to any other method.
   /// <summary>
   ///   Anything that accepts Tapo requests: a device reached by IP address
   ///   (<see cref="TTapoDevice"/>) or a device reached through another one
@@ -291,18 +299,16 @@ type
   /// </remarks>
   TTapoEndpoint = class abstract
   protected
-    (***
-      Sends one request and returns its result.
-
-      @param(AMethod The method name, for example 'get_device_info'.)
-
-      @param(AParams The params object. Ownership passes to this method. May be nil.)
-
-      @param(AStamp Adds requestTimeMilis and terminalUUID, as the Tapo app does for
-      set_device_info and the light effects.)
-
-      @returns(The reply's result object, owned by the caller; an empty object if there was none.)
-    *)
+    //** @abstract(Sends one request and returns its result.)
+    //**
+    //** @param(AMethod The method name, for example 'get_device_info'.)
+    //**
+    //** @param(AParams The params object. Ownership passes to this method. May be nil.)
+    //**
+    //** @param(AStamp Adds requestTimeMilis and terminalUUID, as the Tapo app does for
+    //** set_device_info and the light effects.)
+    //**
+    //** @returns(The reply's result object, owned by the caller; an empty object if there was none.)
     /// <summary>Sends one request and returns its result.</summary>
     /// <param name="AMethod">The method name, for example 'get_device_info'.</param>
     /// <param name="AParams">The params object. Ownership passes to this method. May be nil.</param>
@@ -311,32 +317,30 @@ type
     function DoRequest(const AMethod: string; AParams: TJSONValue;
       AStamp: Boolean): TJSONObject; virtual; abstract;
   public
-    (***
-      Calls any device method.
-
-      @param(AMethod The method name, for example 'get_device_usage'.)
-
-      @param(AParams The params object. Ownership passes to this method; do not free it. May be
-      nil.)
-
-      @returns(The result object. The caller frees it.)
-
-      @raises(ETapoError The device returned an error.)
-
-      @seealso(ExecuteRequest)
-
-      @seealso(ExecuteStamped)
-
-      Example:
-      @longCode(#
-      R := Plug.Execute('get_device_usage');
-      try
-        Memo1.Lines.Add(R.Format);
-      finally
-        R.Free;
-      end;
-      #)
-    *)
+    //** @abstract(Calls any device method.)
+    //**
+    //** @param(AMethod The method name, for example 'get_device_usage'.)
+    //**
+    //** @param(AParams The params object. Ownership passes to this method; do not free it. May be
+    //** nil.)
+    //**
+    //** @returns(The result object. The caller frees it.)
+    //**
+    //** @raises(ETapoError The device returned an error.)
+    //**
+    //** @seealso(ExecuteRequest)
+    //**
+    //** @seealso(ExecuteStamped)
+    //**
+    //** Example:
+    //** @longCode(#
+    //** R := Plug.Execute('get_device_usage');
+    //** try
+    //**   Memo1.Lines.Add(R.Format);
+    //** finally
+    //**   R.Free;
+    //** end;
+    //** #)
     /// <summary>Calls any device method.</summary>
     /// <param name="AMethod">The method name, for example 'get_device_usage'.</param>
     /// <param name="AParams">The params object. Ownership passes to this method; do not free it. May be nil.</param>
@@ -355,16 +359,14 @@ type
     /// <seealso cref="ExecuteRequest"/>
     /// <seealso cref="ExecuteStamped"/>
     function Execute(const AMethod: string; AParams: TJSONValue = nil): TJSONObject;
-    (***
-      Same as @link(Execute), but adds requestTimeMilis and terminalUUID to the request as
-      set_device_info does.
-
-      @param(AMethod The method name.)
-
-      @param(AParams The params object. Ownership passes to this method. May be nil.)
-
-      @returns(The result object. The caller frees it.)
-    *)
+    //** @abstract(Same as @link(Execute), but adds requestTimeMilis and terminalUUID to the request
+    //** as set_device_info does.)
+    //**
+    //** @param(AMethod The method name.)
+    //**
+    //** @param(AParams The params object. Ownership passes to this method. May be nil.)
+    //**
+    //** @returns(The result object. The caller frees it.)
     /// <summary>
     ///   Same as <see cref="Execute"/>, but adds requestTimeMilis and
     ///   terminalUUID to the request as set_device_info does.
@@ -373,15 +375,13 @@ type
     /// <param name="AParams">The params object. Ownership passes to this method. May be nil.</param>
     /// <returns>The result object. The caller frees it.</returns>
     function ExecuteStamped(const AMethod: string; AParams: TJSONValue = nil): TJSONObject;
-    (***
-      Same as @link(Execute), but AParams stays with the caller (a copy is sent).
-
-      @param(AMethod The method name.)
-
-      @param(AParams The params object, still owned by the caller. May be nil.)
-
-      @returns(The result object. The caller frees it.)
-    *)
+    //** @abstract(Same as @link(Execute), but AParams stays with the caller @(a copy is sent@).)
+    //**
+    //** @param(AMethod The method name.)
+    //**
+    //** @param(AParams The params object, still owned by the caller. May be nil.)
+    //**
+    //** @returns(The result object. The caller frees it.)
     /// <summary>
     ///   Same as <see cref="Execute"/>, but AParams stays with the caller
     ///   (a copy is sent).
@@ -390,55 +390,45 @@ type
     /// <param name="AParams">The params object, still owned by the caller. May be nil.</param>
     /// <returns>The result object. The caller frees it.</returns>
     function ExecuteRequest(const AMethod: string; AParams: TJSONObject = nil): TJSONObject;
-    (***
-      Changes device settings with set_device_info.
-
-      @param(AParams The fields to set, for example {"device_on": true}. Ownership passes to this
-      method.)
-
-      @raises(ETapoError The device rejected a field.)
-    *)
+    //** @abstract(Changes device settings with set_device_info.)
+    //**
+    //** @param(AParams The fields to set, for example {"device_on": true}. Ownership passes to this
+    //** method.)
+    //**
+    //** @raises(ETapoError The device rejected a field.)
     /// <summary>Changes device settings with set_device_info.</summary>
     /// <param name="AParams">The fields to set, for example {"device_on": true}. Ownership passes to this method.</param>
     /// <exception cref="ETapoError">The device rejected a field.</exception>
     procedure SetDeviceInfo(AParams: TJSONObject);
-    (***
-      Reads the device info.
-
-      @returns(The device info object. The caller frees it.)
-
-      @seealso(GetDeviceInfoJSON)
-    *)
+    //** @abstract(Reads the device info.)
+    //**
+    //** @returns(The device info object. The caller frees it.)
+    //**
+    //** @seealso(GetDeviceInfoJSON)
     /// <summary>Reads the device info.</summary>
     /// <returns>The device info object. The caller frees it.</returns>
     /// <seealso cref="GetDeviceInfoJSON"/>
     function GetDeviceInfoObject: TJSONObject; virtual;
-    (***
-      Reads the device info as formatted JSON text.
-
-      Nickname and SSID are still Base64 encoded, as the device sends them.
-    *)
+    //** @abstract(Reads the device info as formatted JSON text.)
+    //**
+    //** Nickname and SSID are still Base64 encoded, as the device sends them.
     /// <summary>Reads the device info as formatted JSON text.</summary>
     /// <remarks>Nickname and SSID are still Base64 encoded, as the device sends them.</remarks>
     function GetDeviceInfoJSON: string;
-    (***
-      Reads the list of components (features and their versions) the device reports.
-
-      @returns(Formatted JSON text.)
-    *)
+    //** @abstract(Reads the list of components @(features and their versions@) the device reports.)
+    //**
+    //** @returns(Formatted JSON text.)
     /// <summary>Reads the list of components (features and their versions) the device reports.</summary>
     /// <returns>Formatted JSON text.</returns>
     function GetComponentListJSON: string; virtual;
   end;
 
-  (***
-    A device reached through a parent device: a power-strip socket or a sensor or switch paired to
-    a hub.
-
-    Requests travel inside the parent's session, so a child device never logs in on its own.
-    Obtain children from the parent (for example @code(Strip.Outlet@(1@)) or
-    @code(Hub.T31x@('Kitchen'@))); the parent owns them.
-  *)
+  //** @abstract(A device reached through a parent device: a power-strip socket or a sensor or switch
+  //** paired to a hub.)
+  //**
+  //** Requests travel inside the parent's session, so a child device never logs in on its own.
+  //** Obtain children from the parent (for example @code(Strip.Outlet@(1@)) or
+  //** @code(Hub.T31x@('Kitchen'@))); the parent owns them.
   /// <summary>
   ///   A device reached through a parent device: a power-strip socket or a
   ///   sensor or switch paired to a hub.
@@ -454,51 +444,47 @@ type
     FParent: TTapoDevice;
     FDeviceId: string;
   protected
-    (*** Sends the request to the parent, which forwards it to this child. *)
+    //** @abstract(Sends the request to the parent, which forwards it to this child.)
     /// <summary>Sends the request to the parent, which forwards it to this child.</summary>
     function DoRequest(const AMethod: string; AParams: TJSONValue;
       AStamp: Boolean): TJSONObject; override;
   public
-    (***
-      Creates a child device object.
-
-      Normally called by the parent device, which owns the object.
-
-      @param(AParent The device the child is reached through.)
-
-      @param(ADeviceId The child's device id.)
-    *)
+    //** @abstract(Creates a child device object.)
+    //**
+    //** Normally called by the parent device, which owns the object.
+    //**
+    //** @param(AParent The device the child is reached through.)
+    //**
+    //** @param(ADeviceId The child's device id.)
     /// <summary>Creates a child device object.</summary>
     /// <param name="AParent">The device the child is reached through.</param>
     /// <param name="ADeviceId">The child's device id.</param>
     /// <remarks>Normally called by the parent device, which owns the object.</remarks>
     constructor Create(AParent: TTapoDevice; const ADeviceId: string); virtual;
-    (*** The device this child is reached through. *)
+    //** @abstract(The device this child is reached through.)
     /// <summary>The device this child is reached through.</summary>
     property Parent: TTapoDevice read FParent;
-    (*** The child's device id. *)
+    //** @abstract(The child's device id.)
     /// <summary>The child's device id.</summary>
     property DeviceId: string read FDeviceId;
   end;
 
-  (*** A child device class, for @link(TTapoDevice.ChildFor). *)
+  //** @abstract(A child device class, for @link(TTapoDevice.ChildFor).)
   /// <summary>A child device class, for <see cref="TTapoDevice.ChildFor"/>.</summary>
   TTapoChildDeviceClass = class of TTapoChildDevice;
 
-  (***
-    A Tapo device reached by IP address: the base class of every device class. It picks the
-    protocol, logs in, and keeps the session.
-
-    The device logs in on its first request and keeps the session. If the device ends the session,
-    the next request logs in again once and is retried. A login rejected for wrong credentials is
-    never retried, because TPAP devices lock themselves after repeated failures.
-
-    Requests to one device are serialised, so a device object may be shared between threads. All
-    calls are blocking network I/O; call them from a background thread in an FMX application.
-
-    Create devices through the client (@code(Client.Add@(P110, ...@)), @code(Client.AddDevice) or
-    @code(Client.AddDetected)), which owns them.
-  *)
+  //** @abstract(A Tapo device reached by IP address: the base class of every device class. It picks
+  //** the protocol, logs in, and keeps the session.)
+  //**
+  //** The device logs in on its first request and keeps the session. If the device ends the session,
+  //** the next request logs in again once and is retried. A login rejected for wrong credentials is
+  //** never retried, because TPAP devices lock themselves after repeated failures.
+  //**
+  //** Requests to one device are serialised, so a device object may be shared between threads. All
+  //** calls are blocking network I/O; call them from a background thread in an FMX application.
+  //**
+  //** Create devices through the client (@code(Client.Add@(P110, ...@)), @code(Client.AddDevice) or
+  //** @code(Client.AddDetected)), which owns them.
   /// <summary>
   ///   A Tapo device reached by IP address: the base class of every device
   ///   class. It picks the protocol, logs in, and keeps the session.
@@ -576,45 +562,39 @@ type
     procedure EnsureLoggedIn;
     function ParseResponse(const AMethod, AText: string; out ARetry: Boolean): TJSONObject;
   protected
-    (*** Sends one request over the session, logging in first if needed. *)
+    //** @abstract(Sends one request over the session, logging in first if needed.)
     /// <summary>Sends one request over the session, logging in first if needed.</summary>
     function DoRequest(const AMethod: string; AParams: TJSONValue;
       AStamp: Boolean): TJSONObject; override;
-    (***
-      The account name sent in an AES SSL login.
-
-      @returns('admin' for camera hubs, otherwise the client's user name.)
-    *)
+    //** @abstract(The account name sent in an AES SSL login.)
+    //**
+    //** @returns('admin' for camera hubs, otherwise the client's user name.)
     /// <summary>The account name sent in an AES SSL login.</summary>
     /// <returns>'admin' for camera hubs, otherwise the client's user name.</returns>
     function LoginUsername: string; virtual;
-    (***
-      Returns the cached child device object, creating it if needed.
-
-      @param(ADeviceId The child's device id.)
-
-      @param(AClass The class to create. A cached object of another class is replaced.)
-
-      @returns(The child object, owned by this device.)
-    *)
+    //** @abstract(Returns the cached child device object, creating it if needed.)
+    //**
+    //** @param(ADeviceId The child's device id.)
+    //**
+    //** @param(AClass The class to create. A cached object of another class is replaced.)
+    //**
+    //** @returns(The child object, owned by this device.)
     /// <summary>Returns the cached child device object, creating it if needed.</summary>
     /// <param name="ADeviceId">The child's device id.</param>
     /// <param name="AClass">The class to create. A cached object of another class is replaced.</param>
     /// <returns>The child object, owned by this device.</returns>
     function ChildFor(const ADeviceId: string; AClass: TTapoChildDeviceClass): TTapoChildDevice;
   public
-    (***
-      Creates a device object for the device at AHost.
-
-      No network request is made until the first call. Usually created through
-      @link(TTapoClient.AddDevice) or the Tapo.Models helpers.
-
-      @param(AClient The client that holds the account details and owns the device.)
-
-      @param(AHost The IP address, host name, or host:port.)
-
-      @raises(ETapoError AClient is nil.)
-    *)
+    //** @abstract(Creates a device object for the device at AHost.)
+    //**
+    //** No network request is made until the first call. Usually created through
+    //** @link(TTapoClient.AddDevice) or the Tapo.Models helpers.
+    //**
+    //** @param(AClient The client that holds the account details and owns the device.)
+    //**
+    //** @param(AHost The IP address, host name, or host:port.)
+    //**
+    //** @raises(ETapoError AClient is nil.)
     /// <summary>Creates a device object for the device at AHost.</summary>
     /// <param name="AClient">The client that holds the account details and owns the device.</param>
     /// <param name="AHost">The IP address, host name, or host:port.</param>
@@ -624,88 +604,74 @@ type
     /// </remarks>
     /// <exception cref="ETapoError">AClient is nil.</exception>
     constructor Create(AClient: TTapoClient; const AHost: string); virtual;
-    (*** Frees the device and its child objects, and removes it from the client. *)
+    //** @abstract(Frees the device and its child objects, and removes it from the client.)
     /// <summary>Frees the device and its child objects, and removes it from the client.</summary>
     destructor Destroy; override;
 
-    (*** The request format the class uses. *)
+    //** @abstract(The request format the class uses.)
     /// <summary>The request format the class uses.</summary>
     class function Family: TTapoDeviceFamily; virtual;
-    (*** How the class logs in. *)
+    //** @abstract(How the class logs in.)
     /// <summary>How the class logs in.</summary>
     class function AuthMode: TTapoAuthMode; virtual;
 
-    (***
-      Picks the protocol and logs in now.
-
-      Optional: the first request logs in if this has not been called.
-
-      @raises(ETapoError The login failed. ErrorCode -2101 means the device has locked itself
-      after too many failed logins.)
-    *)
+    //** @abstract(Picks the protocol and logs in now.)
+    //**
+    //** Optional: the first request logs in if this has not been called.
+    //**
+    //** @raises(ETapoError The login failed. ErrorCode -2101 means the device has locked itself
+    //** after too many failed logins.)
     /// <summary>Picks the protocol and logs in now.</summary>
     /// <remarks>Optional: the first request logs in if this has not been called.</remarks>
     /// <exception cref="ETapoError">The login failed. ErrorCode -2101 means the device has locked itself after too many failed logins.</exception>
     procedure Login;
-    (***
-      Forgets the session, so the next request logs in again.
-
-      The protocol is detected again too, in case a firmware update changed it.
-    *)
+    //** @abstract(Forgets the session, so the next request logs in again.)
+    //**
+    //** The protocol is detected again too, in case a firmware update changed it.
     /// <summary>Forgets the session, so the next request logs in again.</summary>
     /// <remarks>The protocol is detected again too, in case a firmware update changed it.</remarks>
     procedure Logout;
-    (***
-      Takes over the logged-in session of another object for the same device.
-
-      Device detection uses this so a detected device does not log in twice.
-
-      @param(ASource An object for the same host, family and auth mode. It is logged out.)
-
-      @raises(ETapoError ASource is for another host or protocol family.)
-    *)
+    //** @abstract(Takes over the logged-in session of another object for the same device.)
+    //**
+    //** Device detection uses this so a detected device does not log in twice.
+    //**
+    //** @param(ASource An object for the same host, family and auth mode. It is logged out.)
+    //**
+    //** @raises(ETapoError ASource is for another host or protocol family.)
     /// <summary>Takes over the logged-in session of another object for the same device.</summary>
     /// <param name="ASource">An object for the same host, family and auth mode. It is logged out.</param>
     /// <remarks>Device detection uses this so a detected device does not log in twice.</remarks>
     /// <exception cref="ETapoError">ASource is for another host or protocol family.</exception>
     procedure TakeSession(ASource: TTapoDevice);
 
-    (***
-      Reads the device info; cameras and camera hubs return their basic_info section.
-
-      @returns(The device info object. The caller frees it.)
-    *)
+    //** @abstract(Reads the device info; cameras and camera hubs return their basic_info section.)
+    //**
+    //** @returns(The device info object. The caller frees it.)
     /// <summary>Reads the device info; cameras and camera hubs return their basic_info section.</summary>
     /// <returns>The device info object. The caller frees it.</returns>
     function GetDeviceInfoObject: TJSONObject; override;
-    (*** Reads the list of components the device reports. *)
+    //** @abstract(Reads the list of components the device reports.)
     /// <summary>Reads the list of components the device reports.</summary>
     function GetComponentListJSON: string; override;
-    (***
-      Reads the fields every device reports.
-
-      @seealso(TTapoDeviceInfo)
-    *)
+    //** @abstract(Reads the fields every device reports.)
+    //**
+    //** @seealso(TTapoDeviceInfo)
     /// <summary>Reads the fields every device reports.</summary>
     /// <seealso cref="TTapoDeviceInfo"/>
     function GetDeviceInfo: TTapoDeviceInfo;
-    (***
-      Restarts the device.
-
-      The session ends; the next request logs in again.
-
-      @param(ADelaySeconds Seconds to wait before restarting.)
-    *)
+    //** @abstract(Restarts the device.)
+    //**
+    //** The session ends; the next request logs in again.
+    //**
+    //** @param(ADelaySeconds Seconds to wait before restarting.)
     /// <summary>Restarts the device.</summary>
     /// <param name="ADelaySeconds">Seconds to wait before restarting.</param>
     /// <remarks>The session ends; the next request logs in again.</remarks>
     procedure Reboot(ADelaySeconds: Integer = 1);
-    (***
-      Restores the device's factory settings.
-
-      The device leaves your Tapo account and Wi-Fi network and must be set up again in the Tapo
-      app.
-    *)
+    //** @abstract(Restores the device's factory settings.)
+    //**
+    //** The device leaves your Tapo account and Wi-Fi network and must be set up again in the Tapo
+    //** app.
     /// <summary>Restores the device's factory settings.</summary>
     /// <remarks>
     ///   The device leaves your Tapo account and Wi-Fi network and must be
@@ -713,19 +679,17 @@ type
     /// </remarks>
     procedure FactoryReset;
 
-    (***
-      Sends a request to a child device through this device.
-
-      Low-level: the child device classes call this for you.
-
-      @param(ADeviceId The child's device id.)
-
-      @param(AMethod The child's method, for example 'get_device_info'.)
-
-      @param(AParams The params object. Ownership passes to this method. May be nil.)
-
-      @returns(The child's result object. The caller frees it.)
-    *)
+    //** @abstract(Sends a request to a child device through this device.)
+    //**
+    //** Low-level: the child device classes call this for you.
+    //**
+    //** @param(ADeviceId The child's device id.)
+    //**
+    //** @param(AMethod The child's method, for example 'get_device_info'.)
+    //**
+    //** @param(AParams The params object. Ownership passes to this method. May be nil.)
+    //**
+    //** @returns(The child's result object. The caller frees it.)
     /// <summary>Sends a request to a child device through this device.</summary>
     /// <param name="ADeviceId">The child's device id.</param>
     /// <param name="AMethod">The child's method, for example 'get_device_info'.</param>
@@ -734,49 +698,45 @@ type
     /// <remarks>Low-level: the child device classes call this for you.</remarks>
     function ChildRequest(const ADeviceId, AMethod: string; AParams: TJSONValue): TJSONObject;
 
-    (*** The client that owns this device. *)
+    //** @abstract(The client that owns this device.)
     /// <summary>The client that owns this device.</summary>
     property Client: TTapoClient read FClient;
-    (*** The address given when the device was added. *)
+    //** @abstract(The address given when the device was added.)
     /// <summary>The address given when the device was added.</summary>
     property Host: string read FHost;
-    (*** True while a session is open. *)
+    //** @abstract(True while a session is open.)
     /// <summary>True while a session is open.</summary>
     property LoggedIn: Boolean read FLoggedIn;
-    (***
-      The protocol of the current session: tpKlap, tpTpap or tpAesSsl; tpAuto before the first
-      login.
-    *)
+    //** @abstract(The protocol of the current session: tpKlap, tpTpap or tpAesSsl; tpAuto before the
+    //** first login.)
     /// <summary>The protocol of the current session: tpKlap, tpTpap or tpAesSsl; tpAuto before the first login.</summary>
     property ActiveProtocol: TTapoProtocol read FActive;
   end;
 
-  (*** A device class, for @link(TTapoClient.AddDevice). *)
+  //** @abstract(A device class, for @link(TTapoClient.AddDevice).)
   /// <summary>A device class, for <see cref="TTapoClient.AddDevice"/>.</summary>
   TTapoDeviceClass = class of TTapoDevice;
 
-  (***
-    Your Tapo account, and the devices reached with it.
-
-    Give the account details once, then add each device by IP address. The client owns the devices
-    and frees them when it is freed.
-
-    The user name and password are those of the Tapo app. TPAP devices use only the password;
-    camera hubs use the password with their local "admin" account.
-
-    Example:
-    @longCode(#
-    uses Tapo.Client, Tapo.Models, Tapo.Devices;
-
-    Client := TTapoClient.Create('you@example.com', 'password');
-    try
-      Plug := Client.Add(P110, '192.168.1.50');
-      ShowMessage(Format('%.1f W', [Plug.GetCurrentPower]));
-    finally
-      Client.Free;
-    end;
-    #)
-  *)
+  //** @abstract(Your Tapo account, and the devices reached with it.)
+  //**
+  //** Give the account details once, then add each device by IP address. The client owns the devices
+  //** and frees them when it is freed.
+  //**
+  //** The user name and password are those of the Tapo app. TPAP devices use only the password;
+  //** camera hubs use the password with their local "admin" account.
+  //**
+  //** Example:
+  //** @longCode(#
+  //** uses Tapo.Client, Tapo.Models, Tapo.Devices;
+  //**
+  //** Client := TTapoClient.Create('you@example.com', 'password');
+  //** try
+  //**   Plug := Client.Add(P110, '192.168.1.50');
+  //**   ShowMessage(Format('%.1f W', [Plug.GetCurrentPower]));
+  //** finally
+  //**   Client.Free;
+  //** end;
+  //** #)
   /// <summary>
   ///   Your Tapo account, and the devices reached with it.
   /// </summary>
@@ -818,41 +778,37 @@ type
     function GetCount: Integer;
     function GetDevice(AIndex: Integer): TTapoDevice;
   public
-    (***
-      Creates a client for a Tapo account.
-
-      @param(AUsername The Tapo app account e-mail.)
-
-      @param(APassword The Tapo app account password @(case-sensitive@).)
-
-      @param(AProtocol Forces one protocol for every device. tpAuto, the default, picks it per
-      device.)
-    *)
+    //** @abstract(Creates a client for a Tapo account.)
+    //**
+    //** @param(AUsername The Tapo app account e-mail.)
+    //**
+    //** @param(APassword The Tapo app account password @(case-sensitive@).)
+    //**
+    //** @param(AProtocol Forces one protocol for every device. tpAuto, the default, picks it per
+    //** device.)
     /// <summary>Creates a client for a Tapo account.</summary>
     /// <param name="AUsername">The Tapo app account e-mail.</param>
     /// <param name="APassword">The Tapo app account password (case-sensitive).</param>
     /// <param name="AProtocol">Forces one protocol for every device. tpAuto, the default, picks it per device.</param>
     constructor Create(const AUsername, APassword: string; AProtocol: TTapoProtocol = tpAuto);
-    (*** Frees the client and every device it owns. *)
+    //** @abstract(Frees the client and every device it owns.)
     /// <summary>Frees the client and every device it owns.</summary>
     destructor Destroy; override;
 
-    (***
-      Adds the device of class T at AHost, or returns the one already added there.
-
-      No network request is made until the device is first used.
-
-      @param(AHost The IP address, host name, or host:port.)
-
-      @returns(The device, owned by the client.)
-
-      @raises(ETapoError AHost is already registered as another class.)
-
-      Example:
-      @longCode(#
-      Plug := Client.AddDevice<TTapoP110>('192.168.1.50');
-      #)
-    *)
+    //** @abstract(Adds the device of class T at AHost, or returns the one already added there.)
+    //**
+    //** No network request is made until the device is first used.
+    //**
+    //** @param(AHost The IP address, host name, or host:port.)
+    //**
+    //** @returns(The device, owned by the client.)
+    //**
+    //** @raises(ETapoError AHost is already registered as another class.)
+    //**
+    //** Example:
+    //** @longCode(#
+    //** Plug := Client.AddDevice<TTapoP110>('192.168.1.50');
+    //** #)
     /// <summary>Adds the device of class T at AHost, or returns the one already added there.</summary>
     /// <param name="AHost">The IP address, host name, or host:port.</param>
     /// <returns>The device, owned by the client.</returns>
@@ -862,57 +818,50 @@ type
     ///   <code>Plug := Client.AddDevice&lt;TTapoP110&gt;('192.168.1.50');</code>
     /// </example>
     function AddDevice<T: TTapoDevice>(const AHost: string): T; overload;
-    (***
-      Adds the device of class AClass at AHost, or returns the one already added there.
-
-      @param(AClass The device class, for example TTapoP110.)
-
-      @param(AHost The IP address, host name, or host:port.)
-
-      @returns(The device, owned by the client.)
-
-      @raises(ETapoError AHost is already registered as another class.)
-    *)
+    //** @abstract(Adds the device of class AClass at AHost, or returns the one already added there.)
+    //**
+    //** @param(AClass The device class, for example TTapoP110.)
+    //**
+    //** @param(AHost The IP address, host name, or host:port.)
+    //**
+    //** @returns(The device, owned by the client.)
+    //**
+    //** @raises(ETapoError AHost is already registered as another class.)
     /// <summary>Adds the device of class AClass at AHost, or returns the one already added there.</summary>
     /// <param name="AClass">The device class, for example TTapoP110.</param>
     /// <param name="AHost">The IP address, host name, or host:port.</param>
     /// <returns>The device, owned by the client.</returns>
     /// <exception cref="ETapoError">AHost is already registered as another class.</exception>
     function AddDevice(AClass: TTapoDeviceClass; const AHost: string): TTapoDevice; overload;
-    (***
-      Finds a device by address.
-
-      @param(AHost The address the device was added with @(case-insensitive@).)
-
-      @returns(The device, or nil if none was added at AHost.)
-    *)
+    //** @abstract(Finds a device by address.)
+    //**
+    //** @param(AHost The address the device was added with @(case-insensitive@).)
+    //**
+    //** @returns(The device, or nil if none was added at AHost.)
     /// <summary>Finds a device by address.</summary>
     /// <param name="AHost">The address the device was added with (case-insensitive).</param>
     /// <returns>The device, or nil if none was added at AHost.</returns>
     function Find(const AHost: string): TTapoDevice;
-    (***
-      Changes the account details.
-
-      Every device logs in again on its next request.
-
-      @param(AUsername The Tapo app account e-mail.)
-
-      @param(APassword The Tapo app account password.)
-    *)
+    //** @abstract(Changes the account details.)
+    //**
+    //** Every device logs in again on its next request.
+    //**
+    //** @param(AUsername The Tapo app account e-mail.)
+    //**
+    //** @param(APassword The Tapo app account password.)
     /// <summary>Changes the account details.</summary>
     /// <param name="AUsername">The Tapo app account e-mail.</param>
     /// <param name="APassword">The Tapo app account password.</param>
     /// <remarks>Every device logs in again on its next request.</remarks>
     procedure SetCredentials(const AUsername, APassword: string);
-    (***
-      Creates a new client with the same account, protocol and timeouts, and no devices.
-
-      Use it for short-lived work that must not touch this client's devices, for example probing
-      addresses with shorter timeouts during a network scan. A device found that way can be added
-      to this client and given the probe's login with @link(TTapoDevice.TakeSession).
-
-      @returns(The new client. The caller owns it and must free it.)
-    *)
+    //** @abstract(Creates a new client with the same account, protocol and timeouts, and no
+    //** devices.)
+    //**
+    //** Use it for short-lived work that must not touch this client's devices, for example probing
+    //** addresses with shorter timeouts during a network scan. A device found that way can be added
+    //** to this client and given the probe's login with @link(TTapoDevice.TakeSession).
+    //**
+    //** @returns(The new client. The caller owns it and must free it.)
     /// <summary>Creates a new client with the same account, protocol and timeouts, and no devices.</summary>
     /// <returns>The new client. The caller owns it and must free it.</returns>
     /// <remarks>
@@ -923,152 +872,134 @@ type
     /// </remarks>
     function CloneEmpty: TTapoClient;
 
-    (***
-      Runs known-answer tests of the built-in cryptography. No network access.
-
-      @param(AReport Receives one line per check, each starting OK or FAIL.)
-
-      @returns(True if every check passed.)
-
-      @seealso(Tapo.Crypto.TapoCryptoSelfTest)
-    *)
+    //** @abstract(Runs known-answer tests of the built-in cryptography. No network access.)
+    //**
+    //** @param(AReport Receives one line per check, each starting OK or FAIL.)
+    //**
+    //** @returns(True if every check passed.)
+    //**
+    //** @seealso(Tapo.Crypto.TapoCryptoSelfTest)
     /// <summary>Runs known-answer tests of the built-in cryptography. No network access.</summary>
     /// <param name="AReport">Receives one line per check, each starting OK or FAIL.</param>
     /// <returns>True if every check passed.</returns>
     /// <seealso cref="Tapo.Crypto.TapoCryptoSelfTest"/>
     class function SelfTest(out AReport: string): Boolean;
 
-    (*** The Tapo app account e-mail. *)
+    //** @abstract(The Tapo app account e-mail.)
     /// <summary>The Tapo app account e-mail.</summary>
     property Username: string read FUsername;
-    (*** The protocol forced for every device, or tpAuto. *)
+    //** @abstract(The protocol forced for every device, or tpAuto.)
     /// <summary>The protocol forced for every device, or tpAuto.</summary>
     property Protocol: TTapoProtocol read FProtocol;
-    (***
-      Connection time-out in milliseconds for devices added from now on (default 5000).
-
-      Set a short value, such as 500, before scanning a network.
-    *)
+    //** @abstract(Connection time-out in milliseconds for devices added from now on @(default
+    //** 5000@).)
+    //**
+    //** Set a short value, such as 500, before scanning a network.
     /// <summary>Connection time-out in milliseconds for devices added from now on (default 5000).</summary>
     /// <remarks>Set a short value, such as 500, before scanning a network.</remarks>
     property ConnectionTimeout: Integer read FConnectionTimeout write FConnectionTimeout;
-    (*** Response time-out in milliseconds for devices added from now on (default 10000). *)
+    //** @abstract(Response time-out in milliseconds for devices added from now on @(default
+    //** 10000@).)
     /// <summary>Response time-out in milliseconds for devices added from now on (default 10000).</summary>
     property ResponseTimeout: Integer read FResponseTimeout write FResponseTimeout;
-    (*** The number of devices added. *)
+    //** @abstract(The number of devices added.)
     /// <summary>The number of devices added.</summary>
     property Count: Integer read GetCount;
-    (*** The devices added, by index 0 to Count - 1. *)
+    //** @abstract(The devices added, by index 0 to Count - 1.)
     /// <summary>The devices added, by index 0 to Count - 1.</summary>
     property Devices[AIndex: Integer]: TTapoDevice read GetDevice; default;
   end;
 
 { JSON helpers shared with the device units }
 
-(***
-  Reads an integer field.
-
-  Booleans read as 0 or 1 and numeric strings are converted.
-
-  @param(Obj The object to read from. May be nil.)
-
-  @param(Name The field name.)
-
-  @param(Default Returned if the field is missing or not a number.)
-*)
+//** @abstract(Reads an integer field.)
+//**
+//** Booleans read as 0 or 1 and numeric strings are converted.
+//**
+//** @param(Obj The object to read from. May be nil.)
+//**
+//** @param(Name The field name.)
+//**
+//** @param(Default Returned if the field is missing or not a number.)
 /// <summary>Reads an integer field.</summary>
 /// <param name="Obj">The object to read from. May be nil.</param>
 /// <param name="Name">The field name.</param>
 /// <param name="Default">Returned if the field is missing or not a number.</param>
 /// <remarks>Booleans read as 0 or 1 and numeric strings are converted.</remarks>
 function JInt64(Obj: TJSONObject; const Name: string; Default: Int64 = 0): Int64;
-(***
-  Reads a floating-point field.
-
-  @param(Obj The object to read from. May be nil.)
-
-  @param(Name The field name.)
-
-  @param(Default Returned if the field is missing or not a number.)
-*)
+//** @abstract(Reads a floating-point field.)
+//**
+//** @param(Obj The object to read from. May be nil.)
+//**
+//** @param(Name The field name.)
+//**
+//** @param(Default Returned if the field is missing or not a number.)
 /// <summary>Reads a floating-point field.</summary>
 /// <param name="Obj">The object to read from. May be nil.</param>
 /// <param name="Name">The field name.</param>
 /// <param name="Default">Returned if the field is missing or not a number.</param>
 function JFloat(Obj: TJSONObject; const Name: string; Default: Double = 0): Double;
-(***
-  Reads a field as text.
-
-  @param(Obj The object to read from. May be nil.)
-
-  @param(Name The field name.)
-
-  @returns(The value, or an empty string if the field is missing or null.)
-*)
+//** @abstract(Reads a field as text.)
+//**
+//** @param(Obj The object to read from. May be nil.)
+//**
+//** @param(Name The field name.)
+//**
+//** @returns(The value, or an empty string if the field is missing or null.)
 /// <summary>Reads a field as text.</summary>
 /// <param name="Obj">The object to read from. May be nil.</param>
 /// <param name="Name">The field name.</param>
 /// <returns>The value, or an empty string if the field is missing or null.</returns>
 function JStr(Obj: TJSONObject; const Name: string): string;
-(***
-  Reads a Boolean field.
-
-  Numbers read as True when not 0; the strings '1', 'true' and 'on' read as True.
-
-  @param(Obj The object to read from. May be nil.)
-
-  @param(Name The field name.)
-
-  @param(Default Returned if the field is missing.)
-*)
+//** @abstract(Reads a Boolean field.)
+//**
+//** Numbers read as True when not 0; the strings '1', 'true' and 'on' read as True.
+//**
+//** @param(Obj The object to read from. May be nil.)
+//**
+//** @param(Name The field name.)
+//**
+//** @param(Default Returned if the field is missing.)
 /// <summary>Reads a Boolean field.</summary>
 /// <param name="Obj">The object to read from. May be nil.</param>
 /// <param name="Name">The field name.</param>
 /// <param name="Default">Returned if the field is missing.</param>
 /// <remarks>Numbers read as True when not 0; the strings '1', 'true' and 'on' read as True.</remarks>
 function JBool(Obj: TJSONObject; const Name: string; Default: Boolean = False): Boolean;
-(***
-  Reads an object field.
-
-  @returns(The object, still owned by Obj, or nil.)
-*)
+//** @abstract(Reads an object field.)
+//**
+//** @returns(The object, still owned by Obj, or nil.)
 /// <summary>Reads an object field.</summary>
 /// <returns>The object, still owned by Obj, or nil.</returns>
 function JObj(Obj: TJSONObject; const Name: string): TJSONObject;
-(***
-  Reads an array field.
-
-  @returns(The array, still owned by Obj, or nil.)
-*)
+//** @abstract(Reads an array field.)
+//**
+//** @returns(The array, still owned by Obj, or nil.)
 /// <summary>Reads an array field.</summary>
 /// <returns>The array, still owned by Obj, or nil.</returns>
 function JArr(Obj: TJSONObject; const Name: string): TJSONArray;
-(*** Tells whether a field is present and not null. *)
+//** @abstract(Tells whether a field is present and not null.)
 /// <summary>Tells whether a field is present and not null.</summary>
 function JHas(Obj: TJSONObject; const Name: string): Boolean;
-(***
-  Reads a Base64 text field, such as nickname or ssid, and decodes it.
-
-  @returns(The decoded text; the raw value if it is not valid Base64.)
-*)
+//** @abstract(Reads a Base64 text field, such as nickname or ssid, and decodes it.)
+//**
+//** @returns(The decoded text; the raw value if it is not valid Base64.)
 /// <summary>Reads a Base64 text field, such as nickname or ssid, and decodes it.</summary>
 /// <returns>The decoded text; the raw value if it is not valid Base64.</returns>
 function JBase64Str(Obj: TJSONObject; const Name: string): string;
-(***
-  Builds a JSON object from name/value pairs.
-
-  @param(Pairs Alternating names and values. Values may be Integer, Int64, Boolean, string,
-  Extended or a TJSONValue, which the new object takes ownership of.)
-
-  @returns(The new object. The caller frees it, or passes it on to a method that takes ownership.)
-
-  @raises(ETapoError A name is not a string, or a value has an unsupported type.)
-
-  Example:
-  @longCode(#
-  Plug.Execute('device_reboot', JObject(['delay', 5])).Free;
-  #)
-*)
+//** @abstract(Builds a JSON object from name/value pairs.)
+//**
+//** @param(Pairs Alternating names and values. Values may be Integer, Int64, Boolean, string,
+//** Extended or a TJSONValue, which the new object takes ownership of.)
+//**
+//** @returns(The new object. The caller frees it, or passes it on to a method that takes ownership.)
+//**
+//** @raises(ETapoError A name is not a string, or a value has an unsupported type.)
+//**
+//** Example:
+//** @longCode(#
+//** Plug.Execute('device_reboot', JObject(['delay', 5])).Free;
+//** #)
 /// <summary>Builds a JSON object from name/value pairs.</summary>
 /// <param name="Pairs">
 ///   Alternating names and values. Values may be Integer, Int64, Boolean,
@@ -1080,35 +1011,30 @@ function JBase64Str(Obj: TJSONObject; const Name: string): string;
 ///   <code>Plug.Execute('device_reboot', JObject(['delay', 5])).Free;</code>
 /// </example>
 function JObject(const Pairs: array of const): TJSONObject;
-(*** Builds the SmartCam "section names" parameter, {"name": [ASection]}. *)
+//** @abstract(Builds the SmartCam "section names" parameter, {"name": [ASection]}.)
 /// <summary>Builds the SmartCam "section names" parameter, {"name": [ASection]}.</summary>
 function JSectionNames(const ASection: string): TJSONObject;
-(***
-  Reads the error code of a reply.
-
-  @returns(error_code, else err_code, else 0 @(SmartCam replies may omit it@).)
-*)
+//** @abstract(Reads the error code of a reply.)
+//**
+//** @returns(error_code, else err_code, else 0 @(SmartCam replies may omit it@).)
 /// <summary>Reads the error code of a reply.</summary>
 /// <returns>error_code, else err_code, else 0 (SmartCam replies may omit it).</returns>
 function TapoErrorCode(Obj: TJSONObject): Integer;
-(***
-  Finds the data in a SmartCam "get" reply, which nests it as {"section": {"leaf": {...}}}.
-
-  @param(AResult The reply's result object.)
-
-  @returns(The leaf object, still owned by AResult, or nil.)
-*)
+//** @abstract(Finds the data in a SmartCam "get" reply, which nests it as {"section": {"leaf":
+//** {...}}}.)
+//**
+//** @param(AResult The reply's result object.)
+//**
+//** @returns(The leaf object, still owned by AResult, or nil.)
 /// <summary>Finds the data in a SmartCam "get" reply, which nests it as {"section": {"leaf": {...}}}.</summary>
 /// <param name="AResult">The reply's result object.</param>
 /// <returns>The leaf object, still owned by AResult, or nil.</returns>
 function TapoSectionLeaf(AResult: TJSONObject): TJSONObject;
-(***
-  Names a Tapo error code.
-
-  @param(Code An @link(ETapoError.ErrorCode).)
-
-  @returns(The name used by the Tapo API, for example 'SESSION_EXPIRED', or 'UNKNOWN'.)
-*)
+//** @abstract(Names a Tapo error code.)
+//**
+//** @param(Code An @link(ETapoError.ErrorCode).)
+//**
+//** @returns(The name used by the Tapo API, for example 'SESSION_EXPIRED', or 'UNKNOWN'.)
 /// <summary>Names a Tapo error code.</summary>
 /// <param name="Code">An <see cref="ETapoError.ErrorCode"/>.</param>
 /// <returns>The name used by the Tapo API, for example 'SESSION_EXPIRED', or 'UNKNOWN'.</returns>

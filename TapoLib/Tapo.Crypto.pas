@@ -1,3 +1,10 @@
+//** @abstract(Cryptography for the Tapo local protocols, in pure Pascal @(RTL only@): AES-128
+//** @(ECB block, CBC/PKCS#7, CCM@), HMAC-SHA256, HKDF-SHA256, PBKDF2-HMAC-SHA256, P-256 arithmetic
+//** and the SPAKE2+ prover @(RFC 9383@).)
+//**
+//** Ported from https://github.com/mihai-dinculescu/tapo and checked against the RFC 9383 test
+//** vector and the crate's known answers; run TapoCryptoSelfTest to repeat those checks in your
+//** build.
 unit Tapo.Crypto;
 
 {
@@ -19,12 +26,10 @@ uses
   System.SysUtils, System.Classes, System.Hash, System.NetEncoding;
 
 type
-  (***
-    Raised when a cryptographic operation fails: a bad key length, invalid padding after
-    decryption, or a device share that is not a point on P-256.
-
-    Tapo.Client converts this to @link(ETapoError) where it arises during a login.
-  *)
+  //** @abstract(Raised when a cryptographic operation fails: a bad key length, invalid padding after
+  //** decryption, or a device share that is not a point on P-256.)
+  //**
+  //** Tapo.Client converts this to @link(ETapoError) where it arises during a login.
   /// <summary>
   ///   Raised when a cryptographic operation fails: a bad key length, invalid
   ///   padding after decryption, or a device share that is not a point on P-256.
@@ -35,114 +40,98 @@ type
   /// </remarks>
   ETapoCryptoError = class(Exception);
 
-  (***
-    The prover's side of a completed SPAKE2+ exchange (RFC 9383), as returned by
-    @link(SpakeProve).
-  *)
+  //** @abstract(The prover's side of a completed SPAKE2+ exchange @(RFC 9383@), as returned by
+  //** @link(SpakeProve).)
   /// <summary>
   ///   The prover's side of a completed SPAKE2+ exchange (RFC 9383), as
   ///   returned by <see cref="SpakeProve"/>.
   /// </summary>
   TSpakeProof = record
-    (*** The prover share X, uncompressed SEC1 (65 bytes). Sent to the device as user_share. *)
+    //** @abstract(The prover share X, uncompressed SEC1 @(65 bytes@). Sent to the device as
+    //** user_share.)
     /// <summary>The prover share X, uncompressed SEC1 (65 bytes). Sent to the device as user_share.</summary>
     Share: TBytes;
-    (*** The prover confirmation MAC (32 bytes). Sent to the device as user_confirm. *)
+    //** @abstract(The prover confirmation MAC @(32 bytes@). Sent to the device as user_confirm.)
     /// <summary>The prover confirmation MAC (32 bytes). Sent to the device as user_confirm.</summary>
     Confirm: TBytes;
-    (***
-      The session secret (32 bytes) from which the TPAP session key and nonce are derived.
-    *)
+    //** @abstract(The session secret @(32 bytes@) from which the TPAP session key and nonce are
+    //** derived.)
     /// <summary>The session secret (32 bytes) from which the TPAP session key and nonce are derived.</summary>
     SharedKey: TBytes;
-    (*** The key that checks the device's confirmation (dev_confirm). *)
+    //** @abstract(The key that checks the device's confirmation @(dev_confirm@).)
     /// <summary>The key that checks the device's confirmation (dev_confirm).</summary>
     VerifierConfirmKey: TBytes;
   end;
 
 { Byte helpers }
 
-(***
-  Concatenates byte arrays.
-
-  @param(Parts The arrays to join, in order. Empty arrays are allowed.)
-
-  @returns(A new array holding every byte of Parts.)
-*)
+//** @abstract(Concatenates byte arrays.)
+//**
+//** @param(Parts The arrays to join, in order. Empty arrays are allowed.)
+//**
+//** @returns(A new array holding every byte of Parts.)
 /// <summary>Concatenates byte arrays.</summary>
 /// <param name="Parts">The arrays to join, in order. Empty arrays are allowed.</param>
 /// <returns>A new array holding every byte of Parts.</returns>
 function Cat(const Parts: array of TBytes): TBytes;
 
-(***
-  Encodes a 32-bit integer as 4 big-endian bytes.
-
-  @param(V The value. Negative values are encoded in two's complement.)
-
-  @returns(4 bytes, most significant first.)
-*)
+//** @abstract(Encodes a 32-bit integer as 4 big-endian bytes.)
+//**
+//** @param(V The value. Negative values are encoded in two's complement.)
+//**
+//** @returns(4 bytes, most significant first.)
 /// <summary>Encodes a 32-bit integer as 4 big-endian bytes.</summary>
 /// <param name="V">The value. Negative values are encoded in two's complement.</param>
 /// <returns>4 bytes, most significant first.</returns>
 function Int32BE(V: Integer): TBytes;
 
-(***
-  Reads a 32-bit big-endian integer.
-
-  @param(B The bytes to read from.)
-
-  @param(Offset Index of the first of the 4 bytes.)
-
-  @returns(The signed value.)
-*)
+//** @abstract(Reads a 32-bit big-endian integer.)
+//**
+//** @param(B The bytes to read from.)
+//**
+//** @param(Offset Index of the first of the 4 bytes.)
+//**
+//** @returns(The signed value.)
 /// <summary>Reads a 32-bit big-endian integer.</summary>
 /// <param name="B">The bytes to read from.</param>
 /// <param name="Offset">Index of the first of the 4 bytes.</param>
 /// <returns>The signed value.</returns>
 function ReadInt32BE(const B: TBytes; Offset: Integer): Integer;
 
-(***
-  Compares two byte arrays.
-
-  @returns(True if both have the same length and content.)
-*)
+//** @abstract(Compares two byte arrays.)
+//**
+//** @returns(True if both have the same length and content.)
 /// <summary>Compares two byte arrays.</summary>
 /// <returns>True if both have the same length and content.</returns>
 function BytesEqual(const A, B: TBytes): Boolean;
 
-(*** Encodes a string as UTF-8. *)
+//** @abstract(Encodes a string as UTF-8.)
 /// <summary>Encodes a string as UTF-8.</summary>
 function Utf8(const S: string): TBytes;
 
-(***
-  Formats bytes as lower-case hexadecimal.
-
-  @returns(Two characters per byte, for example 'a1b2'.)
-*)
+//** @abstract(Formats bytes as lower-case hexadecimal.)
+//**
+//** @returns(Two characters per byte, for example 'a1b2'.)
 /// <summary>Formats bytes as lower-case hexadecimal.</summary>
 /// <returns>Two characters per byte, for example 'a1b2'.</returns>
 function BytesToHex(const B: TBytes): string;
 
-(***
-  Parses hexadecimal text into bytes.
-
-  @param(S An even number of hexadecimal digits, upper or lower case.)
-
-  @raises(EConvertError S holds a character that is not a hexadecimal digit.)
-*)
+//** @abstract(Parses hexadecimal text into bytes.)
+//**
+//** @param(S An even number of hexadecimal digits, upper or lower case.)
+//**
+//** @raises(EConvertError S holds a character that is not a hexadecimal digit.)
 /// <summary>Parses hexadecimal text into bytes.</summary>
 /// <param name="S">An even number of hexadecimal digits, upper or lower case.</param>
 /// <exception cref="EConvertError">S holds a character that is not a hexadecimal digit.</exception>
 function HexToBytes(const S: string): TBytes;
 
-(***
-  Returns cryptographically secure random bytes.
-
-  Uses BCryptGenRandom on Windows and /dev/urandom elsewhere. If neither is available it falls
-  back to @code(Random), which is not secure.
-
-  @param(Count The number of bytes.)
-*)
+//** @abstract(Returns cryptographically secure random bytes.)
+//**
+//** Uses BCryptGenRandom on Windows and /dev/urandom elsewhere. If neither is available it falls
+//** back to @code(Random), which is not secure.
+//**
+//** @param(Count The number of bytes.)
 /// <summary>Returns cryptographically secure random bytes.</summary>
 /// <param name="Count">The number of bytes.</param>
 /// <remarks>
@@ -151,71 +140,61 @@ function HexToBytes(const S: string): TBytes;
 /// </remarks>
 function SecureRandomBytes(Count: Integer): TBytes;
 
-(*** Encodes bytes as standard Base64 without line breaks. *)
+//** @abstract(Encodes bytes as standard Base64 without line breaks.)
 /// <summary>Encodes bytes as standard Base64 without line breaks.</summary>
 function Base64Encode(const B: TBytes): string;
 
-(*** Decodes standard Base64. *)
+//** @abstract(Decodes standard Base64.)
 /// <summary>Decodes standard Base64.</summary>
 function Base64Decode(const S: string): TBytes;
 
 { Hashes and key derivation }
 
-(***
-  Computes the SHA-1 hash of A.
-
-  @returns(20 bytes.)
-*)
+//** @abstract(Computes the SHA-1 hash of A.)
+//**
+//** @returns(20 bytes.)
 /// <summary>Computes the SHA-1 hash of A.</summary>
 /// <returns>20 bytes.</returns>
 function SHA1Of(const A: TBytes): TBytes;
 
-(***
-  Computes the SHA-256 hash of A.
-
-  @returns(32 bytes.)
-*)
+//** @abstract(Computes the SHA-256 hash of A.)
+//**
+//** @returns(32 bytes.)
 /// <summary>Computes the SHA-256 hash of A.</summary>
 /// <returns>32 bytes.</returns>
 function SHA256Of(const A: TBytes): TBytes;
 
-(***
-  Computes the MD5 hash of A.
-
-  @returns(16 bytes.)
-*)
+//** @abstract(Computes the MD5 hash of A.)
+//**
+//** @returns(16 bytes.)
 /// <summary>Computes the MD5 hash of A.</summary>
 /// <returns>16 bytes.</returns>
 function MD5Of(const A: TBytes): TBytes;
 
-(***
-  Computes HMAC-SHA256 (RFC 2104).
-
-  @param(AKey The key, of any length.)
-
-  @param(AData The message.)
-
-  @returns(The 32-byte MAC.)
-*)
+//** @abstract(Computes HMAC-SHA256 @(RFC 2104@).)
+//**
+//** @param(AKey The key, of any length.)
+//**
+//** @param(AData The message.)
+//**
+//** @returns(The 32-byte MAC.)
 /// <summary>Computes HMAC-SHA256 (RFC 2104).</summary>
 /// <param name="AKey">The key, of any length.</param>
 /// <param name="AData">The message.</param>
 /// <returns>The 32-byte MAC.</returns>
 function HMACSHA256(const AKey, AData: TBytes): TBytes;
 
-(***
-  Derives key material with HKDF-SHA256 (RFC 5869).
-
-  @param(IKM The input key material.)
-
-  @param(Salt The salt; empty means a string of zeros.)
-
-  @param(Info Context information for the expand step.)
-
-  @param(Len The number of bytes to derive, at most 8160.)
-
-  @returns(Len bytes of output key material.)
-*)
+//** @abstract(Derives key material with HKDF-SHA256 @(RFC 5869@).)
+//**
+//** @param(IKM The input key material.)
+//**
+//** @param(Salt The salt; empty means a string of zeros.)
+//**
+//** @param(Info Context information for the expand step.)
+//**
+//** @param(Len The number of bytes to derive, at most 8160.)
+//**
+//** @returns(Len bytes of output key material.)
 /// <summary>Derives key material with HKDF-SHA256 (RFC 5869).</summary>
 /// <param name="IKM">The input key material.</param>
 /// <param name="Salt">The salt; empty means a string of zeros.</param>
@@ -224,19 +203,17 @@ function HMACSHA256(const AKey, AData: TBytes): TBytes;
 /// <returns>Len bytes of output key material.</returns>
 function HKDFSHA256(const IKM, Salt, Info: TBytes; Len: Integer): TBytes;
 
-(***
-  Derives a key with PBKDF2-HMAC-SHA256 (RFC 8018).
-
-  @param(Password The password bytes.)
-
-  @param(Salt The salt.)
-
-  @param(Iterations The iteration count, at least 1.)
-
-  @param(Len The number of bytes to derive.)
-
-  @returns(Len bytes of derived key.)
-*)
+//** @abstract(Derives a key with PBKDF2-HMAC-SHA256 @(RFC 8018@).)
+//**
+//** @param(Password The password bytes.)
+//**
+//** @param(Salt The salt.)
+//**
+//** @param(Iterations The iteration count, at least 1.)
+//**
+//** @param(Len The number of bytes to derive.)
+//**
+//** @returns(Len bytes of derived key.)
 /// <summary>Derives a key with PBKDF2-HMAC-SHA256 (RFC 8018).</summary>
 /// <param name="Password">The password bytes.</param>
 /// <param name="Salt">The salt.</param>
@@ -247,21 +224,19 @@ function PBKDF2SHA256(const Password, Salt: TBytes; Iterations, Len: Integer): T
 
 { AES-128 }
 
-(***
-  Encrypts with AES-128 in CBC mode with PKCS#7 padding.
-
-  @param(Key 16-byte key.)
-
-  @param(IV 16-byte initialisation vector.)
-
-  @param(Plain The plaintext, of any length.)
-
-  @returns(The ciphertext, a multiple of 16 bytes.)
-
-  @raises(ETapoCryptoError Key is not 16 bytes.)
-
-  @seealso(AES128CBCDecrypt)
-*)
+//** @abstract(Encrypts with AES-128 in CBC mode with PKCS#7 padding.)
+//**
+//** @param(Key 16-byte key.)
+//**
+//** @param(IV 16-byte initialisation vector.)
+//**
+//** @param(Plain The plaintext, of any length.)
+//**
+//** @returns(The ciphertext, a multiple of 16 bytes.)
+//**
+//** @raises(ETapoCryptoError Key is not 16 bytes.)
+//**
+//** @seealso(AES128CBCDecrypt)
 /// <summary>Encrypts with AES-128 in CBC mode with PKCS#7 padding.</summary>
 /// <param name="Key">16-byte key.</param>
 /// <param name="IV">16-byte initialisation vector.</param>
@@ -271,22 +246,20 @@ function PBKDF2SHA256(const Password, Salt: TBytes; Iterations, Len: Integer): T
 /// <seealso cref="AES128CBCDecrypt"/>
 function AES128CBCEncrypt(const Key, IV, Plain: TBytes): TBytes;
 
-(***
-  Decrypts AES-128 CBC and removes PKCS#7 padding.
-
-  @param(Key 16-byte key.)
-
-  @param(IV 16-byte initialisation vector.)
-
-  @param(Cipher The ciphertext, a non-zero multiple of 16 bytes.)
-
-  @returns(The plaintext.)
-
-  @raises(ETapoCryptoError Cipher has the wrong length, or the padding is invalid @(usually a
-  wrong key@).)
-
-  @seealso(AES128CBCEncrypt)
-*)
+//** @abstract(Decrypts AES-128 CBC and removes PKCS#7 padding.)
+//**
+//** @param(Key 16-byte key.)
+//**
+//** @param(IV 16-byte initialisation vector.)
+//**
+//** @param(Cipher The ciphertext, a non-zero multiple of 16 bytes.)
+//**
+//** @returns(The plaintext.)
+//**
+//** @raises(ETapoCryptoError Cipher has the wrong length, or the padding is invalid @(usually a
+//** wrong key@).)
+//**
+//** @seealso(AES128CBCEncrypt)
 /// <summary>Decrypts AES-128 CBC and removes PKCS#7 padding.</summary>
 /// <param name="Key">16-byte key.</param>
 /// <param name="IV">16-byte initialisation vector.</param>
@@ -298,20 +271,18 @@ function AES128CBCEncrypt(const Key, IV, Plain: TBytes): TBytes;
 /// <seealso cref="AES128CBCEncrypt"/>
 function AES128CBCDecrypt(const Key, IV, Cipher: TBytes): TBytes;
 
-(***
-  Encrypts with AES-128 in CCM mode with a 12-byte nonce, a 16-byte tag and no associated data, as
-  TPAP sessions do.
-
-  @param(Key 16-byte key.)
-
-  @param(Nonce 12-byte nonce.)
-
-  @param(Plain The plaintext, shorter than 16 MB.)
-
-  @returns(The ciphertext followed by the 16-byte tag.)
-
-  @seealso(AES128CCMDecrypt)
-*)
+//** @abstract(Encrypts with AES-128 in CCM mode with a 12-byte nonce, a 16-byte tag and no
+//** associated data, as TPAP sessions do.)
+//**
+//** @param(Key 16-byte key.)
+//**
+//** @param(Nonce 12-byte nonce.)
+//**
+//** @param(Plain The plaintext, shorter than 16 MB.)
+//**
+//** @returns(The ciphertext followed by the 16-byte tag.)
+//**
+//** @seealso(AES128CCMDecrypt)
 /// <summary>
 ///   Encrypts with AES-128 in CCM mode with a 12-byte nonce, a 16-byte tag
 ///   and no associated data, as TPAP sessions do.
@@ -323,21 +294,19 @@ function AES128CBCDecrypt(const Key, IV, Cipher: TBytes): TBytes;
 /// <seealso cref="AES128CCMDecrypt"/>
 function AES128CCMEncrypt(const Key, Nonce, Plain: TBytes): TBytes;
 
-(***
-  Decrypts and authenticates AES-128 CCM (12-byte nonce, 16-byte tag).
-
-  @param(Key 16-byte key.)
-
-  @param(Nonce 12-byte nonce.)
-
-  @param(Data The ciphertext followed by the 16-byte tag.)
-
-  @param(Plain Receives the plaintext, or nil if authentication fails.)
-
-  @returns(True if the tag is valid.)
-
-  @seealso(AES128CCMEncrypt)
-*)
+//** @abstract(Decrypts and authenticates AES-128 CCM @(12-byte nonce, 16-byte tag@).)
+//**
+//** @param(Key 16-byte key.)
+//**
+//** @param(Nonce 12-byte nonce.)
+//**
+//** @param(Data The ciphertext followed by the 16-byte tag.)
+//**
+//** @param(Plain Receives the plaintext, or nil if authentication fails.)
+//**
+//** @returns(True if the tag is valid.)
+//**
+//** @seealso(AES128CCMEncrypt)
 /// <summary>Decrypts and authenticates AES-128 CCM (12-byte nonce, 16-byte tag).</summary>
 /// <param name="Key">16-byte key.</param>
 /// <param name="Nonce">12-byte nonce.</param>
@@ -349,27 +318,25 @@ function AES128CCMDecrypt(const Key, Nonce, Data: TBytes; out Plain: TBytes): Bo
 
 { SPAKE2+ }
 
-(***
-  Runs the prover side of SPAKE2+ (RFC 9383) on P-256 with SHA-256, HKDF-SHA256 and HMAC-SHA256,
-  as the TPAP login does.
-
-  @param(Credential The password transform the device asked for @(for plugs, the SHA-1 hex of the
-  password@).)
-
-  @param(Salt The device's dev_salt.)
-
-  @param(Iterations The device's PBKDF2 iteration count.)
-
-  @param(UserRandom The 32 random bytes sent in pake_register.)
-
-  @param(DeviceRandom The device's 32-byte dev_random.)
-
-  @param(DeviceShare The device's share @(dev_share@), a SEC1 point.)
-
-  @returns(The share and confirmation to send, and the keys for the session.)
-
-  @raises(ETapoCryptoError DeviceShare is not a usable point on P-256.)
-*)
+//** @abstract(Runs the prover side of SPAKE2+ @(RFC 9383@) on P-256 with SHA-256, HKDF-SHA256 and
+//** HMAC-SHA256, as the TPAP login does.)
+//**
+//** @param(Credential The password transform the device asked for @(for plugs, the SHA-1 hex of the
+//** password@).)
+//**
+//** @param(Salt The device's dev_salt.)
+//**
+//** @param(Iterations The device's PBKDF2 iteration count.)
+//**
+//** @param(UserRandom The 32 random bytes sent in pake_register.)
+//**
+//** @param(DeviceRandom The device's 32-byte dev_random.)
+//**
+//** @param(DeviceShare The device's share @(dev_share@), a SEC1 point.)
+//**
+//** @returns(The share and confirmation to send, and the keys for the session.)
+//**
+//** @raises(ETapoCryptoError DeviceShare is not a usable point on P-256.)
 /// <summary>
 ///   Runs the prover side of SPAKE2+ (RFC 9383) on P-256 with SHA-256,
 ///   HKDF-SHA256 and HMAC-SHA256, as the TPAP login does.
@@ -385,16 +352,14 @@ function AES128CCMDecrypt(const Key, Nonce, Data: TBytes; out Plain: TBytes): Bo
 function SpakeProve(const Credential: string; const Salt: TBytes; Iterations: Integer;
   const UserRandom, DeviceRandom, DeviceShare: TBytes): TSpakeProof;
 
-(***
-  Runs known-answer tests of AES, AES-CCM, the hashes, PBKDF2 and SPAKE2+ (against the RFC 9383
-  test vector). No network access.
-
-  Run this once after building on a new compiler or platform.
-
-  @param(AReport Receives one line per check, each starting OK or FAIL.)
-
-  @returns(True if every check passed.)
-*)
+//** @abstract(Runs known-answer tests of AES, AES-CCM, the hashes, PBKDF2 and SPAKE2+ @(against the
+//** RFC 9383 test vector@). No network access.)
+//**
+//** Run this once after building on a new compiler or platform.
+//**
+//** @param(AReport Receives one line per check, each starting OK or FAIL.)
+//**
+//** @returns(True if every check passed.)
 /// <summary>
 ///   Runs known-answer tests of AES, AES-CCM, the hashes, PBKDF2 and SPAKE2+
 ///   (against the RFC 9383 test vector). No network access.

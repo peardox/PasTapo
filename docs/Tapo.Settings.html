@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Settings</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<h1 class="unit">Unit Tapo.Settings</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div><div class="one_section"><a class="section" href="#PasDoc-Variables">Variables</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+State that lasts between sessions, stored as JSON with Neon (<a href="https://github.com/paolo-rossi/delphi-neon@">https://github.com/paolo-rossi/delphi-neon@</a>).</p>
+<p>
+
+
+<p></p>
+
+<pre class="preformatted">
+settings.json  the Tapo account, the network to scan, and whether the
+               account worked the last time it was used
+devices.json   every Tapo device a scan has found</pre>
+
+<p>
+
+<p>Both live in the per-user application data folder of the platform:
+
+<p></p>
+
+<pre class="preformatted">
+Windows  %LOCALAPPDATA%\TapoScan
+macOS    ~/Library/Application Support/TapoScan
+Linux    $XDG_CONFIG_HOME/TapoScan, or ~/.config/TapoScan</pre>
+
+<p>
+
+<p>(set TapoAppFolderName before first use to change &quot;TapoScan&quot;).
+
+<p>Files are written to a temporary file first and then renamed, so a crash never leaves half a file. On macOS and Linux they are readable by the owner only. The password is stored as plain text for now.
+
+<p>Scans only ever add to devices.json: a device that is not found again is kept. A device found at a new address (same device ID) has its address updated.</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Settings.TTapoSettings.html"><code>TTapoSettings</code></a></td>
+<td class="itemdesc">The contents of settings.json.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Settings.TTapoStoredDevice.html"><code>TTapoStoredDevice</code></a></td>
+<td class="itemdesc">One device in devices.json.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Settings.TTapoDeviceStore.html"><code>TTapoDeviceStore</code></a></td>
+<td class="itemdesc">The contents of devices.json, and the means to load them into a client.</td>
+</tr>
+</table>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Settings.html#TapoDataFolder">TapoDataFolder</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Settings.html#TapoLocalNetwork-string-string-">TapoLocalNetwork</a></strong>(out ANetwork, AMask: string): Boolean;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Settings.html#TapoCheckStatusName-TTapoCheckStatus-">TapoCheckStatusName</a></strong>(AStatus: <a href="Tapo.Settings.html#TTapoCheckStatus">TTapoCheckStatus</a>): string;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Settings.html#TTapoCredentialState">TTapoCredentialState</a></strong> = (...);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Settings.html#TTapoCheckStatus">TTapoCheckStatus</a></strong> = (...);</code></td>
+</tr>
+</table>
+<span id="PasDoc-Variables"></span><h3 class="summary">Variables</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Settings.html#TapoAppFolderName">TapoAppFolderName</a></strong>: string = 'TapoScan';</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoDataFolder"></span><code>function <strong>TapoDataFolder</strong>: string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The folder that holds settings.json and devices.json, created if missing.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The full path.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoLocalNetwork-string-string-"></span><code>function <strong>TapoLocalNetwork</strong>(out ANetwork, AMask: string): Boolean;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Finds this computer's local IPv4 network.</p>
+<p>
+
+
+<p>Asks the system which local address it would use to reach the internet (a UDP socket is pointed at a public address; nothing is sent) and takes that adapter's mask. Without a route it falls back to the adapter list, preferring 192.168.x.x over 10.x.x.x over 172.16-31.x.x and skipping recognisable virtual adapters.
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ANetwork</dt>
+<dd>Receives the network address, for example '192.168.1.0'.</dd>
+<dt>AMask</dt>
+<dd>Receives the subnet mask, for example '255.255.255.0'.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">True if a private (LAN) IPv4 address was found; otherwise False and '192.168.0.0' / '255.255.255.0'.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoCheckStatusName-TTapoCheckStatus-"></span><code>function <strong>TapoCheckStatusName</strong>(AStatus: <a href="Tapo.Settings.html#TTapoCheckStatus">TTapoCheckStatus</a>): string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A short English name for a check result.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AStatus</dt>
+<dd>The result.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">For example 'ok' or 'unreachable'.</p></td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoCredentialState"></span><code><strong>TTapoCredentialState</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Whether the stored Tapo account details have been shown to work.</p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="csUnknown">csUnknown</span>: Not tried yet: no scan has finished since they were entered.</li>
+<li>
+<span id="csGood">csGood</span>: A Tapo device accepted them.</li>
+<li>
+<span id="csBad">csBad</span>: Tapo devices rejected them and none accepted them.</li>
+</ul>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoCheckStatus"></span><code><strong>TTapoCheckStatus</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The result of checking one stored device at startup.</p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="tcsOk">tcsOk</span>: It answered, and it is the device that was stored.</li>
+<li>
+<span id="tcsDifferentDevice">tcsDifferentDevice</span>: It answered, but with another device ID: something else has that address now.</li>
+<li>
+<span id="tcsBadCredentials">tcsBadCredentials</span>: It answered but rejected the Tapo account.</li>
+<li>
+<span id="tcsUnreachable">tcsUnreachable</span>: Nothing answered, or it could not be logged in to.</li>
+<li>
+<span id="tcsNotLoaded">tcsNotLoaded</span>: Its class could not be found, so it was not added.</li>
+</ul>
+</td></tr>
+</table>
+<h3 class="detail">Variables</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoAppFolderName"></span><code><strong>TapoAppFolderName</strong>: string = 'TapoScan';</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The name of the folder, inside the platform's application data folder, that holds settings.json and devices.json. Set it before first use.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

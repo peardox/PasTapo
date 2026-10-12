@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Cameras: Class TTapoCamera</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoCamera"></span><h1 class="cio">Class TTapoCamera</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Cameras.html">Tapo.Cameras</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoCamera = class(<a class="normal" href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>)</code></p>
+<h2 class="description">Description</h2>
+<p>
+Tapo pan/tilt camera: C210, C220, C225, C325WB, C520WS, TC40 and TC70.</p>
+<p>
+
+
+<p>Logs in over TPAP (HTTPS), or over AES SSL if Third-Party Compatibility is on. The camera's self-signed certificate is accepted.
+
+<p>Taking a snapshot is not supported here: open the MJPEG address from <a class="normal" href="Tapo.Cameras.TTapoCamera.html#GetRtspStreamUrl-string-string-">GetRtspStreamUrl</a> with any RTSP-capable player or library.
+
+<p>Example: </p>
+
+<pre class="longcode">
+Cam := Client.Add(C210, <span class="pascal_string">'192.168.1.54'</span>);
+Cam.PanTilt(<span class="pascal_numeric">10</span>, <span class="pascal_numeric">0</span>);
+<span class="pascal_keyword">for</span> Preset <span class="pascal_keyword">in</span> Cam.GetPresets <span class="pascal_keyword">do</span>
+  ListBox1.Items.Add(Preset.<span class="pascal_keyword">Name</span>);</pre>
+
+<p></p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoEndpoint.html">TTapoEndpoint</a></li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoDevice.html">TTapoDevice</a></li>
+<li class="thisitem">TTapoCamera</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Cameras.TTapoCamera.html#Family">Family</a></strong>: <a href="Tapo.Client.html#TTapoDeviceFamily">TTapoDeviceFamily</a>; override;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Cameras.TTapoCamera.html#AuthMode">AuthMode</a></strong>: <a href="Tapo.Client.html#TTapoAuthMode">TTapoAuthMode</a>; override;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Cameras.TTapoCamera.html#GetCameraInfo">GetCameraInfo</a></strong>: <a href="Tapo.Cameras.TTapoCameraInfo.html">TTapoCameraInfo</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Cameras.TTapoCamera.html#GetRtspStreamUrl-string-string-">GetRtspStreamUrl</a></strong>(const ACameraUsername, ACameraPassword: string): <a href="Tapo.Cameras.TTapoRtspStreamUrl.html">TTapoRtspStreamUrl</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Cameras.TTapoCamera.html#PanTilt-Integer-Integer-">PanTilt</a></strong>(APan, ATilt: Integer);</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Cameras.TTapoCamera.html#SavePreset-string-">SavePreset</a></strong>(const AName: string);</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Cameras.TTapoCamera.html#GotoPreset-string-">GotoPreset</a></strong>(const AId: string);</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Cameras.TTapoCamera.html#DeletePreset-string-">DeletePreset</a></strong>(const AId: string);</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Cameras.TTapoCamera.html#GetPresets">GetPresets</a></strong>: TArray&lt;<a href="Tapo.Cameras.TTapoCameraPreset.html">TTapoCameraPreset</a>&gt;;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Family"></span><code>class function <strong>Family</strong>: <a href="Tapo.Client.html#TTapoDeviceFamily">TTapoDeviceFamily</a>; override;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Returns dfSmartCam.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="AuthMode"></span><code>class function <strong>AuthMode</strong>: <a href="Tapo.Client.html#TTapoAuthMode">TTapoAuthMode</a>; override;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Returns amCamera.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetCameraInfo"></span><code>function <strong>GetCameraInfo</strong>: <a href="Tapo.Cameras.TTapoCameraInfo.html">TTapoCameraInfo</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the camera's device info.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetRtspStreamUrl-string-string-"></span><code>function <strong>GetRtspStreamUrl</strong>(const ACameraUsername, ACameraPassword: string): <a href="Tapo.Cameras.TTapoRtspStreamUrl.html">TTapoRtspStreamUrl</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Builds the RTSP addresses of the camera's streams.</p>
+<p>
+
+
+<p>No request is made.
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ACameraUsername</dt>
+<dd>The camera account user name (Tapo app &gt; camera &gt; Advanced Settings &gt; Camera Account), not the Tapo account.</dd>
+<dt>ACameraPassword</dt>
+<dd>The camera account password.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return"><a href="rtsp://user:password@@host:554/streamN">rtsp://user:password@@host:554/streamN</a> addresses, with the user name and password URL-encoded.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="PanTilt-Integer-Integer-"></span><code>procedure <strong>PanTilt</strong>(APan, ATilt: Integer);</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Moves the lens.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>APan</dt>
+<dd>Steps to pan; negative is left.</dd>
+<dt>ATilt</dt>
+<dd>Steps to tilt; negative is down.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SavePreset-string-"></span><code>procedure <strong>SavePreset</strong>(const AName: string);</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Saves the current position as a preset.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AName</dt>
+<dd>The preset's name.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GotoPreset-string-"></span><code>procedure <strong>GotoPreset</strong>(const AId: string);</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Moves to a saved preset.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AId</dt>
+<dd>The preset's id, from <a class="normal" href="Tapo.Cameras.TTapoCamera.html#GetPresets">GetPresets</a>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="DeletePreset-string-"></span><code>procedure <strong>DeletePreset</strong>(const AId: string);</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Deletes a saved preset.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AId</dt>
+<dd>The preset's id, from <a class="normal" href="Tapo.Cameras.TTapoCamera.html#GetPresets">GetPresets</a>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetPresets"></span><code>function <strong>GetPresets</strong>: TArray&lt;<a href="Tapo.Cameras.TTapoCameraPreset.html">TTapoCameraPreset</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the saved presets.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

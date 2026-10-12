@@ -1,3 +1,28 @@
+//** @abstract(Tapo hubs and the devices paired to them.)
+//**
+//** @preformatted(
+//** TTapoDevice @(abstract, Tapo.Client@)
+//** `-- TTapoHub @(abstract@)             child list and child lookup
+//**     |-- TTapoH100                   H100 @(+ alarm@)
+//**     `-- TTapoCameraHub              H200, H500 @(+ paired cameras, recordings@)
+//** )
+//**
+//** @preformatted(
+//** TTapoChildDevice @(abstract, Tapo.Client@)
+//** `-- TTapoHubChild @(abstract@)        common child info
+//**     |-- TTapoKE100                  radiator valve @(TRV@)
+//**     |-- TTapoS210                   light switch @(on/off, usage@)
+//**     |-- TTapoT31x                   T310, T315 temperature/humidity sensor
+//**     `-- TTapoTriggerSensor @(abstract@)   trigger logs
+//**         |-- TTapoS200               S200B, S200D button / dimmer
+//**         |-- TTapoT100               motion sensor
+//**         |-- TTapoT110               contact sensor
+//**         `-- TTapoT300               water leak sensor
+//** )
+//**
+//** Children are obtained from the hub (Hub.T31x('Kitchen')) and owned by it. Capabilities follow
+//** the feature matrix of https://github.com/mihai-dinculescu/tapo. Recording download from camera
+//** hubs is not included (it uses a separate encrypted media stream, not the control API).
 unit Tapo.Hubs;
 
 {
@@ -35,467 +60,450 @@ uses
   System.Generics.Collections, Tapo.Client, Tapo.Devices;
 
 type
-  (***
-    The fields every device paired to a hub reports.
-
-    Fields a device does not report are empty or 0. @link(Raw) holds the whole reply.
-  *)
+  //** @abstract(The fields every device paired to a hub reports.)
+  //**
+  //** Fields a device does not report are empty or 0. @link(Raw) holds the whole reply.
   /// <summary>The fields every device paired to a hub reports.</summary>
   /// <remarks>Fields a device does not report are empty or 0. <see cref="Raw"/> holds the whole reply.</remarks>
   TTapoHubChildInfo = record
-    (*** The device id. *)
+    //** @abstract(The device id.)
     /// <summary>The device id.</summary>
     DeviceId: string;
-    (*** The device id of the hub it is paired to. *)
+    //** @abstract(The device id of the hub it is paired to.)
     /// <summary>The device id of the hub it is paired to.</summary>
     ParentDeviceId: string;
-    (*** The model, for example 'T310'. *)
+    //** @abstract(The model, for example 'T310'.)
     /// <summary>The model, for example 'T310'.</summary>
     Model: string;
-    (*** The name given in the Tapo app. *)
+    //** @abstract(The name given in the Tapo app.)
     /// <summary>The name given in the Tapo app.</summary>
     Nickname: string;
-    (*** The device type. *)
+    //** @abstract(The device type.)
     /// <summary>The device type.</summary>
     DeviceType: string;
-    (*** The device category. *)
+    //** @abstract(The device category.)
     /// <summary>The device category.</summary>
     Category: string;
-    (*** The firmware version. *)
+    //** @abstract(The firmware version.)
     /// <summary>The firmware version.</summary>
     FirmwareVersion: string;
-    (*** The hardware version. *)
+    //** @abstract(The hardware version.)
     /// <summary>The hardware version.</summary>
     HardwareVersion: string;
-    (*** The hardware id. *)
+    //** @abstract(The hardware id.)
     /// <summary>The hardware id.</summary>
     HardwareId: string;
-    (*** The OEM id. *)
+    //** @abstract(The OEM id.)
     /// <summary>The OEM id.</summary>
     OemId: string;
-    (*** The MAC address. *)
+    //** @abstract(The MAC address.)
     /// <summary>The MAC address.</summary>
     Mac: string;
-    (*** The region code. *)
+    //** @abstract(The region code.)
     /// <summary>The region code.</summary>
     Region: string;
-    (*** The hardware specification code. *)
+    //** @abstract(The hardware specification code.)
     /// <summary>The hardware specification code.</summary>
     Specs: string;
-    (*** The icon chosen in the Tapo app. *)
+    //** @abstract(The icon chosen in the Tapo app.)
     /// <summary>The icon chosen in the Tapo app.</summary>
     Avatar: string;
-    (*** 'online' or 'offline'. *)
+    //** @abstract('online' or 'offline'.)
     /// <summary>'online' or 'offline'.</summary>
     Status: string;
-    (*** True when the battery is low. *)
+    //** @abstract(True when the battery is low.)
     /// <summary>True when the battery is low.</summary>
     AtLowBattery: Boolean;
-    (*** The battery level in percent; -1 if the device does not report it (the S210 does). *)
+    //** @abstract(The battery level in percent; -1 if the device does not report it @(the S210
+    //** does@).)
     /// <summary>The battery level in percent; -1 if the device does not report it (the S210 does).</summary>
     BatteryPercentage: Integer;
-    (*** The radio signal strength to the hub, in dBm. *)
+    //** @abstract(The radio signal strength to the hub, in dBm.)
     /// <summary>The radio signal strength to the hub, in dBm.</summary>
     RSSI: Integer;
-    (*** The radio signal level, 0 to 3. *)
+    //** @abstract(The radio signal level, 0 to 3.)
     /// <summary>The radio signal level, 0 to 3.</summary>
     SignalLevel: Integer;
-    (*** The strength of radio interference, in dBm. *)
+    //** @abstract(The strength of radio interference, in dBm.)
     /// <summary>The strength of radio interference, in dBm.</summary>
     JammingRSSI: Integer;
-    (*** The level of radio interference. *)
+    //** @abstract(The level of radio interference.)
     /// <summary>The level of radio interference.</summary>
     JammingSignalLevel: Integer;
-    (*** The bind count. *)
+    //** @abstract(The bind count.)
     /// <summary>The bind count.</summary>
     BindCount: Integer;
-    (*** How often the device reports to the hub, in seconds. *)
+    //** @abstract(How often the device reports to the hub, in seconds.)
     /// <summary>How often the device reports to the hub, in seconds.</summary>
     ReportInterval: Integer;
-    (*** When the device was paired, as a Unix time. *)
+    //** @abstract(When the device was paired, as a Unix time.)
     /// <summary>When the device was paired, as a Unix time.</summary>
     LastOnboardingTimestamp: Int64;
-    (*** The status-follow-edge setting. *)
+    //** @abstract(The status-follow-edge setting.)
     /// <summary>The status-follow-edge setting.</summary>
     StatusFollowEdge: Boolean;
-    (*** The whole reply as formatted JSON. *)
+    //** @abstract(The whole reply as formatted JSON.)
     /// <summary>The whole reply as formatted JSON.</summary>
     Raw: string;
-    (***
-      Reads the fields from a child's device info or child-list entry.
-
-      @param(Obj The object to read. May be nil.)
-    *)
+    //** @abstract(Reads the fields from a child's device info or child-list entry.)
+    //**
+    //** @param(Obj The object to read. May be nil.)
     /// <summary>Reads the fields from a child's device info or child-list entry.</summary>
     /// <param name="Obj">The object to read. May be nil.</param>
     class function FromJSON(Obj: TJSONObject): TTapoHubChildInfo; static;
   end;
 
-  (*** Device info of a KE100 radiator valve. *)
+  //** @abstract(Device info of a KE100 radiator valve.)
   /// <summary>Device info of a KE100 radiator valve.</summary>
   TTapoKE100Info = record
-    (*** The fields every hub child reports. *)
+    //** @abstract(The fields every hub child reports.)
     /// <summary>The fields every hub child reports.</summary>
     Child: TTapoHubChildInfo;
-    (*** True if the child lock is on. *)
+    //** @abstract(True if the child lock is on.)
     /// <summary>True if the child lock is on.</summary>
     ChildProtection: Boolean;
-    (*** True if frost protection is on. *)
+    //** @abstract(True if frost protection is on.)
     /// <summary>True if frost protection is on.</summary>
     FrostProtection: Boolean;
-    (*** The measured temperature. *)
+    //** @abstract(The measured temperature.)
     /// <summary>The measured temperature.</summary>
     CurrentTemperature: Double;
-    (*** The temperature the valve aims for. *)
+    //** @abstract(The temperature the valve aims for.)
     /// <summary>The temperature the valve aims for.</summary>
     TargetTemperature: Double;
-    (*** The lowest target temperature allowed. *)
+    //** @abstract(The lowest target temperature allowed.)
     /// <summary>The lowest target temperature allowed.</summary>
     MinControlTemperature: Integer;
-    (*** The highest target temperature allowed. *)
+    //** @abstract(The highest target temperature allowed.)
     /// <summary>The highest target temperature allowed.</summary>
     MaxControlTemperature: Integer;
-    (*** The correction added to the measured temperature, -10 to 10. *)
+    //** @abstract(The correction added to the measured temperature, -10 to 10.)
     /// <summary>The correction added to the measured temperature, -10 to 10.</summary>
     TemperatureOffset: Integer;
-    (*** The temperature unit, 'celsius'. *)
+    //** @abstract(The temperature unit, 'celsius'.)
     /// <summary>The temperature unit, 'celsius'.</summary>
     TemperatureUnit: string;
-    (*** The room set in the Tapo app. *)
+    //** @abstract(The room set in the Tapo app.)
     /// <summary>The room set in the Tapo app.</summary>
     Location: string;
   end;
 
-  (*** Device info of an S210 light switch. *)
+  //** @abstract(Device info of an S210 light switch.)
   /// <summary>Device info of an S210 light switch.</summary>
   TTapoS210Info = record
-    (*** The fields every hub child reports. *)
+    //** @abstract(The fields every hub child reports.)
     /// <summary>The fields every hub child reports.</summary>
     Child: TTapoHubChildInfo;
-    (*** True if the switch is on. *)
+    //** @abstract(True if the switch is on.)
     /// <summary>True if the switch is on.</summary>
     DeviceOn: Boolean;
-    (*** The switch's position on a multi-gang unit. *)
+    //** @abstract(The switch's position on a multi-gang unit.)
     /// <summary>The switch's position on a multi-gang unit.</summary>
     Position: Integer;
-    (*** The number of switches on the unit. *)
+    //** @abstract(The number of switches on the unit.)
     /// <summary>The number of switches on the unit.</summary>
     SlotNumber: Integer;
   end;
 
-  (*** Device info of a T100 motion sensor. *)
+  //** @abstract(Device info of a T100 motion sensor.)
   /// <summary>Device info of a T100 motion sensor.</summary>
   TTapoT100Info = record
-    (*** The fields every hub child reports. *)
+    //** @abstract(The fields every hub child reports.)
     /// <summary>The fields every hub child reports.</summary>
     Child: TTapoHubChildInfo;
-    (*** True while motion is detected. *)
+    //** @abstract(True while motion is detected.)
     /// <summary>True while motion is detected.</summary>
     Detected: Boolean;
   end;
 
-  (*** Device info of a T110 contact sensor. *)
+  //** @abstract(Device info of a T110 contact sensor.)
   /// <summary>Device info of a T110 contact sensor.</summary>
   TTapoT110Info = record
-    (*** The fields every hub child reports. *)
+    //** @abstract(The fields every hub child reports.)
     /// <summary>The fields every hub child reports.</summary>
     Child: TTapoHubChildInfo;
-    (*** True while the door or window is open. *)
+    //** @abstract(True while the door or window is open.)
     /// <summary>True while the door or window is open.</summary>
     Open: Boolean;
   end;
 
-  (*** Device info of a T300 water leak sensor. *)
+  //** @abstract(Device info of a T300 water leak sensor.)
   /// <summary>Device info of a T300 water leak sensor.</summary>
   TTapoT300Info = record
-    (*** The fields every hub child reports. *)
+    //** @abstract(The fields every hub child reports.)
     /// <summary>The fields every hub child reports.</summary>
     Child: TTapoHubChildInfo;
-    (*** True while the alarm sounds. *)
+    //** @abstract(True while the alarm sounds.)
     /// <summary>True while the alarm sounds.</summary>
     InAlarm: Boolean;
-    (*** 'normal', 'water_dry' or 'water_leak'. *)
+    //** @abstract('normal', 'water_dry' or 'water_leak'.)
     /// <summary>'normal', 'water_dry' or 'water_leak'.</summary>
     WaterLeakStatus: string;
   end;
 
-  (*** Device info of a T310 or T315 temperature and humidity sensor. *)
+  //** @abstract(Device info of a T310 or T315 temperature and humidity sensor.)
   /// <summary>Device info of a T310 or T315 temperature and humidity sensor.</summary>
   TTapoT31xInfo = record
-    (*** The fields every hub child reports. *)
+    //** @abstract(The fields every hub child reports.)
     /// <summary>The fields every hub child reports.</summary>
     Child: TTapoHubChildInfo;
-    (*** The temperature, in @link(TemperatureUnit). *)
+    //** @abstract(The temperature, in @link(TemperatureUnit).)
     /// <summary>The temperature, in <see cref="TemperatureUnit"/>.</summary>
     CurrentTemperature: Double;
-    (*** The relative humidity in percent. *)
+    //** @abstract(The relative humidity in percent.)
     /// <summary>The relative humidity in percent.</summary>
     CurrentHumidity: Integer;
-    (*** How far the temperature is outside the comfort range set in the app; 0 inside it. *)
+    //** @abstract(How far the temperature is outside the comfort range set in the app; 0 inside it.)
     /// <summary>How far the temperature is outside the comfort range set in the app; 0 inside it.</summary>
     TemperatureException: Double;
-    (*** How far the humidity is outside the comfort range set in the app; 0 inside it. *)
+    //** @abstract(How far the humidity is outside the comfort range set in the app; 0 inside it.)
     /// <summary>How far the humidity is outside the comfort range set in the app; 0 inside it.</summary>
     HumidityException: Integer;
-    (*** 'celsius' or 'fahrenheit'. *)
+    //** @abstract('celsius' or 'fahrenheit'.)
     /// <summary>'celsius' or 'fahrenheit'.</summary>
     TemperatureUnit: string;
   end;
 
-  (*** One entry of a sensor's trigger log. *)
+  //** @abstract(One entry of a sensor's trigger log.)
   /// <summary>One entry of a sensor's trigger log.</summary>
   TTapoTriggerLog = record
-    (*** The entry's id; pass it as AStartId to read older entries. *)
+    //** @abstract(The entry's id; pass it as AStartId to read older entries.)
     /// <summary>The entry's id; pass it as AStartId to read older entries.</summary>
     Id: Int64;
-    (*** When it happened, local time. *)
+    //** @abstract(When it happened, local time.)
     /// <summary>When it happened, local time.</summary>
     Time: TDateTime;
-    (***
-      What happened, for example 'motion' (T100); 'open', 'close' or 'keepOpen' (T110);
-      'waterLeak' or 'waterDry' (T300); 'singleClick', 'doubleClick', 'rotation' or 'lowBattery'
-      (S200).
-    *)
+    //** @abstract(What happened, for example 'motion' @(T100@); 'open', 'close' or 'keepOpen'
+    //** @(T110@); 'waterLeak' or 'waterDry' @(T300@); 'singleClick', 'doubleClick', 'rotation' or
+    //** 'lowBattery' @(S200@).)
     /// <summary>
     ///   What happened, for example 'motion' (T100); 'open', 'close' or
     ///   'keepOpen' (T110); 'waterLeak' or 'waterDry' (T300); 'singleClick',
     ///   'doubleClick', 'rotation' or 'lowBattery' (S200).
     /// </summary>
     Event: string;
-    (*** The rotation in degrees, for an S200 'rotation' event. *)
+    //** @abstract(The rotation in degrees, for an S200 'rotation' event.)
     /// <summary>The rotation in degrees, for an S200 'rotation' event.</summary>
     RotationDegrees: Integer;
-    (*** The whole entry as JSON. *)
+    //** @abstract(The whole entry as JSON.)
     /// <summary>The whole entry as JSON.</summary>
     Raw: string;
   end;
 
-  (*** A page of a sensor's trigger log. *)
+  //** @abstract(A page of a sensor's trigger log.)
   /// <summary>A page of a sensor's trigger log.</summary>
   TTapoTriggerLogs = record
-    (*** The id the page starts at. *)
+    //** @abstract(The id the page starts at.)
     /// <summary>The id the page starts at.</summary>
     StartId: Int64;
-    (*** The total number of entries the device holds. *)
+    //** @abstract(The total number of entries the device holds.)
     /// <summary>The total number of entries the device holds.</summary>
     Sum: Int64;
-    (*** The entries, newest first. *)
+    //** @abstract(The entries, newest first.)
     /// <summary>The entries, newest first.</summary>
     Logs: TArray<TTapoTriggerLog>;
   end;
 
-  (*** One 15-minute reading of a T310 or T315. *)
+  //** @abstract(One 15-minute reading of a T310 or T315.)
   /// <summary>One 15-minute reading of a T310 or T315.</summary>
   TTapoTempHumidityRecord = record
-    (*** The time of the reading, local time. *)
+    //** @abstract(The time of the reading, local time.)
     /// <summary>The time of the reading, local time.</summary>
     Time: TDateTime;
-    (*** The temperature. *)
+    //** @abstract(The temperature.)
     /// <summary>The temperature.</summary>
     Temperature: Double;
-    (*** How far the temperature was outside the comfort range. *)
+    //** @abstract(How far the temperature was outside the comfort range.)
     /// <summary>How far the temperature was outside the comfort range.</summary>
     TemperatureException: Double;
-    (*** The relative humidity in percent. *)
+    //** @abstract(The relative humidity in percent.)
     /// <summary>The relative humidity in percent.</summary>
     Humidity: Integer;
-    (*** How far the humidity was outside the comfort range. *)
+    //** @abstract(How far the humidity was outside the comfort range.)
     /// <summary>How far the humidity was outside the comfort range.</summary>
     HumidityException: Integer;
   end;
 
-  (*** The last 24 hours of a T310 or T315, one reading every 15 minutes. *)
+  //** @abstract(The last 24 hours of a T310 or T315, one reading every 15 minutes.)
   /// <summary>The last 24 hours of a T310 or T315, one reading every 15 minutes.</summary>
   TTapoTempHumidityRecords = record
-    (*** When the device answered, local time. *)
+    //** @abstract(When the device answered, local time.)
     /// <summary>When the device answered, local time.</summary>
     RetrievedAt: TDateTime;
-    (*** 'celsius' or 'fahrenheit'. *)
+    //** @abstract('celsius' or 'fahrenheit'.)
     /// <summary>'celsius' or 'fahrenheit'.</summary>
     TemperatureUnit: string;
-    (*** The readings, oldest first. Intervals without a reading are left out. *)
+    //** @abstract(The readings, oldest first. Intervals without a reading are left out.)
     /// <summary>The readings, oldest first. Intervals without a reading are left out.</summary>
     Records: TArray<TTapoTempHumidityRecord>;
   end;
 
   { --- hub children -------------------------------------------------------- }
 
-  (***
-    A sensor or switch paired to a hub.
-
-    Obtain children from the hub (for example @code(Hub.T31x@('Kitchen'@))), which owns them.
-  *)
+  //** @abstract(A sensor or switch paired to a hub.)
+  //**
+  //** Obtain children from the hub (for example @code(Hub.T31x@('Kitchen'@))), which owns them.
   /// <summary>A sensor or switch paired to a hub.</summary>
   /// <remarks>Obtain children from the hub (for example <c>Hub.T31x('Kitchen')</c>), which owns them.</remarks>
   TTapoHubChild = class abstract(TTapoChildDevice)
   public
-    (*** Reads the fields every hub child reports. *)
+    //** @abstract(Reads the fields every hub child reports.)
     /// <summary>Reads the fields every hub child reports.</summary>
     function GetChildInfo: TTapoHubChildInfo;
   end;
 
-  (*** A sensor that keeps a log of what triggered it. *)
+  //** @abstract(A sensor that keeps a log of what triggered it.)
   /// <summary>A sensor that keeps a log of what triggered it.</summary>
   TTapoTriggerSensor = class abstract(TTapoHubChild)
   public
-    (***
-      Reads a page of the trigger log.
-
-      @param(APageSize The number of entries to read.)
-
-      @param(AStartId 0 for the newest entries; otherwise the id to continue from.)
-    *)
+    //** @abstract(Reads a page of the trigger log.)
+    //**
+    //** @param(APageSize The number of entries to read.)
+    //**
+    //** @param(AStartId 0 for the newest entries; otherwise the id to continue from.)
     /// <summary>Reads a page of the trigger log.</summary>
     /// <param name="APageSize">The number of entries to read.</param>
     /// <param name="AStartId">0 for the newest entries; otherwise the id to continue from.</param>
     function GetTriggerLogs(APageSize: Integer; AStartId: Int64 = 0): TTapoTriggerLogs;
   end;
 
-  (*** Tapo KE100 smart radiator valve. *)
+  //** @abstract(Tapo KE100 smart radiator valve.)
   /// <summary>Tapo KE100 smart radiator valve.</summary>
   TTapoKE100 = class(TTapoHubChild)
   public
-    (*** Reads the valve's device info. *)
+    //** @abstract(Reads the valve's device info.)
     /// <summary>Reads the valve's device info.</summary>
     function GetKE100Info: TTapoKE100Info;
-    (*** Switches the child lock on or off. *)
+    //** @abstract(Switches the child lock on or off.)
     /// <summary>Switches the child lock on or off.</summary>
     procedure SetChildProtection(AOn: Boolean);
-    (*** Switches frost protection on or off. *)
+    //** @abstract(Switches frost protection on or off.)
     /// <summary>Switches frost protection on or off.</summary>
     procedure SetFrostProtection(AOn: Boolean);
-    (*** Sets the highest target temperature allowed, in degrees Celsius. *)
+    //** @abstract(Sets the highest target temperature allowed, in degrees Celsius.)
     /// <summary>Sets the highest target temperature allowed, in degrees Celsius.</summary>
     procedure SetMaxControlTemperature(AValue: Integer);
-    (*** Sets the lowest target temperature allowed, in degrees Celsius. *)
+    //** @abstract(Sets the lowest target temperature allowed, in degrees Celsius.)
     /// <summary>Sets the lowest target temperature allowed, in degrees Celsius.</summary>
     procedure SetMinControlTemperature(AValue: Integer);
-    (***
-      Sets the temperature the valve aims for, in degrees Celsius.
-
-      @param(AValue Between the minimum and maximum control temperatures.)
-
-      @raises(ETapoError AValue is outside the allowed range.)
-    *)
+    //** @abstract(Sets the temperature the valve aims for, in degrees Celsius.)
+    //**
+    //** @param(AValue Between the minimum and maximum control temperatures.)
+    //**
+    //** @raises(ETapoError AValue is outside the allowed range.)
     /// <summary>Sets the temperature the valve aims for, in degrees Celsius.</summary>
     /// <param name="AValue">Between the minimum and maximum control temperatures.</param>
     /// <exception cref="ETapoError">AValue is outside the allowed range.</exception>
     procedure SetTargetTemperature(AValue: Integer);
-    (***
-      Sets the correction added to the measured temperature.
-
-      @param(AValue -10 to 10 degrees.)
-
-      @raises(ETapoError AValue is out of range.)
-    *)
+    //** @abstract(Sets the correction added to the measured temperature.)
+    //**
+    //** @param(AValue -10 to 10 degrees.)
+    //**
+    //** @raises(ETapoError AValue is out of range.)
     /// <summary>Sets the correction added to the measured temperature.</summary>
     /// <param name="AValue">-10 to 10 degrees.</param>
     /// <exception cref="ETapoError">AValue is out of range.</exception>
     procedure SetTemperatureOffset(AValue: Integer);
   end;
 
-  (*** Tapo S200B smart button and S200D remote dimmer. *)
+  //** @abstract(Tapo S200B smart button and S200D remote dimmer.)
   /// <summary>Tapo S200B smart button and S200D remote dimmer.</summary>
   TTapoS200 = class(TTapoTriggerSensor)
   public
-    (*** Reads the device info. *)
+    //** @abstract(Reads the device info.)
     /// <summary>Reads the device info.</summary>
     function GetS200Info: TTapoHubChildInfo;
   end;
 
-  (*** Tapo S210 smart light switch. *)
+  //** @abstract(Tapo S210 smart light switch.)
   /// <summary>Tapo S210 smart light switch.</summary>
   TTapoS210 = class(TTapoHubChild)
   public
-    (*** Switches the switch on. *)
+    //** @abstract(Switches the switch on.)
     /// <summary>Switches the switch on.</summary>
     procedure TurnOn;
-    (*** Switches the switch off. *)
+    //** @abstract(Switches the switch off.)
     /// <summary>Switches the switch off.</summary>
     procedure TurnOff;
-    (*** Switches the switch on or off. *)
+    //** @abstract(Switches the switch on or off.)
     /// <summary>Switches the switch on or off.</summary>
     procedure SetOn(AOn: Boolean);
-    (*** Reads the power state. *)
+    //** @abstract(Reads the power state.)
     /// <summary>Reads the power state.</summary>
     function IsOn: Boolean;
-    (*** Reads the switch's device info. *)
+    //** @abstract(Reads the switch's device info.)
     /// <summary>Reads the switch's device info.</summary>
     function GetS210Info: TTapoS210Info;
-    (***
-      Reads how long the switch has been on.
-
-      Only TimeUsage is reported; PowerUsage and SavedPower are -1.
-    *)
+    //** @abstract(Reads how long the switch has been on.)
+    //**
+    //** Only TimeUsage is reported; PowerUsage and SavedPower are -1.
     /// <summary>Reads how long the switch has been on.</summary>
     /// <remarks>Only TimeUsage is reported; PowerUsage and SavedPower are -1.</remarks>
     function GetDeviceUsage: TTapoDeviceUsage;
   end;
 
-  (*** Tapo T100 motion sensor. *)
+  //** @abstract(Tapo T100 motion sensor.)
   /// <summary>Tapo T100 motion sensor.</summary>
   TTapoT100 = class(TTapoTriggerSensor)
   public
-    (*** Reads the sensor's device info. *)
+    //** @abstract(Reads the sensor's device info.)
     /// <summary>Reads the sensor's device info.</summary>
     function GetT100Info: TTapoT100Info;
   end;
 
-  (*** Tapo T110 contact sensor. *)
+  //** @abstract(Tapo T110 contact sensor.)
   /// <summary>Tapo T110 contact sensor.</summary>
   TTapoT110 = class(TTapoTriggerSensor)
   public
-    (*** Reads the sensor's device info. *)
+    //** @abstract(Reads the sensor's device info.)
     /// <summary>Reads the sensor's device info.</summary>
     function GetT110Info: TTapoT110Info;
   end;
 
-  (*** Tapo T300 water leak sensor. *)
+  //** @abstract(Tapo T300 water leak sensor.)
   /// <summary>Tapo T300 water leak sensor.</summary>
   TTapoT300 = class(TTapoTriggerSensor)
   public
-    (*** Reads the sensor's device info. *)
+    //** @abstract(Reads the sensor's device info.)
     /// <summary>Reads the sensor's device info.</summary>
     function GetT300Info: TTapoT300Info;
   end;
 
-  (*** Tapo T310 and T315 temperature and humidity sensor. *)
+  //** @abstract(Tapo T310 and T315 temperature and humidity sensor.)
   /// <summary>Tapo T310 and T315 temperature and humidity sensor.</summary>
   TTapoT31x = class(TTapoHubChild)
   public
-    (*** Reads the sensor's device info, including the current readings. *)
+    //** @abstract(Reads the sensor's device info, including the current readings.)
     /// <summary>Reads the sensor's device info, including the current readings.</summary>
     function GetT31xInfo: TTapoT31xInfo;
-    (*** Reads the last 24 hours of readings. *)
+    //** @abstract(Reads the last 24 hours of readings.)
     /// <summary>Reads the last 24 hours of readings.</summary>
     function GetTemperatureHumidityRecords: TTapoTempHumidityRecords;
   end;
 
-  (*** Tapo S200B: the same as @link(TTapoS200). *)
+  //** @abstract(Tapo S200B: the same as @link(TTapoS200).)
   /// <summary>Tapo S200B: the same as <see cref="TTapoS200"/>.</summary>
   TTapoS200B = TTapoS200;
-  (*** Tapo S200D: the same as @link(TTapoS200). *)
+  //** @abstract(Tapo S200D: the same as @link(TTapoS200).)
   /// <summary>Tapo S200D: the same as <see cref="TTapoS200"/>.</summary>
   TTapoS200D = TTapoS200;
-  (*** Tapo T310: the same as @link(TTapoT31x). *)
+  //** @abstract(Tapo T310: the same as @link(TTapoT31x).)
   /// <summary>Tapo T310: the same as <see cref="TTapoT31x"/>.</summary>
   TTapoT310 = TTapoT31x;
-  (*** Tapo T315: the same as @link(TTapoT31x). *)
+  //** @abstract(Tapo T315: the same as @link(TTapoT31x).)
   /// <summary>Tapo T315: the same as <see cref="TTapoT31x"/>.</summary>
   TTapoT315 = TTapoT31x;
 
   { --- hubs ---------------------------------------------------------------- }
 
-  (***
-    The features common to the hubs: the sensors and switches paired to them.
-
-    Example:
-    @longCode(#
-    Hub := Client.Add(H100, '192.168.1.53');
-    Info := Hub.T31x('Kitchen').GetT31xInfo;
-    Label1.Text := Format('%.1f C, %d%%', [Info.CurrentTemperature, Info.CurrentHumidity]);
-    #)
-  *)
+  //** @abstract(The features common to the hubs: the sensors and switches paired to them.)
+  //**
+  //** Example:
+  //** @longCode(#
+  //** Hub := Client.Add(H100, '192.168.1.53');
+  //** Info := Hub.T31x('Kitchen').GetT31xInfo;
+  //** Label1.Text := Format('%.1f C, %d%%', [Info.CurrentTemperature, Info.CurrentHumidity]);
+  //** #)
   /// <summary>The features common to the hubs: the sensors and switches paired to them.</summary>
   /// <example>
   ///   <code>
@@ -509,107 +517,85 @@ type
     function FindChild(const AModels: array of string; const AIdOrNickname: string;
       AClass: TTapoChildDeviceClass): TTapoChildDevice;
   public
-    (***
-      Reads every paired sensor and switch.
-
-      Cameras paired to an H200 or H500 are listed by @link(TTapoCameraHub.GetGeneralDeviceList)
-      instead.
-    *)
+    //** @abstract(Reads every paired sensor and switch.)
+    //**
+    //** Cameras paired to an H200 or H500 are listed by @link(TTapoCameraHub.GetGeneralDeviceList)
+    //** instead.
     /// <summary>Reads every paired sensor and switch.</summary>
     /// <remarks>Cameras paired to an H200 or H500 are listed by <see cref="TTapoCameraHub.GetGeneralDeviceList"/> instead.</remarks>
     function GetChildDeviceList: TArray<TTapoHubChildInfo>;
-    (***
-      Reads one page (10 entries) of the child list as formatted JSON.
-
-      @param(AStartIndex The index to start from.)
-    *)
+    //** @abstract(Reads one page @(10 entries@) of the child list as formatted JSON.)
+    //**
+    //** @param(AStartIndex The index to start from.)
     /// <summary>Reads one page (10 entries) of the child list as formatted JSON.</summary>
     /// <param name="AStartIndex">The index to start from.</param>
     function GetChildDeviceListJSON(AStartIndex: Integer = 0): string;
-    (*** Reads the children's components as formatted JSON. *)
+    //** @abstract(Reads the children's components as formatted JSON.)
     /// <summary>Reads the children's components as formatted JSON.</summary>
     function GetChildDeviceComponentListJSON: string;
 
-    (***
-      A KE100 radiator valve by device id or nickname.
-
-      @returns(The valve, owned by the hub.)
-
-      @raises(ETapoError No KE100 with that id or nickname is paired.)
-    *)
+    //** @abstract(A KE100 radiator valve by device id or nickname.)
+    //**
+    //** @returns(The valve, owned by the hub.)
+    //**
+    //** @raises(ETapoError No KE100 with that id or nickname is paired.)
     /// <summary>A KE100 radiator valve by device id or nickname.</summary>
     /// <returns>The valve, owned by the hub.</returns>
     /// <exception cref="ETapoError">No KE100 with that id or nickname is paired.</exception>
     function KE100(const AIdOrNickname: string): TTapoKE100;
-    (***
-      An S200B or S200D by device id or nickname.
-
-      @raises(ETapoError No such device is paired.)
-    *)
+    //** @abstract(An S200B or S200D by device id or nickname.)
+    //**
+    //** @raises(ETapoError No such device is paired.)
     /// <summary>An S200B or S200D by device id or nickname.</summary>
     /// <exception cref="ETapoError">No such device is paired.</exception>
     function S200(const AIdOrNickname: string): TTapoS200;
-    (***
-      An S210 light switch by device id or nickname.
-
-      @raises(ETapoError No such device is paired.)
-    *)
+    //** @abstract(An S210 light switch by device id or nickname.)
+    //**
+    //** @raises(ETapoError No such device is paired.)
     /// <summary>An S210 light switch by device id or nickname.</summary>
     /// <exception cref="ETapoError">No such device is paired.</exception>
     function S210(const AIdOrNickname: string): TTapoS210;
-    (***
-      A T100 motion sensor by device id or nickname.
-
-      @raises(ETapoError No such device is paired.)
-    *)
+    //** @abstract(A T100 motion sensor by device id or nickname.)
+    //**
+    //** @raises(ETapoError No such device is paired.)
     /// <summary>A T100 motion sensor by device id or nickname.</summary>
     /// <exception cref="ETapoError">No such device is paired.</exception>
     function T100(const AIdOrNickname: string): TTapoT100;
-    (***
-      A T110 contact sensor by device id or nickname.
-
-      @raises(ETapoError No such device is paired.)
-    *)
+    //** @abstract(A T110 contact sensor by device id or nickname.)
+    //**
+    //** @raises(ETapoError No such device is paired.)
     /// <summary>A T110 contact sensor by device id or nickname.</summary>
     /// <exception cref="ETapoError">No such device is paired.</exception>
     function T110(const AIdOrNickname: string): TTapoT110;
-    (***
-      A T300 water leak sensor by device id or nickname.
-
-      @raises(ETapoError No such device is paired.)
-    *)
+    //** @abstract(A T300 water leak sensor by device id or nickname.)
+    //**
+    //** @raises(ETapoError No such device is paired.)
     /// <summary>A T300 water leak sensor by device id or nickname.</summary>
     /// <exception cref="ETapoError">No such device is paired.</exception>
     function T300(const AIdOrNickname: string): TTapoT300;
-    (***
-      A T310 or T315 temperature and humidity sensor by device id or nickname.
-
-      @raises(ETapoError No such device is paired.)
-    *)
+    //** @abstract(A T310 or T315 temperature and humidity sensor by device id or nickname.)
+    //**
+    //** @raises(ETapoError No such device is paired.)
     /// <summary>A T310 or T315 temperature and humidity sensor by device id or nickname.</summary>
     /// <exception cref="ETapoError">No such device is paired.</exception>
     function T31x(const AIdOrNickname: string): TTapoT31x;
-    (***
-      Every paired device, each as its own class.
-
-      Use @code(is) to tell them apart (for example @code(if C is TTapoT31x)). A model this unit
-      does not know comes back as a plain TTapoHubChild.
-    *)
+    //** @abstract(Every paired device, each as its own class.)
+    //**
+    //** Use @code(is) to tell them apart (for example @code(if C is TTapoT31x)). A model this unit
+    //** does not know comes back as a plain TTapoHubChild.
     /// <summary>Every paired device, each as its own class.</summary>
     /// <remarks>
     ///   Use <c>is</c> to tell them apart (for example <c>if C is TTapoT31x</c>).
     ///   A model this unit does not know comes back as a plain TTapoHubChild.
     /// </remarks>
     function Children: TArray<TTapoHubChild>;
-    (***
-      A child by device id, without checking that it exists.
-
-      @param(ADeviceId The child's device id, for example from @link(GetChildDeviceList).)
-
-      @param(AClass The class to use for it.)
-
-      @returns(The child, owned by the hub. No request is made.)
-    *)
+    //** @abstract(A child by device id, without checking that it exists.)
+    //**
+    //** @param(ADeviceId The child's device id, for example from @link(GetChildDeviceList).)
+    //**
+    //** @param(AClass The class to use for it.)
+    //**
+    //** @returns(The child, owned by the hub. No request is made.)
     /// <summary>A child by device id, without checking that it exists.</summary>
     /// <param name="ADeviceId">The child's device id, for example from <see cref="GetChildDeviceList"/>.</param>
     /// <param name="AClass">The class to use for it.</param>
@@ -617,11 +603,9 @@ type
     function Child(const ADeviceId: string; AClass: TTapoChildDeviceClass): TTapoChildDevice;
   end;
 
-  (***
-    The sounds an H100 can play.
-
-    arDefault leaves the choice to the hub's settings.
-  *)
+  //** @abstract(The sounds an H100 can play.)
+  //**
+  //** arDefault leaves the choice to the hub's settings.
   /// <summary>The sounds an H100 can play.</summary>
   /// <remarks>arDefault leaves the choice to the hub's settings.</remarks>
   TTapoAlarmRingtone = (arDefault, arAlarm1, arAlarm2, arAlarm3, arAlarm4, arAlarm5,
@@ -629,26 +613,24 @@ type
     arDoorbellRing4, arDoorbellRing5, arDoorbellRing6, arDoorbellRing7, arDoorbellRing8,
     arDoorbellRing9, arDoorbellRing10, arDrippingTap, arPhoneRing);
 
-  (*** The volume of an H100 alarm. avDefault leaves it to the hub's settings. *)
+  //** @abstract(The volume of an H100 alarm. avDefault leaves it to the hub's settings.)
   /// <summary>The volume of an H100 alarm. avDefault leaves it to the hub's settings.</summary>
   TTapoAlarmVolume = (avDefault, avMute, avLow, avNormal, avHigh);
 
-  (*** Tapo H100 hub. *)
+  //** @abstract(Tapo H100 hub.)
   /// <summary>Tapo H100 hub.</summary>
   TTapoH100 = class(TTapoHub)
   public
-    (***
-      Sounds the hub's alarm.
-
-      @param(ARingtone The sound.)
-
-      @param(AVolume The volume.)
-
-      @param(ADurationSeconds @link(TapoAlarmContinuous) @(until @link(StopAlarm)@),
-      @link(TapoAlarmOnce), or a number of seconds.)
-
-      @raises(ETapoError ADurationSeconds is invalid.)
-    *)
+    //** @abstract(Sounds the hub's alarm.)
+    //**
+    //** @param(ARingtone The sound.)
+    //**
+    //** @param(AVolume The volume.)
+    //**
+    //** @param(ADurationSeconds @link(TapoAlarmContinuous) @(until @link(StopAlarm)@),
+    //** @link(TapoAlarmOnce), or a number of seconds.)
+    //**
+    //** @raises(ETapoError ADurationSeconds is invalid.)
     /// <summary>Sounds the hub's alarm.</summary>
     /// <param name="ARingtone">The sound.</param>
     /// <param name="AVolume">The volume.</param>
@@ -659,112 +641,109 @@ type
     /// <exception cref="ETapoError">ADurationSeconds is invalid.</exception>
     procedure PlayAlarm(ARingtone: TTapoAlarmRingtone = arDefault;
       AVolume: TTapoAlarmVolume = avDefault; ADurationSeconds: Integer = -1);
-    (*** Silences the alarm. *)
+    //** @abstract(Silences the alarm.)
     /// <summary>Silences the alarm.</summary>
     procedure StopAlarm;
-    (*** Reads the names of the sounds the hub can play. *)
+    //** @abstract(Reads the names of the sounds the hub can play.)
     /// <summary>Reads the names of the sounds the hub can play.</summary>
     function GetSupportedRingtoneList: TArray<string>;
   end;
 
-  (*** A camera paired to an H200 or H500. *)
+  //** @abstract(A camera paired to an H200 or H500.)
   /// <summary>A camera paired to an H200 or H500.</summary>
   TTapoHubCameraInfo = record
-    (*** The camera's device id, used by the recording functions. *)
+    //** @abstract(The camera's device id, used by the recording functions.)
     /// <summary>The camera's device id, used by the recording functions.</summary>
     DeviceId: string;
-    (*** The hub's device id. *)
+    //** @abstract(The hub's device id.)
     /// <summary>The hub's device id.</summary>
     ParentDeviceId: string;
-    (*** The name given in the Tapo app. *)
+    //** @abstract(The name given in the Tapo app.)
     /// <summary>The name given in the Tapo app.</summary>
     Alias: string;
-    (*** The camera model. *)
+    //** @abstract(The camera model.)
     /// <summary>The camera model.</summary>
     DeviceModel: string;
-    (*** The device type. *)
+    //** @abstract(The device type.)
     /// <summary>The device type.</summary>
     DeviceType: string;
-    (*** The device category. *)
+    //** @abstract(The device category.)
     /// <summary>The device category.</summary>
     Category: string;
-    (*** The MAC address. *)
+    //** @abstract(The MAC address.)
     /// <summary>The MAC address.</summary>
     Mac: string;
-    (*** How the camera connects. *)
+    //** @abstract(How the camera connects.)
     /// <summary>How the camera connects.</summary>
     NetworkMode: string;
-    (*** The backup Wi-Fi: 'auto', empty for none, or an SSID. *)
+    //** @abstract(The backup Wi-Fi: 'auto', empty for none, or an SSID.)
     /// <summary>The backup Wi-Fi: 'auto', empty for none, or an SSID.</summary>
     BackupWifi: string;
-    (*** True if the backup Wi-Fi is enabled. *)
+    //** @abstract(True if the backup Wi-Fi is enabled.)
     /// <summary>True if the backup Wi-Fi is enabled.</summary>
     WifiBackupEnabled: Boolean;
-    (*** True if the camera records to the hub. *)
+    //** @abstract(True if the camera records to the hub.)
     /// <summary>True if the camera records to the hub.</summary>
     HubStorageEnabled: Boolean;
-    (*** True if the camera records continuously. *)
+    //** @abstract(True if the camera records continuously.)
     /// <summary>True if the camera records continuously.</summary>
     Plan24hRecord: Boolean;
-    (*** What the camera can recognise, as bits: 1 person, 2 pet, 4 vehicle, 8 face. *)
+    //** @abstract(What the camera can recognise, as bits: 1 person, 2 pet, 4 vehicle, 8 face.)
     /// <summary>What the camera can recognise, as bits: 1 person, 2 pet, 4 vehicle, 8 face.</summary>
     AiCameraSupport: Int64;
-    (*** The whole entry as formatted JSON. *)
+    //** @abstract(The whole entry as formatted JSON.)
     /// <summary>The whole entry as formatted JSON.</summary>
     Raw: string;
-    (*** True if the camera can recognise people. *)
+    //** @abstract(True if the camera can recognise people.)
     /// <summary>True if the camera can recognise people.</summary>
     function SupportsPerson: Boolean;
-    (*** True if the camera can recognise pets. *)
+    //** @abstract(True if the camera can recognise pets.)
     /// <summary>True if the camera can recognise pets.</summary>
     function SupportsPet: Boolean;
-    (*** True if the camera can recognise vehicles. *)
+    //** @abstract(True if the camera can recognise vehicles.)
     /// <summary>True if the camera can recognise vehicles.</summary>
     function SupportsVehicle: Boolean;
-    (*** True if the camera can recognise faces. *)
+    //** @abstract(True if the camera can recognise faces.)
     /// <summary>True if the camera can recognise faces.</summary>
     function SupportsFace: Boolean;
   end;
 
-  (*** A camera hub's time zone. *)
+  //** @abstract(A camera hub's time zone.)
   /// <summary>A camera hub's time zone.</summary>
   TTapoHubTimezone = record
-    (*** The offset, for example 'UTC+01:00'. *)
+    //** @abstract(The offset, for example 'UTC+01:00'.)
     /// <summary>The offset, for example 'UTC+01:00'.</summary>
     Timezone: string;
-    (*** The IANA time zone name, for example 'Europe/London'. *)
+    //** @abstract(The IANA time zone name, for example 'Europe/London'.)
     /// <summary>The IANA time zone name, for example 'Europe/London'.</summary>
     ZoneId: string;
   end;
 
-  (*** A recording stored on a camera hub. *)
+  //** @abstract(A recording stored on a camera hub.)
   /// <summary>A recording stored on a camera hub.</summary>
   TTapoRecording = record
-    (*** The start, local time. *)
+    //** @abstract(The start, local time.)
     /// <summary>The start, local time.</summary>
     StartTime: TDateTime;
-    (*** The end, local time. *)
+    //** @abstract(The end, local time.)
     /// <summary>The end, local time.</summary>
     EndTime: TDateTime;
-    (***
-      What triggered the recording, as the hub reports it (1 continuous, 2 motion, 6 person ...).
-
-      @seealso(VideoTypeName)
-    *)
+    //** @abstract(What triggered the recording, as the hub reports it @(1 continuous, 2 motion, 6
+    //** person ...@).)
+    //**
+    //** @seealso(VideoTypeName)
     /// <summary>What triggered the recording, as the hub reports it (1 continuous, 2 motion, 6 person ...).</summary>
     /// <seealso cref="VideoTypeName"/>
     VideoType: Integer;
-    (*** The name of @link(VideoType), for example 'Motion' or 'Person'. *)
+    //** @abstract(The name of @link(VideoType), for example 'Motion' or 'Person'.)
     /// <summary>The name of <see cref="VideoType"/>, for example 'Motion' or 'Person'.</summary>
     function VideoTypeName: string;
   end;
 
-  (***
-    Tapo H200 and H500 camera hub.
-
-    Logs in over AES SSL as the hub's local "admin" account with your Tapo password. Reboot and
-    FactoryReset are not supported by these hubs.
-  *)
+  //** @abstract(Tapo H200 and H500 camera hub.)
+  //**
+  //** Logs in over AES SSL as the hub's local "admin" account with your Tapo password. Reboot and
+  //** FactoryReset are not supported by these hubs.
   /// <summary>Tapo H200 and H500 camera hub.</summary>
   /// <remarks>
   ///   Logs in over AES SSL as the hub's local "admin" account with your
@@ -774,55 +753,51 @@ type
   private
     FPlayerId: string;
   public
-    (*** Creates the hub object; see @link(TTapoDevice.Create). *)
+    //** @abstract(Creates the hub object; see @link(TTapoDevice.Create).)
     /// <summary>Creates the hub object; see <see cref="TTapoDevice.Create"/>.</summary>
     constructor Create(AClient: TTapoClient; const AHost: string); override;
-    (*** Returns dfSmartCam. *)
+    //** @abstract(Returns dfSmartCam.)
     /// <summary>Returns dfSmartCam.</summary>
     class function Family: TTapoDeviceFamily; override;
-    (*** Returns amCameraHub. *)
+    //** @abstract(Returns amCameraHub.)
     /// <summary>Returns amCameraHub.</summary>
     class function AuthMode: TTapoAuthMode; override;
 
-    (*** Reads the cameras paired to the hub. *)
+    //** @abstract(Reads the cameras paired to the hub.)
     /// <summary>Reads the cameras paired to the hub.</summary>
     function GetGeneralDeviceList: TArray<TTapoHubCameraInfo>;
-    (*** Reads the paired cameras as formatted JSON. *)
+    //** @abstract(Reads the paired cameras as formatted JSON.)
     /// <summary>Reads the paired cameras as formatted JSON.</summary>
     function GetGeneralDeviceListJSON: string;
-    (*** Reads the hub's time zone. *)
+    //** @abstract(Reads the hub's time zone.)
     /// <summary>Reads the hub's time zone.</summary>
     function GetTimezone: TTapoHubTimezone;
-    (***
-      Reads the days that have recordings of a camera.
-
-      @param(AChildDeviceId The camera's device id, from @link(GetGeneralDeviceList).)
-
-      @param(AStartDate The first day, on the hub's calendar.)
-
-      @param(AEndDate The last day, on the hub's calendar.)
-
-      @raises(ETapoError AEndDate is before AStartDate.)
-    *)
+    //** @abstract(Reads the days that have recordings of a camera.)
+    //**
+    //** @param(AChildDeviceId The camera's device id, from @link(GetGeneralDeviceList).)
+    //**
+    //** @param(AStartDate The first day, on the hub's calendar.)
+    //**
+    //** @param(AEndDate The last day, on the hub's calendar.)
+    //**
+    //** @raises(ETapoError AEndDate is before AStartDate.)
     /// <summary>Reads the days that have recordings of a camera.</summary>
     /// <param name="AChildDeviceId">The camera's device id, from <see cref="GetGeneralDeviceList"/>.</param>
     /// <param name="AStartDate">The first day, on the hub's calendar.</param>
     /// <param name="AEndDate">The last day, on the hub's calendar.</param>
     /// <exception cref="ETapoError">AEndDate is before AStartDate.</exception>
     function GetRecordingDates(const AChildDeviceId: string; AStartDate, AEndDate: TDate): TArray<TDate>;
-    (***
-      Reads the recordings of a camera between two times.
-
-      Downloading a recording is not supported.
-
-      @param(AChildDeviceId The camera's device id, from @link(GetGeneralDeviceList).)
-
-      @param(AStart The start, local time.)
-
-      @param(AEnd The end, local time.)
-
-      @raises(ETapoError AEnd is before AStart.)
-    *)
+    //** @abstract(Reads the recordings of a camera between two times.)
+    //**
+    //** Downloading a recording is not supported.
+    //**
+    //** @param(AChildDeviceId The camera's device id, from @link(GetGeneralDeviceList).)
+    //**
+    //** @param(AStart The start, local time.)
+    //**
+    //** @param(AEnd The end, local time.)
+    //**
+    //** @raises(ETapoError AEnd is before AStart.)
     /// <summary>Reads the recordings of a camera between two times.</summary>
     /// <param name="AChildDeviceId">The camera's device id, from <see cref="GetGeneralDeviceList"/>.</param>
     /// <param name="AStart">The start, local time.</param>
@@ -832,18 +807,18 @@ type
     function GetRecordings(const AChildDeviceId: string; AStart, AEnd: TDateTime): TArray<TTapoRecording>;
   end;
 
-  (*** Tapo H200: the same as @link(TTapoCameraHub). *)
+  //** @abstract(Tapo H200: the same as @link(TTapoCameraHub).)
   /// <summary>Tapo H200: the same as <see cref="TTapoCameraHub"/>.</summary>
   TTapoH200 = TTapoCameraHub;
-  (*** Tapo H500: the same as @link(TTapoCameraHub). *)
+  //** @abstract(Tapo H500: the same as @link(TTapoCameraHub).)
   /// <summary>Tapo H500: the same as <see cref="TTapoCameraHub"/>.</summary>
   TTapoH500 = TTapoCameraHub;
 
 const
-  (*** Alarm duration: until @link(TTapoH100.StopAlarm) is called. *)
+  //** @abstract(Alarm duration: until @link(TTapoH100.StopAlarm) is called.)
   /// <summary>Alarm duration: until <see cref="TTapoH100.StopAlarm"/> is called.</summary>
   TapoAlarmContinuous = -1;
-  (*** Alarm duration: play the sound once. *)
+  //** @abstract(Alarm duration: play the sound once.)
   /// <summary>Alarm duration: play the sound once.</summary>
   TapoAlarmOnce = 0;
 

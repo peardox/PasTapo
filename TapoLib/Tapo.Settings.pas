@@ -1,3 +1,28 @@
+//** @abstract(State that lasts between sessions, stored as JSON with Neon
+//** @(https://github.com/paolo-rossi/delphi-neon@).)
+//**
+//** @preformatted(
+//** settings.json  the Tapo account, the network to scan, and whether the
+//**                account worked the last time it was used
+//** devices.json   every Tapo device a scan has found
+//** )
+//**
+//** Both live in the per-user application data folder of the platform:
+//**
+//** @preformatted(
+//** Windows  %LOCALAPPDATA%\TapoScan
+//** macOS    ~/Library/Application Support/TapoScan
+//** Linux    $XDG_CONFIG_HOME/TapoScan, or ~/.config/TapoScan
+//** )
+//**
+//** (set TapoAppFolderName before first use to change "TapoScan").
+//**
+//** Files are written to a temporary file first and then renamed, so a crash never leaves half a
+//** file. On macOS and Linux they are readable by the owner only. The password is stored as plain
+//** text for now.
+//**
+//** Scans only ever add to devices.json: a device that is not found again is kept. A device found
+//** at a new address (same device ID) has its address updated.
 unit Tapo.Settings;
 
 {
@@ -34,25 +59,23 @@ uses
   Tapo.Client, Tapo.Discovery;
 
 type
-  (*** Whether the stored Tapo account details have been shown to work. *)
+  //** @abstract(Whether the stored Tapo account details have been shown to work.)
   /// <summary>Whether the stored Tapo account details have been shown to work.</summary>
   TTapoCredentialState = (
-    (*** Not tried yet: no scan has finished since they were entered. *)
+    //** @abstract(Not tried yet: no scan has finished since they were entered.)
     /// <summary>Not tried yet: no scan has finished since they were entered.</summary>
     csUnknown,
-    (*** A Tapo device accepted them. *)
+    //** @abstract(A Tapo device accepted them.)
     /// <summary>A Tapo device accepted them.</summary>
     csGood,
-    (*** Tapo devices rejected them and none accepted them. *)
+    //** @abstract(Tapo devices rejected them and none accepted them.)
     /// <summary>Tapo devices rejected them and none accepted them.</summary>
     csBad);
 
-  (***
-    The contents of settings.json.
-
-    Every public property is written to the file by Neon. Use @link(Load) and @link(Save);
-    @link(FileName) says where it lives.
-  *)
+  //** @abstract(The contents of settings.json.)
+  //**
+  //** Every public property is written to the file by Neon. Use @link(Load) and @link(Save);
+  //** @link(FileName) says where it lives.
   /// <summary>The contents of settings.json.</summary>
   /// <remarks>
   ///   Every public property is written to the file by Neon. Use
@@ -69,227 +92,198 @@ type
     FCredentialState: TTapoCredentialState;
     FCredentialsCheckedAt: TDateTime;
   public
-    (*** Creates empty settings: no account, network and subnet blank, state csUnknown. *)
+    //** @abstract(Creates empty settings: no account, network and subnet blank, state csUnknown.)
     /// <summary>Creates empty settings: no account, network and subnet blank, state csUnknown.</summary>
     constructor Create;
-    (***
-      The full path of settings.json.
-
-      @returns(A path in the platform's per-user application data folder.)
-    *)
+    //** @abstract(The full path of settings.json.)
+    //**
+    //** @returns(A path in the platform's per-user application data folder.)
     /// <summary>The full path of settings.json.</summary>
     /// <returns>A path in the platform's per-user application data folder.</returns>
     class function FileName: string;
-    (***
-      True if settings.json exists.
-
-      @returns(False on first run.)
-    *)
+    //** @abstract(True if settings.json exists.)
+    //**
+    //** @returns(False on first run.)
     /// <summary>True if settings.json exists.</summary>
     /// <returns>False on first run.</returns>
     class function Exists: Boolean;
-    (***
-      Reads settings.json into this object.
-
-      @returns(False if the file does not exist or cannot be read; the object then keeps its
-      values.)
-    *)
+    //** @abstract(Reads settings.json into this object.)
+    //**
+    //** @returns(False if the file does not exist or cannot be read; the object then keeps its
+    //** values.)
     /// <summary>Reads settings.json into this object.</summary>
     /// <returns>False if the file does not exist or cannot be read; the object then keeps its values.</returns>
     function Load: Boolean;
-    (***
-      Writes this object to settings.json, creating the folder if needed.
-
-      @raises(EInOutError The file could not be written.)
-    *)
+    //** @abstract(Writes this object to settings.json, creating the folder if needed.)
+    //**
+    //** @raises(EInOutError The file could not be written.)
     /// <summary>Writes this object to settings.json, creating the folder if needed.</summary>
     /// <exception cref="EInOutError">The file could not be written.</exception>
     procedure Save;
-    (***
-      True if a user name and password are set.
-
-      @returns(False if either is empty.)
-    *)
+    //** @abstract(True if a user name and password are set.)
+    //**
+    //** @returns(False if either is empty.)
     /// <summary>True if a user name and password are set.</summary>
     /// <returns>False if either is empty.</returns>
     function HasLogin: Boolean;
-    (***
-      True if the network and subnet describe a usable range.
-
-      @returns(False if either is empty or invalid.)
-    *)
+    //** @abstract(True if the network and subnet describe a usable range.)
+    //**
+    //** @returns(False if either is empty or invalid.)
     /// <summary>True if the network and subnet describe a usable range.</summary>
     /// <returns>False if either is empty or invalid.</returns>
     function HasValidNetwork: Boolean;
-    (***
-      Records whether the account worked, and when.
-
-      @param(AState The new state.)
-    *)
+    //** @abstract(Records whether the account worked, and when.)
+    //**
+    //** @param(AState The new state.)
     /// <summary>Records whether the account worked, and when.</summary>
     /// <param name="AState">The new state.</param>
     procedure MarkCredentials(AState: TTapoCredentialState);
 
-    (*** The file format version; 1. *)
+    //** @abstract(The file format version; 1.)
     /// <summary>The file format version; 1.</summary>
     property Version: Integer read FVersion write FVersion;
-    (*** The Tapo app account e-mail. *)
+    //** @abstract(The Tapo app account e-mail.)
     /// <summary>The Tapo app account e-mail.</summary>
     property Username: string read FUsername write FUsername;
-    (*** The Tapo app account password (plain text for now). *)
+    //** @abstract(The Tapo app account password @(plain text for now@).)
     /// <summary>The Tapo app account password (plain text for now).</summary>
     property Password: string read FPassword write FPassword;
-    (*** Any address in the network to scan, for example '192.168.1.0'. *)
+    //** @abstract(Any address in the network to scan, for example '192.168.1.0'.)
     /// <summary>Any address in the network to scan, for example '192.168.1.0'.</summary>
     property Network: string read FNetwork write FNetwork;
-    (*** The subnet mask, for example '255.255.255.0'. *)
+    //** @abstract(The subnet mask, for example '255.255.255.0'.)
     /// <summary>The subnet mask, for example '255.255.255.0'.</summary>
     property Subnet: string read FSubnet write FSubnet;
-    (*** Whether the account worked the last time it was used. *)
+    //** @abstract(Whether the account worked the last time it was used.)
     /// <summary>Whether the account worked the last time it was used.</summary>
     property CredentialState: TTapoCredentialState read FCredentialState write FCredentialState;
-    (*** When @link(CredentialState) was last set from a result; 0 if never. *)
+    //** @abstract(When @link(CredentialState) was last set from a result; 0 if never.)
     /// <summary>When <see cref="CredentialState"/> was last set from a result; 0 if never.</summary>
     property CredentialsCheckedAt: TDateTime read FCredentialsCheckedAt write FCredentialsCheckedAt;
   end;
 
-  (*** One device in devices.json. *)
+  //** @abstract(One device in devices.json.)
   /// <summary>One device in devices.json.</summary>
   TTapoStoredDevice = record
-    (*** The device's own ID; empty if it was only ever seen as already added. *)
+    //** @abstract(The device's own ID; empty if it was only ever seen as already added.)
     /// <summary>The device's own ID; empty if it was only ever seen as already added.</summary>
     DeviceId: string;
-    (*** The IP address it was last found at. *)
+    //** @abstract(The IP address it was last found at.)
     /// <summary>The IP address it was last found at.</summary>
     Host: string;
-    (*** The MAC address, as 'AA:BB:CC:DD:EE:FF'. *)
+    //** @abstract(The MAC address, as 'AA:BB:CC:DD:EE:FF'.)
     /// <summary>The MAC address, as 'AA:BB:CC:DD:EE:FF'.</summary>
     MAC: string;
-    (*** The model it reports, for example 'P110'. *)
+    //** @abstract(The model it reports, for example 'P110'.)
     /// <summary>The model it reports, for example 'P110'.</summary>
     Model: string;
-    (*** The device type it reports, for example 'SMART.TAPOPLUG'. *)
+    //** @abstract(The device type it reports, for example 'SMART.TAPOPLUG'.)
     /// <summary>The device type it reports, for example 'SMART.TAPOPLUG'.</summary>
     DeviceType: string;
-    (*** The name given in the Tapo app. *)
+    //** @abstract(The name given in the Tapo app.)
     /// <summary>The name given in the Tapo app.</summary>
     Nickname: string;
-    (***
-      The qualified name of the class it was added as, for example 'Tapo.Devices.TTapoP110'.
-    *)
+    //** @abstract(The qualified name of the class it was added as, for example
+    //** 'Tapo.Devices.TTapoP110'.)
     /// <summary>The qualified name of the class it was added as, for example 'Tapo.Devices.TTapoP110'.</summary>
     DeviceClass: string;
-    (*** When a scan first found it. *)
+    //** @abstract(When a scan first found it.)
     /// <summary>When a scan first found it.</summary>
     FirstSeen: TDateTime;
-    (*** When a scan or a check last reached it. *)
+    //** @abstract(When a scan or a check last reached it.)
     /// <summary>When a scan or a check last reached it.</summary>
     LastSeen: TDateTime;
-    (*** Whether the last check of it succeeded. *)
+    //** @abstract(Whether the last check of it succeeded.)
     /// <summary>Whether the last check of it succeeded.</summary>
     LastCheckOk: Boolean;
-    (*** What the last check found, in words. *)
+    //** @abstract(What the last check found, in words.)
     /// <summary>What the last check found, in words.</summary>
     LastCheckResult: string;
   end;
 
-  (*** The result of checking one stored device at startup. *)
+  //** @abstract(The result of checking one stored device at startup.)
   /// <summary>The result of checking one stored device at startup.</summary>
   TTapoCheckStatus = (
-    (*** It answered, and it is the device that was stored. *)
+    //** @abstract(It answered, and it is the device that was stored.)
     /// <summary>It answered, and it is the device that was stored.</summary>
     tcsOk,
-    (*** It answered, but with another device ID: something else has that address now. *)
+    //** @abstract(It answered, but with another device ID: something else has that address now.)
     /// <summary>It answered, but with another device ID: something else has that address now.</summary>
     tcsDifferentDevice,
-    (*** It answered but rejected the Tapo account. *)
+    //** @abstract(It answered but rejected the Tapo account.)
     /// <summary>It answered but rejected the Tapo account.</summary>
     tcsBadCredentials,
-    (*** Nothing answered, or it could not be logged in to. *)
+    //** @abstract(Nothing answered, or it could not be logged in to.)
     /// <summary>Nothing answered, or it could not be logged in to.</summary>
     tcsUnreachable,
-    (*** Its class could not be found, so it was not added. *)
+    //** @abstract(Its class could not be found, so it was not added.)
     /// <summary>Its class could not be found, so it was not added.</summary>
     tcsNotLoaded);
 
-  (*** The contents of devices.json, and the means to load them into a client. *)
+  //** @abstract(The contents of devices.json, and the means to load them into a client.)
   /// <summary>The contents of devices.json, and the means to load them into a client.</summary>
   TTapoDeviceStore = class
   private
     FVersion: Integer;
     FDevices: TArray<TTapoStoredDevice>;
   public
-    (*** Creates an empty store. *)
+    //** @abstract(Creates an empty store.)
     /// <summary>Creates an empty store.</summary>
     constructor Create;
-    (***
-      The full path of devices.json.
-
-      @returns(A path in the platform's per-user application data folder.)
-    *)
+    //** @abstract(The full path of devices.json.)
+    //**
+    //** @returns(A path in the platform's per-user application data folder.)
     /// <summary>The full path of devices.json.</summary>
     /// <returns>A path in the platform's per-user application data folder.</returns>
     class function FileName: string;
-    (***
-      True if devices.json exists.
-
-      @returns(False until a scan has found something.)
-    *)
+    //** @abstract(True if devices.json exists.)
+    //**
+    //** @returns(False until a scan has found something.)
     /// <summary>True if devices.json exists.</summary>
     /// <returns>False until a scan has found something.</returns>
     class function Exists: Boolean;
-    (***
-      Reads devices.json into this object.
-
-      @returns(False if the file does not exist or cannot be read; the store then stays as it
-      was.)
-    *)
+    //** @abstract(Reads devices.json into this object.)
+    //**
+    //** @returns(False if the file does not exist or cannot be read; the store then stays as it
+    //** was.)
     /// <summary>Reads devices.json into this object.</summary>
     /// <returns>False if the file does not exist or cannot be read; the store then stays as it was.</returns>
     function Load: Boolean;
-    (***
-      Writes this object to devices.json, creating the folder if needed.
-
-      @raises(EInOutError The file could not be written.)
-    *)
+    //** @abstract(Writes this object to devices.json, creating the folder if needed.)
+    //**
+    //** @raises(EInOutError The file could not be written.)
     /// <summary>Writes this object to devices.json, creating the folder if needed.</summary>
     /// <exception cref="EInOutError">The file could not be written.</exception>
     procedure Save;
 
-    (***
-      The position of the device with an ID.
-
-      @param(ADeviceId The device ID.)
-
-      @returns(The index, or -1.)
-    *)
+    //** @abstract(The position of the device with an ID.)
+    //**
+    //** @param(ADeviceId The device ID.)
+    //**
+    //** @returns(The index, or -1.)
     /// <summary>The position of the device with an ID.</summary>
     /// <param name="ADeviceId">The device ID.</param>
     /// <returns>The index, or -1.</returns>
     function IndexOfId(const ADeviceId: string): Integer;
-    (***
-      The position of the device stored at an address.
-
-      @param(AHost The address.)
-
-      @returns(The index, or -1.)
-    *)
+    //** @abstract(The position of the device stored at an address.)
+    //**
+    //** @param(AHost The address.)
+    //**
+    //** @returns(The index, or -1.)
     /// <summary>The position of the device stored at an address.</summary>
     /// <param name="AHost">The address.</param>
     /// <returns>The index, or -1.</returns>
     function IndexOfHost(const AHost: string): Integer;
 
-    (***
-      Adds the Tapo devices of a scan; never removes any.
-
-      A device is matched by its ID first, then by address. A match has its address, MAC, model,
-      name and class refreshed; anything else is added. Devices the scan did not find are kept as
-      they are.
-
-      @param(AResult A scan result.)
-
-      @returns(How many devices were new.)
-    *)
+    //** @abstract(Adds the Tapo devices of a scan; never removes any.)
+    //**
+    //** A device is matched by its ID first, then by address. A match has its address, MAC, model,
+    //** name and class refreshed; anything else is added. Devices the scan did not find are kept as
+    //** they are.
+    //**
+    //** @param(AResult A scan result.)
+    //**
+    //** @returns(How many devices were new.)
     /// <summary>Adds the Tapo devices of a scan; never removes any.</summary>
     /// <param name="AResult">A scan result.</param>
     /// <returns>How many devices were new.</returns>
@@ -300,18 +294,16 @@ type
     /// </remarks>
     function Merge(const AResult: TTapoScanResult): Integer;
 
-    (***
-      Adds every stored device to a client, as its stored class.
-
-      Nothing is sent to the devices: each one logs in on its first request. @link(CheckDevice) is
-      the quick check of one.
-
-      @param(AClient The client.)
-
-      @param(ASkipped Receives one line per device that could not be added.)
-
-      @returns(The devices, in store order; nil where a device could not be added.)
-    *)
+    //** @abstract(Adds every stored device to a client, as its stored class.)
+    //**
+    //** Nothing is sent to the devices: each one logs in on its first request. @link(CheckDevice) is
+    //** the quick check of one.
+    //**
+    //** @param(AClient The client.)
+    //**
+    //** @param(ASkipped Receives one line per device that could not be added.)
+    //**
+    //** @returns(The devices, in store order; nil where a device could not be added.)
     /// <summary>Adds every stored device to a client, as its stored class.</summary>
     /// <param name="AClient">The client.</param>
     /// <param name="ASkipped">Receives one line per device that could not be added.</param>
@@ -322,21 +314,20 @@ type
     /// </remarks>
     function AddToClient(AClient: TTapoClient; out ASkipped: TArray<string>): TArray<TTapoDevice>;
 
-    (***
-      Checks that a stored device is still where it was. Do not call it on the main thread.
-
-      Logs in if needed and reads the device info: one or two requests. Records the result, the
-      time and any new name in the store, but does not save it. Safe to call for several indexes
-      from different threads at once.
-
-      @param(AIndex The device's position in @link(Devices).)
-
-      @param(ADevice The device object for it, from @link(AddToClient); may be nil.)
-
-      @param(AMessage Receives a short description of the result.)
-
-      @returns(What was found.)
-    *)
+    //** @abstract(Checks that a stored device is still where it was. Do not call it on the main
+    //** thread.)
+    //**
+    //** Logs in if needed and reads the device info: one or two requests. Records the result, the
+    //** time and any new name in the store, but does not save it. Safe to call for several indexes
+    //** from different threads at once.
+    //**
+    //** @param(AIndex The device's position in @link(Devices).)
+    //**
+    //** @param(ADevice The device object for it, from @link(AddToClient); may be nil.)
+    //**
+    //** @param(AMessage Receives a short description of the result.)
+    //**
+    //** @returns(What was found.)
     /// <summary>Checks that a stored device is still where it was. Do not call it on the main thread.</summary>
     /// <param name="AIndex">The device's position in <see cref="Devices"/>.</param>
     /// <param name="ADevice">The device object for it, from <see cref="AddToClient"/>; may be nil.</param>
@@ -350,19 +341,17 @@ type
     /// </remarks>
     function CheckDevice(AIndex: Integer; ADevice: TTapoDevice; out AMessage: string): TTapoCheckStatus;
 
-    (*** The file format version; 1. *)
+    //** @abstract(The file format version; 1.)
     /// <summary>The file format version; 1.</summary>
     property Version: Integer read FVersion write FVersion;
-    (*** The stored devices. *)
+    //** @abstract(The stored devices.)
     /// <summary>The stored devices.</summary>
     property Devices: TArray<TTapoStoredDevice> read FDevices write FDevices;
   end;
 
 var
-  (***
-    The name of the folder, inside the platform's application data folder, that holds
-    settings.json and devices.json. Set it before first use.
-  *)
+  //** @abstract(The name of the folder, inside the platform's application data folder, that holds
+  //** settings.json and devices.json. Set it before first use.)
   /// <summary>
   ///   The name of the folder, inside the platform's application data
   ///   folder, that holds settings.json and devices.json. Set it before
@@ -370,30 +359,26 @@ var
   /// </summary>
   TapoAppFolderName: string = 'TapoScan';
 
-(***
-  The folder that holds settings.json and devices.json, created if missing.
-
-  @returns(The full path.)
-*)
+//** @abstract(The folder that holds settings.json and devices.json, created if missing.)
+//**
+//** @returns(The full path.)
 /// <summary>The folder that holds settings.json and devices.json, created if missing.</summary>
 /// <returns>The full path.</returns>
 function TapoDataFolder: string;
 
-(***
-  Finds this computer's local IPv4 network.
-
-  Asks the system which local address it would use to reach the internet (a UDP socket is
-  pointed at a public address; nothing is sent) and takes that adapter's mask. Without a route it
-  falls back to the adapter list, preferring 192.168.x.x over 10.x.x.x over 172.16-31.x.x and
-  skipping recognisable virtual adapters.
-
-  @param(ANetwork Receives the network address, for example '192.168.1.0'.)
-
-  @param(AMask Receives the subnet mask, for example '255.255.255.0'.)
-
-  @returns(True if a private @(LAN@) IPv4 address was found; otherwise False and '192.168.0.0' /
-  '255.255.255.0'.)
-*)
+//** @abstract(Finds this computer's local IPv4 network.)
+//**
+//** Asks the system which local address it would use to reach the internet (a UDP socket is pointed
+//** at a public address; nothing is sent) and takes that adapter's mask. Without a route it falls
+//** back to the adapter list, preferring 192.168.x.x over 10.x.x.x over 172.16-31.x.x and skipping
+//** recognisable virtual adapters.
+//**
+//** @param(ANetwork Receives the network address, for example '192.168.1.0'.)
+//**
+//** @param(AMask Receives the subnet mask, for example '255.255.255.0'.)
+//**
+//** @returns(True if a private @(LAN@) IPv4 address was found; otherwise False and '192.168.0.0' /
+//** '255.255.255.0'.)
 /// <summary>Finds this computer's local IPv4 network.</summary>
 /// <param name="ANetwork">Receives the network address, for example '192.168.1.0'.</param>
 /// <param name="AMask">Receives the subnet mask, for example '255.255.255.0'.</param>
@@ -407,13 +392,11 @@ function TapoDataFolder: string;
 /// </remarks>
 function TapoLocalNetwork(out ANetwork, AMask: string): Boolean;
 
-(***
-  A short English name for a check result.
-
-  @param(AStatus The result.)
-
-  @returns(For example 'ok' or 'unreachable'.)
-*)
+//** @abstract(A short English name for a check result.)
+//**
+//** @param(AStatus The result.)
+//**
+//** @returns(For example 'ok' or 'unreachable'.)
 /// <summary>A short English name for a check result.</summary>
 /// <param name="AStatus">The result.</param>
 /// <returns>For example 'ok' or 'unreachable'.</returns>

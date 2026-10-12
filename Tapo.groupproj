@@ -3,7 +3,7 @@
         <ProjectGuid>{163D0533-FE79-4CD3-A227-E0C175460037}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="LibScan\LibScan.dproj">
+        <Projects Include="Demo\Scan.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -14,23 +14,23 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="LibScan">
-        <MSBuild Projects="LibScan\LibScan.dproj"/>
+    <Target Name="Scan">
+        <MSBuild Projects="Demo\Scan.dproj"/>
     </Target>
-    <Target Name="LibScan:Clean">
-        <MSBuild Projects="LibScan\LibScan.dproj" Targets="Clean"/>
+    <Target Name="Scan:Clean">
+        <MSBuild Projects="Demo\Scan.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="LibScan:Make">
-        <MSBuild Projects="LibScan\LibScan.dproj" Targets="Make"/>
+    <Target Name="Scan:Make">
+        <MSBuild Projects="Demo\Scan.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="LibScan"/>
+        <CallTarget Targets="Scan"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="LibScan:Clean"/>
+        <CallTarget Targets="Scan:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="LibScan:Make"/>
+        <CallTarget Targets="Scan:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

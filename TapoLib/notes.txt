@@ -1,5 +1,7 @@
-pasdoc --staronly --format html --output docs Tapo.*.pas
+\utils\pasdoc\bin\pasdoc --staronly --auto-abstract --format html --output ../docs *.pas
 
 NSLocalNetworkUsageDescription
 
 macOS 15 and later requires you to add NSLocalNetworkUsageDescription under Project Options → Version Info. Without it, the OS silently blocks traffic on the local network.
+
+[dcc32 Hint] H2675 Directory not found: ..\C:\Users\simon\.boss\modules\internal.788af1d41adb05ae310e4deff3e187be\modules\.dcp

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Client</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<h1 class="unit">Unit Tapo.Client</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Tapo local-network client: account credentials, device registry and the abstract device base class that handles authentication.</p>
+<p>
+
+
+<p></p>
+
+<pre class="preformatted">
+TTapoClient       - holds the Tapo account e-mail and password (given once)
+                    and owns the devices created from it.
+TTapoEndpoint     - anything that accepts Tapo requests.
+TTapoDevice       - abstract device reached by IP address. Picks the
+                    protocol, logs in on first use, keeps the session and
+                    logs in again only when the device ends it.
+TTapoChildDevice  - abstract device reached through a parent device: a
+                    power-strip socket or a hub sensor/switch.</pre>
+
+<p>
+
+<p></p>
+
+<pre class="preformatted">
+Protocols (chosen per device family, as the Rust crate does):
+  plugs, bulbs, strips, H100  - TPAP if the device announces it, else KLAP
+  cameras                     - TPAP over HTTPS, else AES SSL
+  camera hubs (H200, H500)    - AES SSL, as the local &quot;admin&quot; account</pre>
+
+<p>
+
+<p>Concrete device classes are in Tapo.Devices, Tapo.Hubs and Tapo.Cameras; Tapo.Models adds Client.Add(P110, '192.168.1.50').
+
+<p>Protocol code ported from <a href="https://github.com/mihai-dinculescu/tapo">https://github.com/mihai-dinculescu/tapo</a>. All calls are blocking network I/O; call them from a background thread (TTask.Run) in an FMX app. Each device serialises its own requests, so one device object may be shared between threads.</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Client.ETapoError.html"><code>ETapoError</code></a></td>
+<td class="itemdesc">Raised for every failure reported by a Tapo device or found while talking to one.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Client.ETapoSessionExpired.html"><code>ETapoSessionExpired</code></a></td>
+<td class="itemdesc">Raised internally when a device no longer knows the session.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Client.ETapoAuthError.html"><code>ETapoAuthError</code></a></td>
+<td class="itemdesc">Raised when a device rejects the Tapo account e-mail or password.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Client.TTapoDeviceInfo.html"><code>TTapoDeviceInfo</code></a></td>
+<td class="itemdesc">The fields every Tapo device reports in its device info.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Client.TTapoEndpoint.html"><code>TTapoEndpoint</code></a></td>
+<td class="itemdesc">Anything that accepts Tapo requests: a device reached by IP address (<a class="normal" href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>) or a device reached through another one (<a class="normal" href="Tapo.Client.TTapoChildDevice.html">TTapoChildDevice</a>).</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Client.TTapoChildDevice.html"><code>TTapoChildDevice</code></a></td>
+<td class="itemdesc">A device reached through a parent device: a power-strip socket or a sensor or switch paired to a hub.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Client.TTapoDevice.html"><code>TTapoDevice</code></a></td>
+<td class="itemdesc">A Tapo device reached by IP address: the base class of every device class. It picks the protocol, logs in, and keeps the session.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Client.TTapoClient.html"><code>TTapoClient</code></a></td>
+<td class="itemdesc">Your Tapo account, and the devices reached with it.</td>
+</tr>
+</table>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#JInt64-TJSONObject-string-Int64-">JInt64</a></strong>(Obj: TJSONObject; const Name: string; Default: Int64 = 0): Int64;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#JFloat-TJSONObject-string-Double-">JFloat</a></strong>(Obj: TJSONObject; const Name: string; Default: Double = 0): Double;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#JStr-TJSONObject-string-">JStr</a></strong>(Obj: TJSONObject; const Name: string): string;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#JBool-TJSONObject-string-Boolean-">JBool</a></strong>(Obj: TJSONObject; const Name: string; Default: Boolean = False): Boolean;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#JObj-TJSONObject-string-">JObj</a></strong>(Obj: TJSONObject; const Name: string): TJSONObject;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#JArr-TJSONObject-string-">JArr</a></strong>(Obj: TJSONObject; const Name: string): TJSONArray;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#JHas-TJSONObject-string-">JHas</a></strong>(Obj: TJSONObject; const Name: string): Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#JBase64Str-TJSONObject-string-">JBase64Str</a></strong>(Obj: TJSONObject; const Name: string): string;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#JObject-arrayof-">JObject</a></strong>(const Pairs: array of const): TJSONObject;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#JSectionNames-string-">JSectionNames</a></strong>(const ASection: string): TJSONObject;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#TapoErrorCode-TJSONObject-">TapoErrorCode</a></strong>(Obj: TJSONObject): Integer;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#TapoSectionLeaf-TJSONObject-">TapoSectionLeaf</a></strong>(AResult: TJSONObject): TJSONObject;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.html#TapoErrorName-Integer-">TapoErrorName</a></strong>(Code: Integer): string;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Client.html#TTapoProtocol">TTapoProtocol</a></strong> = (...);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Client.html#TTapoDeviceFamily">TTapoDeviceFamily</a></strong> = (...);</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Client.html#TTapoAuthMode">TTapoAuthMode</a></strong> = (...);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Client.html#TTapoChildDeviceClass">TTapoChildDeviceClass</a></strong> = class of <a href="Tapo.Client.TTapoChildDevice.html">TTapoChildDevice</a>;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Client.html#TTapoDeviceClass">TTapoDeviceClass</a></strong> = class of <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="JInt64-TJSONObject-string-Int64-"></span><code>function <strong>JInt64</strong>(Obj: TJSONObject; const Name: string; Default: Int64 = 0): Int64;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reads an integer field.</p>
+<p>
+
+
+<p>Booleans read as 0 or 1 and numeric strings are converted.
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Obj</dt>
+<dd>The object to read from. May be nil.</dd>
+<dt>Name</dt>
+<dd>The field name.</dd>
+<dt>Default</dt>
+<dd>Returned if the field is missing or not a number.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="JFloat-TJSONObject-string-Double-"></span><code>function <strong>JFloat</strong>(Obj: TJSONObject; const Name: string; Default: Double = 0): Double;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reads a floating-point field.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Obj</dt>
+<dd>The object to read from. May be nil.</dd>
+<dt>Name</dt>
+<dd>The field name.</dd>
+<dt>Default</dt>
+<dd>Returned if the field is missing or not a number.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="JStr-TJSONObject-string-"></span><code>function <strong>JStr</strong>(Obj: TJSONObject; const Name: string): string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reads a field as text.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Obj</dt>
+<dd>The object to read from. May be nil.</dd>
+<dt>Name</dt>
+<dd>The field name.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The value, or an empty string if the field is missing or null.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="JBool-TJSONObject-string-Boolean-"></span><code>function <strong>JBool</strong>(Obj: TJSONObject; const Name: string; Default: Boolean = False): Boolean;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reads a Boolean field.</p>
+<p>
+
+
+<p>Numbers read as True when not 0; the strings '1', 'true' and 'on' read as True.
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Obj</dt>
+<dd>The object to read from. May be nil.</dd>
+<dt>Name</dt>
+<dd>The field name.</dd>
+<dt>Default</dt>
+<dd>Returned if the field is missing.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="JObj-TJSONObject-string-"></span><code>function <strong>JObj</strong>(Obj: TJSONObject; const Name: string): TJSONObject;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reads an object field.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The object, still owned by Obj, or nil.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="JArr-TJSONObject-string-"></span><code>function <strong>JArr</strong>(Obj: TJSONObject; const Name: string): TJSONArray;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reads an array field.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The array, still owned by Obj, or nil.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="JHas-TJSONObject-string-"></span><code>function <strong>JHas</strong>(Obj: TJSONObject; const Name: string): Boolean;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tells whether a field is present and not null.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="JBase64Str-TJSONObject-string-"></span><code>function <strong>JBase64Str</strong>(Obj: TJSONObject; const Name: string): string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reads a Base64 text field, such as nickname or ssid, and decodes it.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The decoded text; the raw value if it is not valid Base64.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="JObject-arrayof-"></span><code>function <strong>JObject</strong>(const Pairs: array of const): TJSONObject;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Builds a JSON object from name/value pairs.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>Example: </p>
+
+<pre class="longcode">
+Plug.Execute(<span class="pascal_string">'device_reboot'</span>, JObject([<span class="pascal_string">'delay'</span>, <span class="pascal_numeric">5</span>])).Free;</pre>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Pairs</dt>
+<dd>Alternating names and values. Values may be Integer, Int64, Boolean, string, Extended or a TJSONValue, which the new object takes ownership of.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The new object. The caller frees it, or passes it on to a method that takes ownership.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A name is not a string, or a value has an unsupported type.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="JSectionNames-string-"></span><code>function <strong>JSectionNames</strong>(const ASection: string): TJSONObject;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Builds the SmartCam &quot;section names&quot; parameter, {&quot;name&quot;: [ASection]}.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoErrorCode-TJSONObject-"></span><code>function <strong>TapoErrorCode</strong>(Obj: TJSONObject): Integer;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reads the error code of a reply.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">error_code, else err_code, else 0 (SmartCam replies may omit it).</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoSectionLeaf-TJSONObject-"></span><code>function <strong>TapoSectionLeaf</strong>(AResult: TJSONObject): TJSONObject;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Finds the data in a SmartCam &quot;get&quot; reply, which nests it as {&quot;section&quot;: {&quot;leaf&quot;: {...}}}.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AResult</dt>
+<dd>The reply's result object.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The leaf object, still owned by AResult, or nil.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoErrorName-Integer-"></span><code>function <strong>TapoErrorName</strong>(Code: Integer): string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Names a Tapo error code.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Code</dt>
+<dd>An <a class="normal" href="Tapo.Client.ETapoError.html#ErrorCode">ETapoError.ErrorCode</a>.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The name used by the Tapo API, for example 'SESSION_EXPIRED', or 'UNKNOWN'.</p></td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoProtocol"></span><code><strong>TTapoProtocol</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The local protocol a device is spoken to with.</p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="tpAuto">tpAuto</span>: Pick the protocol for each device (the default).</li>
+<li>
+<span id="tpKlap">tpKlap</span>: KLAP: older firmware, or any firmware with Third-Party Compatibility on.</li>
+<li>
+<span id="tpTpap">tpTpap</span>: TPAP: SPAKE2+ login and AES-CCM session; current firmware with Third-Party Compatibility off.</li>
+<li>
+<span id="tpAesSsl">tpAesSsl</span>: AES SSL: cameras and camera hubs.</li>
+</ul>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoDeviceFamily"></span><code><strong>TTapoDeviceFamily</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The request format a device family uses.</p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="dfSmart">dfSmart</span>: Plugs, lights, light strips, power strips and the H100 hub.</li>
+<li>
+<span id="dfSmartCam">dfSmartCam</span>: Cameras and camera hubs (H200, H500): every request is wrapped in a multipleRequest.</li>
+</ul>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoAuthMode"></span><code><strong>TTapoAuthMode</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+How a device class logs in.</p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="amNegotiate">amNegotiate</span>: Ask the device: TPAP if it announces it, otherwise KLAP.</li>
+<li>
+<span id="amCamera">amCamera</span>: TPAP over HTTPS, otherwise AES SSL (cameras).</li>
+<li>
+<span id="amCameraHub">amCameraHub</span>: AES SSL as the hub's local &quot;admin&quot; account (H200, H500).</li>
+</ul>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoChildDeviceClass"></span><code><strong>TTapoChildDeviceClass</strong> = class of <a href="Tapo.Client.TTapoChildDevice.html">TTapoChildDevice</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A child device class, for <a class="normal" href="Tapo.Client.TTapoDevice.html#ChildFor-string-TTapoChildDeviceClass-">TTapoDevice.ChildFor</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoDeviceClass"></span><code><strong>TTapoDeviceClass</strong> = class of <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A device class, for <a class="normal" href="Tapo.Client.TTapoClient.html#AddDevice-TTapoDeviceClass-string-">TTapoClient.AddDevice</a>.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

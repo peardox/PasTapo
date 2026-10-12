@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Models: Class TTapoClientModels</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoClientModels"></span><h1 class="cio">Class TTapoClientModels</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Models.html">Tapo.Models</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoClientModels = class helper(TObject) for TTapoClient</code></p>
+<h2 class="description">Description</h2>
+<p>
+Adds <code>Add(Model, Host)</code> and device detection to <a class="normal" href="Tapo.Client.TTapoClient.html">TTapoClient</a>.</p>
+<p>
+
+
+<p>Each model constant has its own type, so the compiler picks the overload of Add that returns the right class: <code>Client.Add(P110, ...)</code> returns a TTapoP110 with no cast.</p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="thisitem">TTapoClientModels</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL510-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL510.html">TTapoModelL510</a>; const AHost: string): <a href="Tapo.Devices.TTapoL510.html">TTapoL510</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL510B-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL510B.html">TTapoModelL510B</a>; const AHost: string): <a href="Tapo.Devices.TTapoL510.html">TTapoL510</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL520-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL520.html">TTapoModelL520</a>; const AHost: string): <a href="Tapo.Devices.TTapoL510.html">TTapoL510</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL610-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL610.html">TTapoModelL610</a>; const AHost: string): <a href="Tapo.Devices.TTapoL510.html">TTapoL510</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL530-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL530.html">TTapoModelL530</a>; const AHost: string): <a href="Tapo.Devices.TTapoL530.html">TTapoL530</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL530B-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL530B.html">TTapoModelL530B</a>; const AHost: string): <a href="Tapo.Devices.TTapoL530.html">TTapoL530</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL535-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL535.html">TTapoModelL535</a>; const AHost: string): <a href="Tapo.Devices.TTapoL530.html">TTapoL530</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL630-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL630.html">TTapoModelL630</a>; const AHost: string): <a href="Tapo.Devices.TTapoL530.html">TTapoL530</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL900-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL900.html">TTapoModelL900</a>; const AHost: string): <a href="Tapo.Devices.TTapoL900.html">TTapoL900</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL920-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL920.html">TTapoModelL920</a>; const AHost: string): <a href="Tapo.Devices.TTapoL920.html">TTapoL920</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelL930-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelL930.html">TTapoModelL930</a>; const AHost: string): <a href="Tapo.Devices.TTapoL920.html">TTapoL920</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP100-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP100.html">TTapoModelP100</a>; const AHost: string): <a href="Tapo.Devices.TTapoP100.html">TTapoP100</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP105-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP105.html">TTapoModelP105</a>; const AHost: string): <a href="Tapo.Devices.TTapoP100.html">TTapoP100</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP125-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP125.html">TTapoModelP125</a>; const AHost: string): <a href="Tapo.Devices.TTapoP100.html">TTapoP100</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP125M-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP125M.html">TTapoModelP125M</a>; const AHost: string): <a href="Tapo.Devices.TTapoP100.html">TTapoP100</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP110-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP110.html">TTapoModelP110</a>; const AHost: string): <a href="Tapo.Devices.TTapoP110.html">TTapoP110</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP110M-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP110M.html">TTapoModelP110M</a>; const AHost: string): <a href="Tapo.Devices.TTapoP110.html">TTapoP110</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP115-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP115.html">TTapoModelP115</a>; const AHost: string): <a href="Tapo.Devices.TTapoP110.html">TTapoP110</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP300-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP300.html">TTapoModelP300</a>; const AHost: string): <a href="Tapo.Devices.TTapoP300.html">TTapoP300</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP306-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP306.html">TTapoModelP306</a>; const AHost: string): <a href="Tapo.Devices.TTapoP300.html">TTapoP300</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP304M-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP304M.html">TTapoModelP304M</a>; const AHost: string): <a href="Tapo.Devices.TTapoP304M.html">TTapoP304M</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelP316M-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelP316M.html">TTapoModelP316M</a>; const AHost: string): <a href="Tapo.Devices.TTapoP304M.html">TTapoP304M</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelH100-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelH100.html">TTapoModelH100</a>; const AHost: string): <a href="Tapo.Hubs.TTapoH100.html">TTapoH100</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelH200-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelH200.html">TTapoModelH200</a>; const AHost: string): <a href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelH500-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelH500.html">TTapoModelH500</a>; const AHost: string): <a href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelC210-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelC210.html">TTapoModelC210</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelC220-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelC220.html">TTapoModelC220</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelC225-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelC225.html">TTapoModelC225</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelC325WB-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelC325WB.html">TTapoModelC325WB</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelC520WS-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelC520WS.html">TTapoModelC520WS</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelTC40-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelTC40.html">TTapoModelTC40</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-TTapoModelTC70-string-">Add</a></strong>(const AModel: <a href="Tapo.Models.TTapoModelTC70.html">TTapoModelTC70</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#AddDetected-string-">AddDetected</a></strong>(const AHost: string): <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#AddDetected-string-TTapoDetection-">AddDetected</a></strong>(const AHost: string; out ADetection: <a href="Tapo.Models.TTapoDetection.html">TTapoDetection</a>): <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#TryAddDetected-string-TTapoDevice-string-">TryAddDetected</a></strong>(const AHost: string; out ADevice: <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; out AError: string): Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.TTapoClientModels.html#Add-string-string-">Add</a></strong>(const AModelName: string; const AHost: string): <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; overload;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL510-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL510.html">TTapoModelL510</a>; const AHost: string): <a href="Tapo.Devices.TTapoL510.html">TTapoL510</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L510 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L510">L510</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL510B-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL510B.html">TTapoModelL510B</a>; const AHost: string): <a href="Tapo.Devices.TTapoL510.html">TTapoL510</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L510B at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L510B">L510B</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL520-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL520.html">TTapoModelL520</a>; const AHost: string): <a href="Tapo.Devices.TTapoL510.html">TTapoL510</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L520 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L520">L520</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL610-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL610.html">TTapoModelL610</a>; const AHost: string): <a href="Tapo.Devices.TTapoL510.html">TTapoL510</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L610 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L610">L610</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL530-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL530.html">TTapoModelL530</a>; const AHost: string): <a href="Tapo.Devices.TTapoL530.html">TTapoL530</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L530 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L530">L530</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL530B-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL530B.html">TTapoModelL530B</a>; const AHost: string): <a href="Tapo.Devices.TTapoL530.html">TTapoL530</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L530B at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L530B">L530B</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL535-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL535.html">TTapoModelL535</a>; const AHost: string): <a href="Tapo.Devices.TTapoL530.html">TTapoL530</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L535 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L535">L535</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL630-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL630.html">TTapoModelL630</a>; const AHost: string): <a href="Tapo.Devices.TTapoL530.html">TTapoL530</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L630 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L630">L630</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL900-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL900.html">TTapoModelL900</a>; const AHost: string): <a href="Tapo.Devices.TTapoL900.html">TTapoL900</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L900 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L900">L900</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL920-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL920.html">TTapoModelL920</a>; const AHost: string): <a href="Tapo.Devices.TTapoL920.html">TTapoL920</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L920 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L920">L920</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelL930-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelL930.html">TTapoModelL930</a>; const AHost: string): <a href="Tapo.Devices.TTapoL920.html">TTapoL920</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo L930 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#L930">L930</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP100-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP100.html">TTapoModelP100</a>; const AHost: string): <a href="Tapo.Devices.TTapoP100.html">TTapoP100</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P100 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P100">P100</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP105-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP105.html">TTapoModelP105</a>; const AHost: string): <a href="Tapo.Devices.TTapoP100.html">TTapoP100</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P105 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P105">P105</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP125-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP125.html">TTapoModelP125</a>; const AHost: string): <a href="Tapo.Devices.TTapoP100.html">TTapoP100</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P125 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P125">P125</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP125M-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP125M.html">TTapoModelP125M</a>; const AHost: string): <a href="Tapo.Devices.TTapoP100.html">TTapoP100</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P125M at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P125M">P125M</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP110-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP110.html">TTapoModelP110</a>; const AHost: string): <a href="Tapo.Devices.TTapoP110.html">TTapoP110</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P110 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P110">P110</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP110M-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP110M.html">TTapoModelP110M</a>; const AHost: string): <a href="Tapo.Devices.TTapoP110.html">TTapoP110</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P110M at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P110M">P110M</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP115-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP115.html">TTapoModelP115</a>; const AHost: string): <a href="Tapo.Devices.TTapoP110.html">TTapoP110</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P115 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P115">P115</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP300-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP300.html">TTapoModelP300</a>; const AHost: string): <a href="Tapo.Devices.TTapoP300.html">TTapoP300</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P300 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P300">P300</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP306-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP306.html">TTapoModelP306</a>; const AHost: string): <a href="Tapo.Devices.TTapoP300.html">TTapoP300</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P306 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P306">P306</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP304M-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP304M.html">TTapoModelP304M</a>; const AHost: string): <a href="Tapo.Devices.TTapoP304M.html">TTapoP304M</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P304M at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P304M">P304M</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelP316M-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelP316M.html">TTapoModelP316M</a>; const AHost: string): <a href="Tapo.Devices.TTapoP304M.html">TTapoP304M</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo P316M at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#P316M">P316M</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelH100-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelH100.html">TTapoModelH100</a>; const AHost: string): <a href="Tapo.Hubs.TTapoH100.html">TTapoH100</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo H100 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#H100">H100</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelH200-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelH200.html">TTapoModelH200</a>; const AHost: string): <a href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo H200 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#H200">H200</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelH500-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelH500.html">TTapoModelH500</a>; const AHost: string): <a href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo H500 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#H500">H500</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelC210-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelC210.html">TTapoModelC210</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo C210 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#C210">C210</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelC220-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelC220.html">TTapoModelC220</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo C220 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#C220">C220</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelC225-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelC225.html">TTapoModelC225</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo C225 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#C225">C225</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelC325WB-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelC325WB.html">TTapoModelC325WB</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo C325WB at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#C325WB">C325WB</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelC520WS-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelC520WS.html">TTapoModelC520WS</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo C520WS at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#C520WS">C520WS</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelTC40-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelTC40.html">TTapoModelTC40</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo TC40 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#TC40">TC40</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-TTapoModelTC70-string-"></span><code>function <strong>Add</strong>(const AModel: <a href="Tapo.Models.TTapoModelTC70.html">TTapoModelTC70</a>; const AHost: string): <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the Tapo TC70 at AHost, or returns the device already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModel</dt>
+<dd>The model constant <a class="normal" href="Tapo.Models.html#TC70">TC70</a>.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client. No request is made until it is first used.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="AddDetected-string-"></span><code>function <strong>AddDetected</strong>(const AHost: string): <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Logs in to AHost, reads its device info and adds it as the matching class.</p>
+<p>
+
+
+<p>Port 80 is tried first (plugs, lights, strips, H100), then port 443 as a camera and then as a camera hub. The probe's login is handed to the new device, so each device is logged in to once.
+
+<p>A camera hub may count one failed login when it is tried as a camera first. Do not rescan the same addresses in a tight loop.
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client and already logged in; the existing device if AHost was already added.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is not a Tapo device these credentials can log in to. ErrorCode -2101 means the device has locked itself after too many failed logins.</dd>
+<dt><a class="normal" href="Tapo.Client.ETapoAuthError.html">ETapoAuthError</a></dt>
+<dd>A Tapo device rejected the account e-mail or password.</dd>
+<dt><a class="normal" href="Tapo.Models.ETapoNoResponse.html">ETapoNoResponse</a></dt>
+<dd>Nothing answered on port 80 or 443.</dd>
+<dt><a class="normal" href="Tapo.Models.ETapoUnsupportedModel.html">ETapoUnsupportedModel</a></dt>
+<dd>A Tapo device of a model that is not supported.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Models.TTapoClientModels.html#TryAddDetected-string-TTapoDevice-string-">TryAddDetected</a></dt>
+  <dd>Same as <a class="normal" href="Tapo.Models.TTapoClientModels.html#AddDetected-string-TTapoDetection-">AddDetected</a>, without exceptions, for scanning a network.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="AddDetected-string-TTapoDetection-"></span><code>function <strong>AddDetected</strong>(const AHost: string; out ADetection: <a href="Tapo.Models.TTapoDetection.html">TTapoDetection</a>): <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Same as AddDetected(AHost), and reports what was found.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+<dt>ADetection</dt>
+<dd>Receives the reported model, type and nickname, and how the class was chosen.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="TryAddDetected-string-TTapoDevice-string-"></span><code>function <strong>TryAddDetected</strong>(const AHost: string; out ADevice: <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; out AError: string): Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Same as <a class="normal" href="Tapo.Models.TTapoClientModels.html#AddDetected-string-TTapoDetection-">AddDetected</a>, without exceptions, for scanning a network.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>Example: </p>
+
+<pre class="longcode">
+Client.ConnectionTimeout := <span class="pascal_numeric">500</span>;
+<span class="pascal_keyword">for</span> I := <span class="pascal_numeric">1</span> <span class="pascal_keyword">to</span> <span class="pascal_numeric">254</span> <span class="pascal_keyword">do</span>
+  <span class="pascal_keyword">if</span> Client.TryAddDetected(<span class="pascal_string">'192.168.1.'</span> + IntToStr(I), Dev, Err) <span class="pascal_keyword">then</span>
+    Memo1.Lines.Add(Dev.Host + <span class="pascal_string">': '</span> + Dev.ClassName);</pre>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+<dt>ADevice</dt>
+<dd>Receives the device, or nil.</dd>
+<dt>AError</dt>
+<dd>Receives the reason when the result is False.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">True if a supported Tapo device was found and added.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Add-string-string-"></span><code>function <strong>Add</strong>(const AModelName: string; const AHost: string): <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds a device by model name given at run time.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModelName</dt>
+<dd>A model name, for example 'P110' (case-insensitive).</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>The model is not supported.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Models.html#TapoSupportedModels">TapoSupportedModels</a></dt>
+  <dd>Lists every supported model name.</dd>
+</dl>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

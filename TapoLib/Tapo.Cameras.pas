@@ -1,3 +1,17 @@
+//** @abstract(Tapo cameras: C210, C220, C225, C325WB, C520WS, TC40, TC70.)
+//**
+//** @preformatted(
+//** TTapoDevice @(abstract, Tapo.Client@)
+//** `-- TTapoCamera                 device info, pan/tilt, presets, RTSP URLs
+//** )
+//**
+//** Cameras log in over TPAP (HTTPS), or AES SSL if Third-Party Compatibility is on; Tapo.Client
+//** picks the protocol.
+//**
+//** The RTSP URLs need the camera account (Tapo app > camera > Advanced Settings > Camera
+//** Account), which is separate from the Tapo cloud account. Snapshot capture is not included: it
+//** needs an RTSP/MJPEG client, which is outside the Tapo control API (open the MJPEG URL with any
+//** RTSP-capable player or library instead).
 unit Tapo.Cameras;
 
 {
@@ -23,74 +37,72 @@ uses
   System.Generics.Collections, Tapo.Client;
 
 type
-  (*** Device info of a camera. *)
+  //** @abstract(Device info of a camera.)
   /// <summary>Device info of a camera.</summary>
   TTapoCameraInfo = record
-    (*** The fields every device reports. *)
+    //** @abstract(The fields every device reports.)
     /// <summary>The fields every device reports.</summary>
     Info: TTapoDeviceInfo;
-    (*** A free-text description of the model. *)
+    //** @abstract(A free-text description of the model.)
     /// <summary>A free-text description of the model.</summary>
     DeviceInfo: string;
-    (*** True if the camera reports the no_rtsp_constrain setting. *)
+    //** @abstract(True if the camera reports the no_rtsp_constrain setting.)
     /// <summary>True if the camera reports the no_rtsp_constrain setting.</summary>
     HasNoRtspConstrain: Boolean;
-    (*** The no_rtsp_constrain setting, when reported. *)
+    //** @abstract(The no_rtsp_constrain setting, when reported.)
     /// <summary>The no_rtsp_constrain setting, when reported.</summary>
     NoRtspConstrain: Boolean;
   end;
 
-  (*** A pan/tilt position saved on the camera. *)
+  //** @abstract(A pan/tilt position saved on the camera.)
   /// <summary>A pan/tilt position saved on the camera.</summary>
   TTapoCameraPreset = record
-    (*** The id, for @link(TTapoCamera.GotoPreset) and @link(TTapoCamera.DeletePreset). *)
+    //** @abstract(The id, for @link(TTapoCamera.GotoPreset) and @link(TTapoCamera.DeletePreset).)
     /// <summary>The id, for <see cref="TTapoCamera.GotoPreset"/> and <see cref="TTapoCamera.DeletePreset"/>.</summary>
     Id: string;
-    (*** The name. *)
+    //** @abstract(The name.)
     /// <summary>The name.</summary>
     Name: string;
-    (*** The pan position. *)
+    //** @abstract(The pan position.)
     /// <summary>The pan position.</summary>
     Pan: Double;
-    (*** The tilt position. *)
+    //** @abstract(The tilt position.)
     /// <summary>The tilt position.</summary>
     Tilt: Double;
-    (*** True for a preset that cannot be deleted. *)
+    //** @abstract(True for a preset that cannot be deleted.)
     /// <summary>True for a preset that cannot be deleted.</summary>
     IsReadOnly: Boolean;
   end;
 
-  (*** The RTSP addresses of a camera's video streams. *)
+  //** @abstract(The RTSP addresses of a camera's video streams.)
   /// <summary>The RTSP addresses of a camera's video streams.</summary>
   TTapoRtspStreamUrl = record
-    (*** The high-definition stream (stream1). *)
+    //** @abstract(The high-definition stream @(stream1@).)
     /// <summary>The high-definition stream (stream1).</summary>
     HD: string;
-    (*** The standard-definition stream (stream2). *)
+    //** @abstract(The standard-definition stream @(stream2@).)
     /// <summary>The standard-definition stream (stream2).</summary>
     SD: string;
-    (*** The MJPEG stream (stream8), for still images. *)
+    //** @abstract(The MJPEG stream @(stream8@), for still images.)
     /// <summary>The MJPEG stream (stream8), for still images.</summary>
     MJPEG: string;
   end;
 
-  (***
-    Tapo pan/tilt camera: C210, C220, C225, C325WB, C520WS, TC40 and TC70.
-
-    Logs in over TPAP (HTTPS), or over AES SSL if Third-Party Compatibility is on. The camera's
-    self-signed certificate is accepted.
-
-    Taking a snapshot is not supported here: open the MJPEG address from @link(GetRtspStreamUrl)
-    with any RTSP-capable player or library.
-
-    Example:
-    @longCode(#
-    Cam := Client.Add(C210, '192.168.1.54');
-    Cam.PanTilt(10, 0);
-    for Preset in Cam.GetPresets do
-      ListBox1.Items.Add(Preset.Name);
-    #)
-  *)
+  //** @abstract(Tapo pan/tilt camera: C210, C220, C225, C325WB, C520WS, TC40 and TC70.)
+  //**
+  //** Logs in over TPAP (HTTPS), or over AES SSL if Third-Party Compatibility is on. The camera's
+  //** self-signed certificate is accepted.
+  //**
+  //** Taking a snapshot is not supported here: open the MJPEG address from @link(GetRtspStreamUrl)
+  //** with any RTSP-capable player or library.
+  //**
+  //** Example:
+  //** @longCode(#
+  //** Cam := Client.Add(C210, '192.168.1.54');
+  //** Cam.PanTilt(10, 0);
+  //** for Preset in Cam.GetPresets do
+  //**   ListBox1.Items.Add(Preset.Name);
+  //** #)
   /// <summary>Tapo pan/tilt camera: C210, C220, C225, C325WB, C520WS, TC40 and TC70.</summary>
   /// <remarks>
   ///   <para>
@@ -112,94 +124,84 @@ type
   /// </example>
   TTapoCamera = class(TTapoDevice)
   public
-    (*** Returns dfSmartCam. *)
+    //** @abstract(Returns dfSmartCam.)
     /// <summary>Returns dfSmartCam.</summary>
     class function Family: TTapoDeviceFamily; override;
-    (*** Returns amCamera. *)
+    //** @abstract(Returns amCamera.)
     /// <summary>Returns amCamera.</summary>
     class function AuthMode: TTapoAuthMode; override;
 
-    (*** Reads the camera's device info. *)
+    //** @abstract(Reads the camera's device info.)
     /// <summary>Reads the camera's device info.</summary>
     function GetCameraInfo: TTapoCameraInfo;
-    (***
-      Builds the RTSP addresses of the camera's streams.
-
-      No request is made.
-
-      @param(ACameraUsername The camera account user name @(Tapo app > camera > Advanced Settings
-      > Camera Account@), not the Tapo account.)
-
-      @param(ACameraPassword The camera account password.)
-
-      @returns(rtsp://user:password@@host:554/streamN addresses, with the user name and password
-      URL-encoded.)
-    *)
+    //** @abstract(Builds the RTSP addresses of the camera's streams.)
+    //**
+    //** No request is made.
+    //**
+    //** @param(ACameraUsername The camera account user name @(Tapo app > camera > Advanced Settings
+    //** > Camera Account@), not the Tapo account.)
+    //**
+    //** @param(ACameraPassword The camera account password.)
+    //**
+    //** @returns(rtsp://user:password@@host:554/streamN addresses, with the user name and password
+    //** URL-encoded.)
     /// <summary>Builds the RTSP addresses of the camera's streams.</summary>
     /// <param name="ACameraUsername">The camera account user name (Tapo app &gt; camera &gt; Advanced Settings &gt; Camera Account), not the Tapo account.</param>
     /// <param name="ACameraPassword">The camera account password.</param>
     /// <returns>rtsp://user:password@host:554/streamN addresses, with the user name and password URL-encoded.</returns>
     /// <remarks>No request is made.</remarks>
     function GetRtspStreamUrl(const ACameraUsername, ACameraPassword: string): TTapoRtspStreamUrl;
-    (***
-      Moves the lens.
-
-      @param(APan Steps to pan; negative is left.)
-
-      @param(ATilt Steps to tilt; negative is down.)
-    *)
+    //** @abstract(Moves the lens.)
+    //**
+    //** @param(APan Steps to pan; negative is left.)
+    //**
+    //** @param(ATilt Steps to tilt; negative is down.)
     /// <summary>Moves the lens.</summary>
     /// <param name="APan">Steps to pan; negative is left.</param>
     /// <param name="ATilt">Steps to tilt; negative is down.</param>
     procedure PanTilt(APan, ATilt: Integer);
-    (***
-      Saves the current position as a preset.
-
-      @param(AName The preset's name.)
-    *)
+    //** @abstract(Saves the current position as a preset.)
+    //**
+    //** @param(AName The preset's name.)
     /// <summary>Saves the current position as a preset.</summary>
     /// <param name="AName">The preset's name.</param>
     procedure SavePreset(const AName: string);
-    (***
-      Moves to a saved preset.
-
-      @param(AId The preset's id, from @link(GetPresets).)
-    *)
+    //** @abstract(Moves to a saved preset.)
+    //**
+    //** @param(AId The preset's id, from @link(GetPresets).)
     /// <summary>Moves to a saved preset.</summary>
     /// <param name="AId">The preset's id, from <see cref="GetPresets"/>.</param>
     procedure GotoPreset(const AId: string);
-    (***
-      Deletes a saved preset.
-
-      @param(AId The preset's id, from @link(GetPresets).)
-    *)
+    //** @abstract(Deletes a saved preset.)
+    //**
+    //** @param(AId The preset's id, from @link(GetPresets).)
     /// <summary>Deletes a saved preset.</summary>
     /// <param name="AId">The preset's id, from <see cref="GetPresets"/>.</param>
     procedure DeletePreset(const AId: string);
-    (*** Reads the saved presets. *)
+    //** @abstract(Reads the saved presets.)
     /// <summary>Reads the saved presets.</summary>
     function GetPresets: TArray<TTapoCameraPreset>;
   end;
 
-  (*** Tapo C210: the same as @link(TTapoCamera). *)
+  //** @abstract(Tapo C210: the same as @link(TTapoCamera).)
   /// <summary>Tapo C210: the same as <see cref="TTapoCamera"/>.</summary>
   TTapoC210 = TTapoCamera;
-  (*** Tapo C220: the same as @link(TTapoCamera). *)
+  //** @abstract(Tapo C220: the same as @link(TTapoCamera).)
   /// <summary>Tapo C220: the same as <see cref="TTapoCamera"/>.</summary>
   TTapoC220 = TTapoCamera;
-  (*** Tapo C225: the same as @link(TTapoCamera). *)
+  //** @abstract(Tapo C225: the same as @link(TTapoCamera).)
   /// <summary>Tapo C225: the same as <see cref="TTapoCamera"/>.</summary>
   TTapoC225 = TTapoCamera;
-  (*** Tapo C325WB: the same as @link(TTapoCamera). *)
+  //** @abstract(Tapo C325WB: the same as @link(TTapoCamera).)
   /// <summary>Tapo C325WB: the same as <see cref="TTapoCamera"/>.</summary>
   TTapoC325WB = TTapoCamera;
-  (*** Tapo C520WS: the same as @link(TTapoCamera). *)
+  //** @abstract(Tapo C520WS: the same as @link(TTapoCamera).)
   /// <summary>Tapo C520WS: the same as <see cref="TTapoCamera"/>.</summary>
   TTapoC520WS = TTapoCamera;
-  (*** Tapo TC40: the same as @link(TTapoCamera). *)
+  //** @abstract(Tapo TC40: the same as @link(TTapoCamera).)
   /// <summary>Tapo TC40: the same as <see cref="TTapoCamera"/>.</summary>
   TTapoTC40 = TTapoCamera;
-  (*** Tapo TC70: the same as @link(TTapoCamera). *)
+  //** @abstract(Tapo TC70: the same as @link(TTapoCamera).)
   /// <summary>Tapo TC70: the same as <see cref="TTapoCamera"/>.</summary>
   TTapoTC70 = TTapoCamera;
 

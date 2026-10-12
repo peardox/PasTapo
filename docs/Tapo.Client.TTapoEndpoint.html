@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Client: Class TTapoEndpoint</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoEndpoint"></span><h1 class="cio">Class TTapoEndpoint</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Client.html">Tapo.Client</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoEndpoint = class abstract(TObject)</code></p>
+<h2 class="description">Description</h2>
+<p>
+Anything that accepts Tapo requests: a device reached by IP address (<a class="normal" href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>) or a device reached through another one (<a class="normal" href="Tapo.Client.TTapoChildDevice.html">TTapoChildDevice</a>).</p>
+<p>
+
+
+<p>The typed methods of the device classes cover everything the devices are known to support. <a class="normal" href="Tapo.Client.TTapoEndpoint.html#Execute-string-TJSONValue-">Execute</a> gives raw access to any other method.</p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="thisitem">TTapoEndpoint</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-protected">
+<td class="visibility"><span class="badge vis-protected">Protected</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoEndpoint.html#DoRequest-string-TJSONValue-Boolean-">DoRequest</a></strong>(const AMethod: string; AParams: TJSONValue; AStamp: Boolean): TJSONObject; virtual; abstract;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoEndpoint.html#Execute-string-TJSONValue-">Execute</a></strong>(const AMethod: string; AParams: TJSONValue = nil): TJSONObject;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoEndpoint.html#ExecuteStamped-string-TJSONValue-">ExecuteStamped</a></strong>(const AMethod: string; AParams: TJSONValue = nil): TJSONObject;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoEndpoint.html#ExecuteRequest-string-TJSONObject-">ExecuteRequest</a></strong>(const AMethod: string; AParams: TJSONObject = nil): TJSONObject;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Client.TTapoEndpoint.html#SetDeviceInfo-TJSONObject-">SetDeviceInfo</a></strong>(AParams: TJSONObject);</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoEndpoint.html#GetDeviceInfoObject">GetDeviceInfoObject</a></strong>: TJSONObject; virtual;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoEndpoint.html#GetDeviceInfoJSON">GetDeviceInfoJSON</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoEndpoint.html#GetComponentListJSON">GetComponentListJSON</a></strong>: string; virtual;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-protected wide_list">
+<tr class="list visibility-protected">
+<td class="visibility"><span class="badge vis-protected">Protected</span></td>
+<td class="itemcode"><span id="DoRequest-string-TJSONValue-Boolean-"></span><code>function <strong>DoRequest</strong>(const AMethod: string; AParams: TJSONValue; AStamp: Boolean): TJSONObject; virtual; abstract;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Sends one request and returns its result.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AMethod</dt>
+<dd>The method name, for example 'get_device_info'.</dd>
+<dt>AParams</dt>
+<dd>The params object. Ownership passes to this method. May be nil.</dd>
+<dt>AStamp</dt>
+<dd>Adds requestTimeMilis and terminalUUID, as the Tapo app does for set_device_info and the light effects.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The reply's result object, owned by the caller; an empty object if there was none.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Execute-string-TJSONValue-"></span><code>function <strong>Execute</strong>(const AMethod: string; AParams: TJSONValue = nil): TJSONObject;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Calls any device method.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>Example: </p>
+
+<pre class="longcode">
+R := Plug.Execute(<span class="pascal_string">'get_device_usage'</span>);
+<span class="pascal_keyword">try</span>
+  Memo1.Lines.Add(R.Format);
+<span class="pascal_keyword">finally</span>
+  R.Free;
+<span class="pascal_keyword">end</span>;</pre>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AMethod</dt>
+<dd>The method name, for example 'get_device_usage'.</dd>
+<dt>AParams</dt>
+<dd>The params object. Ownership passes to this method; do not free it. May be nil.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The result object. The caller frees it.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>The device returned an error.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Client.TTapoEndpoint.html#ExecuteRequest-string-TJSONObject-">ExecuteRequest</a></dt>
+  <dd>Same as <a class="normal" href="Tapo.Client.TTapoEndpoint.html#Execute-string-TJSONValue-">Execute</a>, but AParams stays with the caller (a copy is sent).</dd>
+  <dt><a class="normal" href="Tapo.Client.TTapoEndpoint.html#ExecuteStamped-string-TJSONValue-">ExecuteStamped</a></dt>
+  <dd>Same as <a class="normal" href="Tapo.Client.TTapoEndpoint.html#Execute-string-TJSONValue-">Execute</a>, but adds requestTimeMilis and terminalUUID to the request as set_device_info does.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ExecuteStamped-string-TJSONValue-"></span><code>function <strong>ExecuteStamped</strong>(const AMethod: string; AParams: TJSONValue = nil): TJSONObject;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Same as <a class="normal" href="Tapo.Client.TTapoEndpoint.html#Execute-string-TJSONValue-">Execute</a>, but adds requestTimeMilis and terminalUUID to the request as set_device_info does.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AMethod</dt>
+<dd>The method name.</dd>
+<dt>AParams</dt>
+<dd>The params object. Ownership passes to this method. May be nil.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The result object. The caller frees it.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ExecuteRequest-string-TJSONObject-"></span><code>function <strong>ExecuteRequest</strong>(const AMethod: string; AParams: TJSONObject = nil): TJSONObject;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Same as <a class="normal" href="Tapo.Client.TTapoEndpoint.html#Execute-string-TJSONValue-">Execute</a>, but AParams stays with the caller (a copy is sent).</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AMethod</dt>
+<dd>The method name.</dd>
+<dt>AParams</dt>
+<dd>The params object, still owned by the caller. May be nil.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The result object. The caller frees it.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SetDeviceInfo-TJSONObject-"></span><code>procedure <strong>SetDeviceInfo</strong>(AParams: TJSONObject);</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Changes device settings with set_device_info.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AParams</dt>
+<dd>The fields to set, for example {&quot;device_on&quot;: true}. Ownership passes to this method.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>The device rejected a field.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetDeviceInfoObject"></span><code>function <strong>GetDeviceInfoObject</strong>: TJSONObject; virtual;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the device info.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device info object. The caller frees it.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Client.TTapoEndpoint.html#GetDeviceInfoJSON">GetDeviceInfoJSON</a></dt>
+  <dd>Reads the device info as formatted JSON text.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetDeviceInfoJSON"></span><code>function <strong>GetDeviceInfoJSON</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the device info as formatted JSON text.</p>
+<p>
+
+
+<p>Nickname and SSID are still Base64 encoded, as the device sends them.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetComponentListJSON"></span><code>function <strong>GetComponentListJSON</strong>: string; virtual;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the list of components (features and their versions) the device reports.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">Formatted JSON text.</p></td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

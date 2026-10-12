@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Client: Record TTapoDeviceInfo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoDeviceInfo"></span><h1 class="cio">Record TTapoDeviceInfo</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Fields">Fields</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Client.html">Tapo.Client</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoDeviceInfo = record</code></p>
+<h2 class="description">Description</h2>
+<p>
+The fields every Tapo device reports in its device info.</p>
+<p>
+
+
+<p>Nickname and SSID are decoded from the Base64 the device sends. Cameras report some fields under other names (dev_id, sw_version, device_model, device_alias); <a class="normal" href="Tapo.Client.TTapoDeviceInfo.html#FromJSON-TJSONObject-">FromJSON</a> reads either. Fields a device does not report are empty or 0. <a class="normal" href="Tapo.Client.TTapoDeviceInfo.html#Raw">Raw</a> holds the whole reply for anything else.</p>
+<h2 class="overview">Overview</h2>
+<span id="PasDoc-Fields"></span><h3 class="summary">Fields</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#DeviceId">DeviceId</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#Model">Model</a></strong>: string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#DeviceType">DeviceType</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#Nickname">Nickname</a></strong>: string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#DeviceName">DeviceName</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#FirmwareVersion">FirmwareVersion</a></strong>: string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#HardwareVersion">HardwareVersion</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#FirmwareId">FirmwareId</a></strong>: string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#HardwareId">HardwareId</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#OemId">OemId</a></strong>: string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#Mac">Mac</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#IP">IP</a></strong>: string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#SSID">SSID</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#RSSI">RSSI</a></strong>: Integer;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#SignalLevel">SignalLevel</a></strong>: Integer;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#Region">Region</a></strong>: string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#Lang">Lang</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#Specs">Specs</a></strong>: string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#Avatar">Avatar</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#TimeDiff">TimeDiff</a></strong>: Int64;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#Latitude">Latitude</a></strong>: Int64;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#Longitude">Longitude</a></strong>: Int64;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#HasSetLocationInfo">HasSetLocationInfo</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#HasDeviceOn">HasDeviceOn</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#DeviceOn">DeviceOn</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#OnTime">OnTime</a></strong>: Int64;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Client.TTapoDeviceInfo.html#Raw">Raw</a></strong>: string;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Client.TTapoDeviceInfo.html#FromJSON-TJSONObject-">FromJSON</a></strong>(Obj: TJSONObject): <a href="Tapo.Client.TTapoDeviceInfo.html">TTapoDeviceInfo</a>; static;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Fields</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="DeviceId"></span><code><strong>DeviceId</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The device id, unique per device.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Model"></span><code><strong>Model</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The model as the device reports it, for example 'P110'.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="DeviceType"></span><code><strong>DeviceType</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The device type, for example 'SMART.TAPOPLUG'.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Nickname"></span><code><strong>Nickname</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The name given in the Tapo app.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="DeviceName"></span><code><strong>DeviceName</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The device name (cameras and camera hubs).</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="FirmwareVersion"></span><code><strong>FirmwareVersion</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The firmware version.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="HardwareVersion"></span><code><strong>HardwareVersion</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The hardware version.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="FirmwareId"></span><code><strong>FirmwareId</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The firmware id.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="HardwareId"></span><code><strong>HardwareId</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The hardware id.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="OemId"></span><code><strong>OemId</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The OEM id.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Mac"></span><code><strong>Mac</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The MAC address.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="IP"></span><code><strong>IP</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The IP address the device reports for itself.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SSID"></span><code><strong>SSID</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The Wi-Fi network the device is on.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="RSSI"></span><code><strong>RSSI</strong>: Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The Wi-Fi signal strength in dBm.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SignalLevel"></span><code><strong>SignalLevel</strong>: Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The Wi-Fi signal level, 0 to 3.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Region"></span><code><strong>Region</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The region code.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Lang"></span><code><strong>Lang</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The language code.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Specs"></span><code><strong>Specs</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The hardware specification code.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Avatar"></span><code><strong>Avatar</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The icon chosen in the Tapo app.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="TimeDiff"></span><code><strong>TimeDiff</strong>: Int64;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The device's offset from UTC in minutes.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Latitude"></span><code><strong>Latitude</strong>: Int64;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The latitude set in the Tapo app, in units of 1/10000 degree.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Longitude"></span><code><strong>Longitude</strong>: Int64;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The longitude set in the Tapo app, in units of 1/10000 degree.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="HasSetLocationInfo"></span><code><strong>HasSetLocationInfo</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True if a location has been set in the Tapo app.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="HasDeviceOn"></span><code><strong>HasDeviceOn</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True if the device reports a power state (False for hubs and power strips).</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="DeviceOn"></span><code><strong>DeviceOn</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The power state, when <a class="normal" href="Tapo.Client.TTapoDeviceInfo.html#HasDeviceOn">HasDeviceOn</a> is True.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="OnTime"></span><code><strong>OnTime</strong>: Int64;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Seconds since the device was switched on.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Raw"></span><code><strong>Raw</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The whole device info reply as formatted JSON.</p>
+</td></tr>
+</table>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="FromJSON-TJSONObject-"></span><code>class function <strong>FromJSON</strong>(Obj: TJSONObject): <a href="Tapo.Client.TTapoDeviceInfo.html">TTapoDeviceInfo</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads device info from a get_device_info / getDeviceInfo reply.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Obj</dt>
+<dd>The reply's result object. May be nil.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The decoded fields.</p></td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

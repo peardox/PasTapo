@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Discovery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<h1 class="unit">Unit Tapo.Discovery</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+On-demand discovery of Tapo devices on the local network.</p>
+<p>
+
+
+<p></p>
+
+<pre class="preformatted">
+The scan has two stages:
+  1. ARP stage: NetMacScan (https://github.com/peardox/NetScan) lists the
+     hosts that answer on the subnet with their MAC addresses. By default
+     only TP-Link MAC prefixes are kept; that list still holds routers,
+     range extenders, Deco units and other TP-Link kit.
+  2. Probe stage: each candidate is checked with AddDetected on a private
+     client with short timeouts. A real Tapo device is then added to your
+     client as the right class, already logged in. Anything else is
+     reported with the reason and left out.</pre>
+
+<p>
+
+<p>If the ARP table cannot be read (macOS can hide it from an app), stage 1 is replaced by a TCP sweep: every address is tried on port 80 (plugs, lights, hubs) and, if something answers there with a refusal, on 443 (cameras). See TcpSweepFallback and LastArpError.
+
+<p>A scan is slow (seconds for the ARP stage, plus a login per Tapo device), so it only runs when you ask for one. The devices it adds stay in the client, so later code uses Client.Find, Client.Devices[] or Scanner.Devices without scanning again.
+
+<p></p>
+
+<pre class="preformatted">
+Scanner := TTapoScanner.Create(Client);
+Scanner.ScanAsync('192.168.1.0', '/24',
+  procedure(const R: TTapoScanResult; const Err: string)
+  begin
+    for Dev in Scanner.Devices do
+      Memo1.Lines.Add(Dev.Host + '  ' + Dev.ClassName);
+  end);</pre>
+
+<p>
+
+<p>Devices are added by IP address. Give them DHCP reservations in the router so the addresses do not change between scans.
+
+<p>Needs NetMacScan.pas from the NetScan repository on the search path. Windows, macOS and Linux only: Android and iOS do not let apps read the ARP table (CheckCandidates and CheckHosts work everywhere).</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Discovery.TTapoScanEntry.html"><code>TTapoScanEntry</code></a></td>
+<td class="itemdesc">One candidate address and what the scan found there.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Interface&nbsp;<a class="bold" href="Tapo.Discovery.ITapoScanState.html"><code>ITapoScanState</code></a></td>
+<td class="itemdesc">Internal: shared between a scanner and the work it started.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Discovery.TTapoScanner.html"><code>TTapoScanner</code></a></td>
+<td class="itemdesc">Finds Tapo devices on the local network and adds them to a <a class="normal" href="Tapo.Client.TTapoClient.html">TTapoClient</a>.</td>
+</tr>
+</table>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Discovery.html#TapoScanStatusName-TTapoScanStatus-">TapoScanStatusName</a></strong>(AStatus: <a href="Tapo.Discovery.html#TTapoScanStatus">TTapoScanStatus</a>): string;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Discovery.html#TTapoScanStatus">TTapoScanStatus</a></strong> = (...);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a></strong> = TArray&lt;<a href="Tapo.Discovery.TTapoScanEntry.html">TTapoScanEntry</a>&gt;;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Discovery.html#TTapoScanStage">TTapoScanStage</a></strong> = (...);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Discovery.html#TTapoScanProgressEvent">TTapoScanProgressEvent</a></strong> = procedure(Sender: TObject; AStage: <a href="Tapo.Discovery.html#TTapoScanStage">TTapoScanStage</a>; ADone, ATotal, AFound: Integer) of object;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Discovery.html#TTapoScanDeviceEvent">TTapoScanDeviceEvent</a></strong> = procedure(Sender: TObject; const AEntry: <a href="Tapo.Discovery.TTapoScanEntry.html">TTapoScanEntry</a>) of object;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Discovery.html#TTapoScanCompleteProc">TTapoScanCompleteProc</a></strong> = reference to procedure(const AResult: <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a>;
+    const AError: string);</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoScanStatusName-TTapoScanStatus-"></span><code>function <strong>TapoScanStatusName</strong>(AStatus: <a href="Tapo.Discovery.html#TTapoScanStatus">TTapoScanStatus</a>): string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A short English description of a scan status, for logs and lists.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AStatus</dt>
+<dd>The status.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">For example 'added' or 'no response'.</p></td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoScanStatus"></span><code><strong>TTapoScanStatus</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+What a scan found at one address.</p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="tssAdded">tssAdded</span>: A Tapo device, added to the client by this scan.</li>
+<li>
+<span id="tssKnown">tssKnown</span>: A device the client already had at this address. It was not probed again.</li>
+<li>
+<span id="tssNoResponse">tssNoResponse</span>: Nothing answered on port 80 or 443: not a Tapo device.</li>
+<li>
+<span id="tssRejected">tssRejected</span>: Something answered but did not log in as a Tapo device. Either it is not one (a router, say), or it is one these credentials do not open. The reason is in <a class="normal" href="Tapo.Discovery.TTapoScanEntry.html#Error">TTapoScanEntry.Error</a>.</li>
+<li>
+<span id="tssBadCredentials">tssBadCredentials</span>: A Tapo device that rejected the account e-mail or password. If no device of the scan accepted them either, the credentials are wrong.</li>
+<li>
+<span id="tssUnsupported">tssUnsupported</span>: A Tapo device that logged in, of a model that is not supported.</li>
+<li>
+<span id="tssLockedOut">tssLockedOut</span>: A Tapo device that has locked itself after too many failed logins (error -2101).</li>
+<li>
+<span id="tssCancelled">tssCancelled</span>: Not probed, because the scan was cancelled first.</li>
+</ul>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoScanResult"></span><code><strong>TTapoScanResult</strong> = TArray&lt;<a href="Tapo.Discovery.TTapoScanEntry.html">TTapoScanEntry</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The result of a scan: one entry per candidate, in address order.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoScanStage"></span><code><strong>TTapoScanStage</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The stage a progress report is about.</p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="tsgArp">tsgArp</span>: Finding hosts and their MAC addresses (NetMacScan).</li>
+<li>
+<span id="tsgSweep">tsgSweep</span>: Only when the ARP table cannot be read: finding hosts that accept a TCP connection on port 80 or 443.</li>
+<li>
+<span id="tsgProbe">tsgProbe</span>: Checking each candidate for a Tapo device.</li>
+</ul>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoScanProgressEvent"></span><code><strong>TTapoScanProgressEvent</strong> = procedure(Sender: TObject; AStage: <a href="Tapo.Discovery.html#TTapoScanStage">TTapoScanStage</a>; ADone, ATotal, AFound: Integer) of object;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Progress of a scan. Always called on the main (UI) thread.</p>
+<p>
+
+
+<p>Each stage starts with ADone = 0 and ends with ADone = ATotal, so a progress bar can take its Max from the first call of each stage.
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Sender</dt>
+<dd>The scanner.</dd>
+<dt>AStage</dt>
+<dd>The stage being reported.</dd>
+<dt>ADone</dt>
+<dd>tsgArp and tsgSweep: addresses checked so far. tsgProbe: candidates checked so far.</dd>
+<dt>ATotal</dt>
+<dd>tsgArp and tsgSweep: addresses in the subnet. tsgProbe: candidates from the ARP stage or the sweep.</dd>
+<dt>AFound</dt>
+<dd>tsgArp and tsgSweep: candidates found so far. tsgProbe: Tapo devices found so far.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoScanDeviceEvent"></span><code><strong>TTapoScanDeviceEvent</strong> = procedure(Sender: TObject; const AEntry: <a href="Tapo.Discovery.TTapoScanEntry.html">TTapoScanEntry</a>) of object;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A Tapo device was found. Always called on the main (UI) thread.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Sender</dt>
+<dd>The scanner.</dd>
+<dt>AEntry</dt>
+<dd>The device's entry; Status is tssAdded or tssKnown.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoScanCompleteProc"></span><code><strong>TTapoScanCompleteProc</strong> = reference to procedure(const AResult: <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a>;
+    const AError: string);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Called on the main (UI) thread when an asynchronous scan ends.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AResult</dt>
+<dd>The entries; partial if the scan was cancelled.</dd>
+<dt>AError</dt>
+<dd>Empty on success; otherwise why the scan stopped.</dd>
+</dl>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

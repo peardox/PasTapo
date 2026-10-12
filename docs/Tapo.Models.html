@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Models</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<h1 class="unit">Unit Tapo.Models</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Constants">Constants</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Model tags for TTapoClient.Add, so a device is added by its model name.</p>
+<p>
+
+
+<p></p>
+
+<pre class="preformatted">
+Plug  := Client.Add(P110, '192.168.1.50');    // TTapoP110
+Bulb  := Client.Add(L530B, '192.168.1.51');   // TTapoL530
+Strip := Client.Add(P304M, '192.168.1.52');   // TTapoP304M
+Hub   := Client.Add(H100, '192.168.1.53');    // TTapoH100
+Cam   := Client.Add(C210, '192.168.1.54');    // TTapoCamera</pre>
+
+<p>
+
+<p>Each tag is a typed constant of its own record type, so the compiler picks the overload that returns the right class. If a tag name clashes with an identifier of your own, qualify it: Tapo.Models.P110.
+
+<p>Add(AModelName: string, ...) does the same at run time, from a model name such as one read from a configuration file.
+
+<p>AddDetected(AHost) needs no model at all: it logs in, reads the device info and adds the device as the matching class - for network scanning:
+
+<p></p>
+
+<pre class="preformatted">
+if Client.TryAddDetected('192.168.1.60', Dev, Err) then
+  if Dev is TTapoP110 then ...</pre>
+
+<p>
+
+<p>Generated from the model list of the Rust crate; one entry per model.</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL510.html"><code>TTapoModelL510</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L510">L510</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL510B.html"><code>TTapoModelL510B</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L510B">L510B</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL520.html"><code>TTapoModelL520</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L520">L520</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL610.html"><code>TTapoModelL610</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L610">L610</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL530.html"><code>TTapoModelL530</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L530">L530</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL530B.html"><code>TTapoModelL530B</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L530B">L530B</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL535.html"><code>TTapoModelL535</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L535">L535</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL630.html"><code>TTapoModelL630</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L630">L630</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL900.html"><code>TTapoModelL900</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L900">L900</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL920.html"><code>TTapoModelL920</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L920">L920</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelL930.html"><code>TTapoModelL930</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#L930">L930</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP100.html"><code>TTapoModelP100</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P100">P100</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP105.html"><code>TTapoModelP105</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P105">P105</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP125.html"><code>TTapoModelP125</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P125">P125</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP125M.html"><code>TTapoModelP125M</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P125M">P125M</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP110.html"><code>TTapoModelP110</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P110">P110</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP110M.html"><code>TTapoModelP110M</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P110M">P110M</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP115.html"><code>TTapoModelP115</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P115">P115</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP300.html"><code>TTapoModelP300</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P300">P300</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP306.html"><code>TTapoModelP306</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P306">P306</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP304M.html"><code>TTapoModelP304M</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P304M">P304M</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelP316M.html"><code>TTapoModelP316M</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#P316M">P316M</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelH100.html"><code>TTapoModelH100</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#H100">H100</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelH200.html"><code>TTapoModelH200</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#H200">H200</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelH500.html"><code>TTapoModelH500</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#H500">H500</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelC210.html"><code>TTapoModelC210</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#C210">C210</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelC220.html"><code>TTapoModelC220</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#C220">C220</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelC225.html"><code>TTapoModelC225</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#C225">C225</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelC325WB.html"><code>TTapoModelC325WB</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#C325WB">C325WB</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelC520WS.html"><code>TTapoModelC520WS</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#C520WS">C520WS</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelTC40.html"><code>TTapoModelTC40</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#TC40">TC40</a> model constant.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoModelTC70.html"><code>TTapoModelTC70</code></a></td>
+<td class="itemdesc">The tag type of the <a class="normal" href="Tapo.Models.html#TC70">TC70</a> model constant.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Models.ETapoNoResponse.html"><code>ETapoNoResponse</code></a></td>
+<td class="itemdesc">Raised by <a class="normal" href="Tapo.Models.TTapoClientModels.html#AddDetected-string-TTapoDetection-">TTapoClientModels.AddDetected</a> when nothing at the address answered as a Tapo device: no connection on port 80 or 443.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Models.ETapoUnsupportedModel.html"><code>ETapoUnsupportedModel</code></a></td>
+<td class="itemdesc">Raised by <a class="normal" href="Tapo.Models.TTapoClientModels.html#AddDetected-string-TTapoDetection-">TTapoClientModels.AddDetected</a> when the address is a Tapo device that logged in, but its model is not supported.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Models.TTapoDetection.html"><code>TTapoDetection</code></a></td>
+<td class="itemdesc">What <a class="normal" href="Tapo.Models.TTapoClientModels.html#AddDetected-string-TTapoDetection-">TTapoClientModels.AddDetected</a> found at an address.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Models.TTapoClientModels.html"><code>TTapoClientModels</code></a></td>
+<td class="itemdesc">Adds <code>Add(Model, Host)</code> and device detection to <a class="normal" href="Tapo.Client.TTapoClient.html">TTapoClient</a>.</td>
+</tr>
+</table>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.html#TapoDeviceClassForModel-string-">TapoDeviceClassForModel</a></strong>(const AModelName: string): <a href="Tapo.Client.html#TTapoDeviceClass">TTapoDeviceClass</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.html#TapoSupportedModels">TapoSupportedModels</a></strong>: TArray&lt;string&gt;;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Models.html#TapoDeviceClassForInfo-TTapoDeviceInfo-TTapoDeviceFamily-string-">TapoDeviceClassForInfo</a></strong>(const AInfo: <a href="Tapo.Client.TTapoDeviceInfo.html">TTapoDeviceInfo</a>; AFamily: <a href="Tapo.Client.html#TTapoDeviceFamily">TTapoDeviceFamily</a>; out AMatchedBy: string): <a href="Tapo.Client.html#TTapoDeviceClass">TTapoDeviceClass</a>;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Constants"></span><h3 class="summary">Constants</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L510">L510</a></strong>: <a href="Tapo.Models.TTapoModelL510.html">TTapoModelL510</a> = (Name: 'L510');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L510B">L510B</a></strong>: <a href="Tapo.Models.TTapoModelL510B.html">TTapoModelL510B</a> = (Name: 'L510B');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L520">L520</a></strong>: <a href="Tapo.Models.TTapoModelL520.html">TTapoModelL520</a> = (Name: 'L520');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L610">L610</a></strong>: <a href="Tapo.Models.TTapoModelL610.html">TTapoModelL610</a> = (Name: 'L610');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L530">L530</a></strong>: <a href="Tapo.Models.TTapoModelL530.html">TTapoModelL530</a> = (Name: 'L530');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L530B">L530B</a></strong>: <a href="Tapo.Models.TTapoModelL530B.html">TTapoModelL530B</a> = (Name: 'L530B');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L535">L535</a></strong>: <a href="Tapo.Models.TTapoModelL535.html">TTapoModelL535</a> = (Name: 'L535');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L630">L630</a></strong>: <a href="Tapo.Models.TTapoModelL630.html">TTapoModelL630</a> = (Name: 'L630');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L900">L900</a></strong>: <a href="Tapo.Models.TTapoModelL900.html">TTapoModelL900</a> = (Name: 'L900');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L920">L920</a></strong>: <a href="Tapo.Models.TTapoModelL920.html">TTapoModelL920</a> = (Name: 'L920');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#L930">L930</a></strong>: <a href="Tapo.Models.TTapoModelL930.html">TTapoModelL930</a> = (Name: 'L930');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P100">P100</a></strong>: <a href="Tapo.Models.TTapoModelP100.html">TTapoModelP100</a> = (Name: 'P100');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P105">P105</a></strong>: <a href="Tapo.Models.TTapoModelP105.html">TTapoModelP105</a> = (Name: 'P105');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P125">P125</a></strong>: <a href="Tapo.Models.TTapoModelP125.html">TTapoModelP125</a> = (Name: 'P125');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P125M">P125M</a></strong>: <a href="Tapo.Models.TTapoModelP125M.html">TTapoModelP125M</a> = (Name: 'P125M');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P110">P110</a></strong>: <a href="Tapo.Models.TTapoModelP110.html">TTapoModelP110</a> = (Name: 'P110');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P110M">P110M</a></strong>: <a href="Tapo.Models.TTapoModelP110M.html">TTapoModelP110M</a> = (Name: 'P110M');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P115">P115</a></strong>: <a href="Tapo.Models.TTapoModelP115.html">TTapoModelP115</a> = (Name: 'P115');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P300">P300</a></strong>: <a href="Tapo.Models.TTapoModelP300.html">TTapoModelP300</a> = (Name: 'P300');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P306">P306</a></strong>: <a href="Tapo.Models.TTapoModelP306.html">TTapoModelP306</a> = (Name: 'P306');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P304M">P304M</a></strong>: <a href="Tapo.Models.TTapoModelP304M.html">TTapoModelP304M</a> = (Name: 'P304M');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#P316M">P316M</a></strong>: <a href="Tapo.Models.TTapoModelP316M.html">TTapoModelP316M</a> = (Name: 'P316M');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#H100">H100</a></strong>: <a href="Tapo.Models.TTapoModelH100.html">TTapoModelH100</a> = (Name: 'H100');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#H200">H200</a></strong>: <a href="Tapo.Models.TTapoModelH200.html">TTapoModelH200</a> = (Name: 'H200');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#H500">H500</a></strong>: <a href="Tapo.Models.TTapoModelH500.html">TTapoModelH500</a> = (Name: 'H500');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#C210">C210</a></strong>: <a href="Tapo.Models.TTapoModelC210.html">TTapoModelC210</a> = (Name: 'C210');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#C220">C220</a></strong>: <a href="Tapo.Models.TTapoModelC220.html">TTapoModelC220</a> = (Name: 'C220');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#C225">C225</a></strong>: <a href="Tapo.Models.TTapoModelC225.html">TTapoModelC225</a> = (Name: 'C225');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#C325WB">C325WB</a></strong>: <a href="Tapo.Models.TTapoModelC325WB.html">TTapoModelC325WB</a> = (Name: 'C325WB');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#C520WS">C520WS</a></strong>: <a href="Tapo.Models.TTapoModelC520WS.html">TTapoModelC520WS</a> = (Name: 'C520WS');</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#TC40">TC40</a></strong>: <a href="Tapo.Models.TTapoModelTC40.html">TTapoModelTC40</a> = (Name: 'TC40');</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Models.html#TC70">TC70</a></strong>: <a href="Tapo.Models.TTapoModelTC70.html">TTapoModelTC70</a> = (Name: 'TC70');</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoDeviceClassForModel-string-"></span><code>function <strong>TapoDeviceClassForModel</strong>(const AModelName: string): <a href="Tapo.Client.html#TTapoDeviceClass">TTapoDeviceClass</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Finds the device class for a model name.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AModelName</dt>
+<dd>A model name, for example 'L530B' (case-insensitive).</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The class, or nil if the model is not supported.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoSupportedModels"></span><code>function <strong>TapoSupportedModels</strong>: TArray&lt;string&gt;;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Lists every supported model name.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoDeviceClassForInfo-TTapoDeviceInfo-TTapoDeviceFamily-string-"></span><code>function <strong>TapoDeviceClassForInfo</strong>(const AInfo: <a href="Tapo.Client.TTapoDeviceInfo.html">TTapoDeviceInfo</a>; AFamily: <a href="Tapo.Client.html#TTapoDeviceFamily">TTapoDeviceFamily</a>; out AMatchedBy: string): <a href="Tapo.Client.html#TTapoDeviceClass">TTapoDeviceClass</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Finds the device class for reported device info.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AInfo</dt>
+<dd>The device info, from <a class="normal" href="Tapo.Client.TTapoDevice.html#GetDeviceInfo">TTapoDevice.GetDeviceInfo</a>.</dd>
+<dt>AFamily</dt>
+<dd>The request format the device answered in.</dd>
+<dt>AMatchedBy</dt>
+<dd>Receives 'model', 'model prefix' or 'device type'; empty if no class was found.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The class: by model, by model prefix, or failing those by device type and the fields reported; nil if unknown.</p></td></tr>
+</table>
+<h3 class="detail">Constants</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L510"></span><code><strong>L510</strong>: <a href="Tapo.Models.TTapoModelL510.html">TTapoModelL510</a> = (Name: 'L510');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L510: <code>Client.Add(L510, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL510.html">TTapoL510</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L510B"></span><code><strong>L510B</strong>: <a href="Tapo.Models.TTapoModelL510B.html">TTapoModelL510B</a> = (Name: 'L510B');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L510B: <code>Client.Add(L510B, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL510.html">TTapoL510</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L520"></span><code><strong>L520</strong>: <a href="Tapo.Models.TTapoModelL520.html">TTapoModelL520</a> = (Name: 'L520');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L520: <code>Client.Add(L520, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL510.html">TTapoL510</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L610"></span><code><strong>L610</strong>: <a href="Tapo.Models.TTapoModelL610.html">TTapoModelL610</a> = (Name: 'L610');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L610: <code>Client.Add(L610, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL510.html">TTapoL510</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L530"></span><code><strong>L530</strong>: <a href="Tapo.Models.TTapoModelL530.html">TTapoModelL530</a> = (Name: 'L530');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L530: <code>Client.Add(L530, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL530.html">TTapoL530</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L530B"></span><code><strong>L530B</strong>: <a href="Tapo.Models.TTapoModelL530B.html">TTapoModelL530B</a> = (Name: 'L530B');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L530B: <code>Client.Add(L530B, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL530.html">TTapoL530</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L535"></span><code><strong>L535</strong>: <a href="Tapo.Models.TTapoModelL535.html">TTapoModelL535</a> = (Name: 'L535');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L535: <code>Client.Add(L535, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL530.html">TTapoL530</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L630"></span><code><strong>L630</strong>: <a href="Tapo.Models.TTapoModelL630.html">TTapoModelL630</a> = (Name: 'L630');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L630: <code>Client.Add(L630, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL530.html">TTapoL530</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L900"></span><code><strong>L900</strong>: <a href="Tapo.Models.TTapoModelL900.html">TTapoModelL900</a> = (Name: 'L900');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L900: <code>Client.Add(L900, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL900.html">TTapoL900</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L920"></span><code><strong>L920</strong>: <a href="Tapo.Models.TTapoModelL920.html">TTapoModelL920</a> = (Name: 'L920');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L920: <code>Client.Add(L920, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL920.html">TTapoL920</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="L930"></span><code><strong>L930</strong>: <a href="Tapo.Models.TTapoModelL930.html">TTapoModelL930</a> = (Name: 'L930');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo L930: <code>Client.Add(L930, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoL920.html">TTapoL920</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P100"></span><code><strong>P100</strong>: <a href="Tapo.Models.TTapoModelP100.html">TTapoModelP100</a> = (Name: 'P100');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P100: <code>Client.Add(P100, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP100.html">TTapoP100</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P105"></span><code><strong>P105</strong>: <a href="Tapo.Models.TTapoModelP105.html">TTapoModelP105</a> = (Name: 'P105');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P105: <code>Client.Add(P105, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP100.html">TTapoP100</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P125"></span><code><strong>P125</strong>: <a href="Tapo.Models.TTapoModelP125.html">TTapoModelP125</a> = (Name: 'P125');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P125: <code>Client.Add(P125, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP100.html">TTapoP100</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P125M"></span><code><strong>P125M</strong>: <a href="Tapo.Models.TTapoModelP125M.html">TTapoModelP125M</a> = (Name: 'P125M');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P125M: <code>Client.Add(P125M, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP100.html">TTapoP100</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P110"></span><code><strong>P110</strong>: <a href="Tapo.Models.TTapoModelP110.html">TTapoModelP110</a> = (Name: 'P110');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P110: <code>Client.Add(P110, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP110.html">TTapoP110</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P110M"></span><code><strong>P110M</strong>: <a href="Tapo.Models.TTapoModelP110M.html">TTapoModelP110M</a> = (Name: 'P110M');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P110M: <code>Client.Add(P110M, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP110.html">TTapoP110</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P115"></span><code><strong>P115</strong>: <a href="Tapo.Models.TTapoModelP115.html">TTapoModelP115</a> = (Name: 'P115');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P115: <code>Client.Add(P115, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP110.html">TTapoP110</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P300"></span><code><strong>P300</strong>: <a href="Tapo.Models.TTapoModelP300.html">TTapoModelP300</a> = (Name: 'P300');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P300: <code>Client.Add(P300, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP300.html">TTapoP300</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P306"></span><code><strong>P306</strong>: <a href="Tapo.Models.TTapoModelP306.html">TTapoModelP306</a> = (Name: 'P306');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P306: <code>Client.Add(P306, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP300.html">TTapoP300</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P304M"></span><code><strong>P304M</strong>: <a href="Tapo.Models.TTapoModelP304M.html">TTapoModelP304M</a> = (Name: 'P304M');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P304M: <code>Client.Add(P304M, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP304M.html">TTapoP304M</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="P316M"></span><code><strong>P316M</strong>: <a href="Tapo.Models.TTapoModelP316M.html">TTapoModelP316M</a> = (Name: 'P316M');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo P316M: <code>Client.Add(P316M, Host)</code> returns a <a class="normal" href="Tapo.Devices.TTapoP304M.html">TTapoP304M</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="H100"></span><code><strong>H100</strong>: <a href="Tapo.Models.TTapoModelH100.html">TTapoModelH100</a> = (Name: 'H100');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo H100: <code>Client.Add(H100, Host)</code> returns a <a class="normal" href="Tapo.Hubs.TTapoH100.html">TTapoH100</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="H200"></span><code><strong>H200</strong>: <a href="Tapo.Models.TTapoModelH200.html">TTapoModelH200</a> = (Name: 'H200');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo H200: <code>Client.Add(H200, Host)</code> returns a <a class="normal" href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="H500"></span><code><strong>H500</strong>: <a href="Tapo.Models.TTapoModelH500.html">TTapoModelH500</a> = (Name: 'H500');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo H500: <code>Client.Add(H500, Host)</code> returns a <a class="normal" href="Tapo.Hubs.TTapoCameraHub.html">TTapoCameraHub</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="C210"></span><code><strong>C210</strong>: <a href="Tapo.Models.TTapoModelC210.html">TTapoModelC210</a> = (Name: 'C210');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo C210: <code>Client.Add(C210, Host)</code> returns a <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="C220"></span><code><strong>C220</strong>: <a href="Tapo.Models.TTapoModelC220.html">TTapoModelC220</a> = (Name: 'C220');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo C220: <code>Client.Add(C220, Host)</code> returns a <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="C225"></span><code><strong>C225</strong>: <a href="Tapo.Models.TTapoModelC225.html">TTapoModelC225</a> = (Name: 'C225');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo C225: <code>Client.Add(C225, Host)</code> returns a <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="C325WB"></span><code><strong>C325WB</strong>: <a href="Tapo.Models.TTapoModelC325WB.html">TTapoModelC325WB</a> = (Name: 'C325WB');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo C325WB: <code>Client.Add(C325WB, Host)</code> returns a <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="C520WS"></span><code><strong>C520WS</strong>: <a href="Tapo.Models.TTapoModelC520WS.html">TTapoModelC520WS</a> = (Name: 'C520WS');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo C520WS: <code>Client.Add(C520WS, Host)</code> returns a <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TC40"></span><code><strong>TC40</strong>: <a href="Tapo.Models.TTapoModelTC40.html">TTapoModelTC40</a> = (Name: 'TC40');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo TC40: <code>Client.Add(TC40, Host)</code> returns a <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TC70"></span><code><strong>TC70</strong>: <a href="Tapo.Models.TTapoModelTC70.html">TTapoModelTC70</a> = (Name: 'TC70');</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo TC70: <code>Client.Add(TC70, Host)</code> returns a <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Devices: Record TTapoSegmentEffect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoSegmentEffect"></span><h1 class="cio">Record TTapoSegmentEffect</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Devices.html">Tapo.Devices</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoSegmentEffect = record</code></p>
+<h2 class="description">Description</h2>
+<p>
+A segment effect for the L920 and L930 light strips.</p>
+<p>
+
+
+<p>Start from a preset (<a class="normal" href="Tapo.Devices.TTapoSegmentEffect.html#Preset-TTapoSegmentEffectPreset-">Preset</a>), from scratch (<a class="normal" href="Tapo.Devices.TTapoSegmentEffect.html#New-string-TTapoSegmentEffectType-Boolean-Boolean-Integer-arrayofTTapoHSBK-">New</a>) or from JSON, then adjust with the With... functions. A custom effect needs segments, states and a type.
+
+<p>
+
+<p>Example: </p>
+
+<pre class="longcode">
+Strip.SetSegmentEffect(sepSunny);</pre>
+
+<p></p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Devices.TTapoL920.html#SetSegmentEffect-TTapoSegmentEffect-">TTapoL920.SetSegmentEffect</a></dt>
+  <dd>Applies a segment effect.</dd>
+</dl>
+<h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#New-string-TTapoSegmentEffectType-Boolean-Boolean-Integer-arrayofTTapoHSBK-">New</a></strong>(const AName: string; AType: <a href="Tapo.Devices.html#TTapoSegmentEffectType">TTapoSegmentEffectType</a>; AIsCustom, AEnabled: Boolean; ABrightness: Integer; const ADisplayColors: array of <a href="Tapo.Devices.TTapoHSBK.html">TTapoHSBK</a>): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>; static;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#Preset-TTapoSegmentEffectPreset-">Preset</a></strong>(APreset: <a href="Tapo.LightEffects.html#TTapoSegmentEffectPreset">TTapoSegmentEffectPreset</a>): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>; static;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#FromJSON-string-">FromJSON</a></strong>(const AJson: string): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>; static;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#WithBrightness-Integer-">WithBrightness</a></strong>(AValue: Integer): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#WithIsCustom-Boolean-">WithIsCustom</a></strong>(AValue: Boolean): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#WithEnabled-Boolean-">WithEnabled</a></strong>(AValue: Boolean): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#WithId-string-">WithId</a></strong>(const AValue: string): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#WithName-string-">WithName</a></strong>(const AValue: string): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#WithType-TTapoSegmentEffectType-">WithType</a></strong>(AValue: <a href="Tapo.Devices.html#TTapoSegmentEffectType">TTapoSegmentEffectType</a>): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#WithDeviceType-string-">WithDeviceType</a></strong>(const AValue: string): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#WithDisplayColors-arrayofTTapoHSBK-">WithDisplayColors</a></strong>(const AValue: array of <a href="Tapo.Devices.TTapoHSBK.html">TTapoHSBK</a>): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#WithSegments-arrayofInteger-">WithSegments</a></strong>(const AValue: array of Integer): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#WithStates-arrayofTTapoHSBK-">WithStates</a></strong>(const AValue: array of <a href="Tapo.Devices.TTapoHSBK.html">TTapoHSBK</a>): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#Validate">Validate</a></strong>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoSegmentEffect.html#ToJSON">ToJSON</a></strong>: string;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="New-string-TTapoSegmentEffectType-Boolean-Boolean-Integer-arrayofTTapoHSBK-"></span><code>class function <strong>New</strong>(const AName: string; AType: <a href="Tapo.Devices.html#TTapoSegmentEffectType">TTapoSegmentEffectType</a>; AIsCustom, AEnabled: Boolean; ABrightness: Integer; const ADisplayColors: array of <a href="Tapo.Devices.TTapoHSBK.html">TTapoHSBK</a>): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A new segment effect.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AName</dt>
+<dd>The name shown in the Tapo app.</dd>
+<dt>AType</dt>
+<dd>How the effect animates.</dd>
+<dt>AIsCustom</dt>
+<dd>True for an effect of your own (device type 'strip' is set).</dd>
+<dt>AEnabled</dt>
+<dd>True to run the effect.</dd>
+<dt>ABrightness</dt>
+<dd>0 to 100.</dd>
+<dt>ADisplayColors</dt>
+<dd>The colours shown for the effect in the app.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Preset-TTapoSegmentEffectPreset-"></span><code>class function <strong>Preset</strong>(APreset: <a href="Tapo.LightEffects.html#TTapoSegmentEffectPreset">TTapoSegmentEffectPreset</a>): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+One of the Tapo app's segment-effect presets.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="FromJSON-string-"></span><code>class function <strong>FromJSON</strong>(const AJson: string): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+An effect from its JSON.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithBrightness-Integer-"></span><code>function <strong>WithBrightness</strong>(AValue: Integer): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Sets the brightness, 0 to 100.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithIsCustom-Boolean-"></span><code>function <strong>WithIsCustom</strong>(AValue: Boolean): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Marks the effect as custom or preset.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithEnabled-Boolean-"></span><code>function <strong>WithEnabled</strong>(AValue: Boolean): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Runs or stops the effect.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithId-string-"></span><code>function <strong>WithId</strong>(const AValue: string): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Sets the id.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithName-string-"></span><code>function <strong>WithName</strong>(const AValue: string): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Sets the name shown in the app.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithType-TTapoSegmentEffectType-"></span><code>function <strong>WithType</strong>(AValue: <a href="Tapo.Devices.html#TTapoSegmentEffectType">TTapoSegmentEffectType</a>): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Sets how the effect animates.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithDeviceType-string-"></span><code>function <strong>WithDeviceType</strong>(const AValue: string): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Sets the device type, 'strip' for custom effects.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithDisplayColors-arrayofTTapoHSBK-"></span><code>function <strong>WithDisplayColors</strong>(const AValue: array of <a href="Tapo.Devices.TTapoHSBK.html">TTapoHSBK</a>): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Sets the colours shown for the effect in the app.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithSegments-arrayofInteger-"></span><code>function <strong>WithSegments</strong>(const AValue: array of Integer): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Sets the segments the states apply to.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithStates-arrayofTTapoHSBK-"></span><code>function <strong>WithStates</strong>(const AValue: array of <a href="Tapo.Devices.TTapoHSBK.html">TTapoHSBK</a>): <a href="Tapo.Devices.TTapoSegmentEffect.html">TTapoSegmentEffect</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Sets the colour of each segment.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Validate"></span><code>procedure <strong>Validate</strong>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Checks that a custom effect has segments, states and a type.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>Something required is missing.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ToJSON"></span><code>function <strong>ToJSON</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Validates the effect and returns the JSON the strip takes.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

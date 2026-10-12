@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Client: Class TTapoClient</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoClient"></span><h1 class="cio">Class TTapoClient</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div><div class="one_section"><a class="section" href="#PasDoc-Properties">Properties</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Client.html">Tapo.Client</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoClient = class(TObject)</code></p>
+<h2 class="description">Description</h2>
+<p>
+Your Tapo account, and the devices reached with it.</p>
+<p>
+
+
+<p>Give the account details once, then add each device by IP address. The client owns the devices and frees them when it is freed.
+
+<p>The user name and password are those of the Tapo app. TPAP devices use only the password; camera hubs use the password with their local &quot;admin&quot; account.
+
+<p>Example: </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">uses</span> Tapo.Client, Tapo.Models, Tapo.Devices;
+
+Client := TTapoClient.Create(<span class="pascal_string">'you@example.com'</span>, <span class="pascal_string">'password'</span>);
+<span class="pascal_keyword">try</span>
+  Plug := Client.Add(P110, <span class="pascal_string">'192.168.1.50'</span>);
+  ShowMessage(Format(<span class="pascal_string">'%.1f W'</span>, [Plug.GetCurrentPower]));
+<span class="pascal_keyword">finally</span>
+  Client.Free;
+<span class="pascal_keyword">end</span>;</pre>
+
+<p></p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="thisitem">TTapoClient</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>constructor <strong><a href="Tapo.Client.TTapoClient.html#Create-string-string-TTapoProtocol-">Create</a></strong>(const AUsername, APassword: string; AProtocol: <a href="Tapo.Client.html#TTapoProtocol">TTapoProtocol</a> = <a href="Tapo.Client.html#tpAuto">tpAuto</a>);</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>destructor <strong><a href="Tapo.Client.TTapoClient.html#Destroy">Destroy</a></strong>; override;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoClient.html#AddDevice-string-">AddDevice</a></strong>&lt;T:<a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>&gt;(const AHost: string): T; overload;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoClient.html#AddDevice-TTapoDeviceClass-string-">AddDevice</a></strong>(AClass: <a href="Tapo.Client.html#TTapoDeviceClass">TTapoDeviceClass</a>; const AHost: string): <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; overload;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoClient.html#Find-string-">Find</a></strong>(const AHost: string): <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Client.TTapoClient.html#SetCredentials-string-string-">SetCredentials</a></strong>(const AUsername, APassword: string);</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoClient.html#CloneEmpty">CloneEmpty</a></strong>: <a href="Tapo.Client.TTapoClient.html">TTapoClient</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Client.TTapoClient.html#SelfTest-string-">SelfTest</a></strong>(out AReport: string): Boolean;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Properties"></span><h3 class="summary">Properties</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Client.TTapoClient.html#Username">Username</a></strong>: string read FUsername;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Client.TTapoClient.html#Protocol">Protocol</a></strong>: <a href="Tapo.Client.html#TTapoProtocol">TTapoProtocol</a> read FProtocol;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Client.TTapoClient.html#ConnectionTimeout">ConnectionTimeout</a></strong>: Integer read FConnectionTimeout write FConnectionTimeout;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Client.TTapoClient.html#ResponseTimeout">ResponseTimeout</a></strong>: Integer read FResponseTimeout write FResponseTimeout;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Client.TTapoClient.html#Count">Count</a></strong>: Integer read GetCount;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Client.TTapoClient.html#Devices">Devices</a></strong>[AIndex: Integer]: <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a> read GetDevice; default;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Create-string-string-TTapoProtocol-"></span><code>constructor <strong>Create</strong>(const AUsername, APassword: string; AProtocol: <a href="Tapo.Client.html#TTapoProtocol">TTapoProtocol</a> = <a href="Tapo.Client.html#tpAuto">tpAuto</a>);</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Creates a client for a Tapo account.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AUsername</dt>
+<dd>The Tapo app account e-mail.</dd>
+<dt>APassword</dt>
+<dd>The Tapo app account password (case-sensitive).</dd>
+<dt>AProtocol</dt>
+<dd>Forces one protocol for every device. tpAuto, the default, picks it per device.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Destroy"></span><code>destructor <strong>Destroy</strong>; override;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Frees the client and every device it owns.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="AddDevice-string-"></span><code>function <strong>AddDevice</strong>&lt;T:<a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>&gt;(const AHost: string): T; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the device of class T at AHost, or returns the one already added there.</p>
+<p>
+
+
+<p>No network request is made until the device is first used.
+
+<p>
+
+<p>
+
+<p>
+
+<p>Example: </p>
+
+<pre class="longcode">
+Plug := Client.AddDevice&lt;TTapoP110&gt;(<span class="pascal_string">'192.168.1.50'</span>);</pre>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="AddDevice-TTapoDeviceClass-string-"></span><code>function <strong>AddDevice</strong>(AClass: <a href="Tapo.Client.html#TTapoDeviceClass">TTapoDeviceClass</a>; const AHost: string): <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; overload;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Adds the device of class AClass at AHost, or returns the one already added there.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AClass</dt>
+<dd>The device class, for example TTapoP110.</dd>
+<dt>AHost</dt>
+<dd>The IP address, host name, or host:port.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, owned by the client.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AHost is already registered as another class.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Find-string-"></span><code>function <strong>Find</strong>(const AHost: string): <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Finds a device by address.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AHost</dt>
+<dd>The address the device was added with (case-insensitive).</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The device, or nil if none was added at AHost.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SetCredentials-string-string-"></span><code>procedure <strong>SetCredentials</strong>(const AUsername, APassword: string);</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Changes the account details.</p>
+<p>
+
+
+<p>Every device logs in again on its next request.
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AUsername</dt>
+<dd>The Tapo app account e-mail.</dd>
+<dt>APassword</dt>
+<dd>The Tapo app account password.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="CloneEmpty"></span><code>function <strong>CloneEmpty</strong>: <a href="Tapo.Client.TTapoClient.html">TTapoClient</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Creates a new client with the same account, protocol and timeouts, and no devices.</p>
+<p>
+
+
+<p>Use it for short-lived work that must not touch this client's devices, for example probing addresses with shorter timeouts during a network scan. A device found that way can be added to this client and given the probe's login with <a class="normal" href="Tapo.Client.TTapoDevice.html#TakeSession-TTapoDevice-">TTapoDevice.TakeSession</a>.
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The new client. The caller owns it and must free it.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SelfTest-string-"></span><code>class function <strong>SelfTest</strong>(out AReport: string): Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Runs known-answer tests of the built-in cryptography. No network access.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AReport</dt>
+<dd>Receives one line per check, each starting OK or FAIL.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">True if every check passed.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Crypto.html#TapoCryptoSelfTest-string-">Tapo.Crypto.TapoCryptoSelfTest</a></dt>
+  <dd>Runs known-answer tests of AES, AES-CCM, the hashes, PBKDF2 and SPAKE2+ (against the RFC 9383 test vector). No network access.</dd>
+</dl>
+</td></tr>
+</table>
+<h3 class="detail">Properties</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Username"></span><code>property <strong>Username</strong>: string read FUsername;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The Tapo app account e-mail.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Protocol"></span><code>property <strong>Protocol</strong>: <a href="Tapo.Client.html#TTapoProtocol">TTapoProtocol</a> read FProtocol;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The protocol forced for every device, or tpAuto.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ConnectionTimeout"></span><code>property <strong>ConnectionTimeout</strong>: Integer read FConnectionTimeout write FConnectionTimeout;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Connection time-out in milliseconds for devices added from now on (default 5000).</p>
+<p>
+
+
+<p>Set a short value, such as 500, before scanning a network.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ResponseTimeout"></span><code>property <strong>ResponseTimeout</strong>: Integer read FResponseTimeout write FResponseTimeout;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Response time-out in milliseconds for devices added from now on (default 10000).</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Count"></span><code>property <strong>Count</strong>: Integer read GetCount;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The number of devices added.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Devices"></span><code>property <strong>Devices</strong>[AIndex: Integer]: <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a> read GetDevice; default;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The devices added, by index 0 to Count - 1.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

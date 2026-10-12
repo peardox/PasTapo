@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Devices: Class TTapoPowerStrip</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoPowerStrip"></span><h1 class="cio">Class TTapoPowerStrip</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Devices.html">Tapo.Devices</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoPowerStrip = class abstract(<a class="normal" href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>)</code></p>
+<h2 class="description">Description</h2>
+<p>
+The features common to the power strips: their sockets.</p>
+<p>
+
+
+<p>The strip itself has no power state; switch the sockets.</p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoEndpoint.html">TTapoEndpoint</a></li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoDevice.html">TTapoDevice</a></li>
+<li class="thisitem">TTapoPowerStrip</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-protected">
+<td class="visibility"><span class="badge vis-protected">Protected</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoPowerStrip.html#OutletClass">OutletClass</a></strong>: <a href="Tapo.Client.html#TTapoChildDeviceClass">TTapoChildDeviceClass</a>; virtual;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoPowerStrip.html#GetChildDeviceList">GetChildDeviceList</a></strong>: TArray&lt;<a href="Tapo.Devices.TTapoOutletInfo.html">TTapoOutletInfo</a>&gt;;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoPowerStrip.html#GetChildDeviceListJSON">GetChildDeviceListJSON</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoPowerStrip.html#GetChildDeviceComponentListJSON">GetChildDeviceComponentListJSON</a></strong>: string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoPowerStrip.html#Outlet-Integer-">Outlet</a></strong>(APosition: Integer): <a href="Tapo.Devices.TTapoPowerStripOutlet.html">TTapoPowerStripOutlet</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoPowerStrip.html#OutletByNickname-string-">OutletByNickname</a></strong>(const ANickname: string): <a href="Tapo.Devices.TTapoPowerStripOutlet.html">TTapoPowerStripOutlet</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoPowerStrip.html#OutletById-string-">OutletById</a></strong>(const ADeviceId: string): <a href="Tapo.Devices.TTapoPowerStripOutlet.html">TTapoPowerStripOutlet</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoPowerStrip.html#Outlets">Outlets</a></strong>: TArray&lt;<a href="Tapo.Devices.TTapoPowerStripOutlet.html">TTapoPowerStripOutlet</a>&gt;;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-protected wide_list">
+<tr class="list visibility-protected">
+<td class="visibility"><span class="badge vis-protected">Protected</span></td>
+<td class="itemcode"><span id="OutletClass"></span><code>class function <strong>OutletClass</strong>: <a href="Tapo.Client.html#TTapoChildDeviceClass">TTapoChildDeviceClass</a>; virtual;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The class of the strip's socket objects.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetChildDeviceList"></span><code>function <strong>GetChildDeviceList</strong>: TArray&lt;<a href="Tapo.Devices.TTapoOutletInfo.html">TTapoOutletInfo</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads every socket and its state, in position order.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetChildDeviceListJSON"></span><code>function <strong>GetChildDeviceListJSON</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the first page of the socket list as formatted JSON.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetChildDeviceComponentListJSON"></span><code>function <strong>GetChildDeviceComponentListJSON</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the sockets' components as formatted JSON.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Outlet-Integer-"></span><code>function <strong>Outlet</strong>(APosition: Integer): <a href="Tapo.Devices.TTapoPowerStripOutlet.html">TTapoPowerStripOutlet</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A socket by its position.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>APosition</dt>
+<dd>1 for the first socket.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The socket, owned by the strip.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>There is no socket at APosition.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="OutletByNickname-string-"></span><code>function <strong>OutletByNickname</strong>(const ANickname: string): <a href="Tapo.Devices.TTapoPowerStripOutlet.html">TTapoPowerStripOutlet</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A socket by the name given in the Tapo app (case-insensitive).</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>No socket has that name.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="OutletById-string-"></span><code>function <strong>OutletById</strong>(const ADeviceId: string): <a href="Tapo.Devices.TTapoPowerStripOutlet.html">TTapoPowerStripOutlet</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A socket by its device id.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>No socket has that id.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Outlets"></span><code>function <strong>Outlets</strong>: TArray&lt;<a href="Tapo.Devices.TTapoPowerStripOutlet.html">TTapoPowerStripOutlet</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Every socket, in position order, owned by the strip.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Hubs: Class TTapoCameraHub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoCameraHub"></span><h1 class="cio">Class TTapoCameraHub</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Hubs.html">Tapo.Hubs</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoCameraHub = class(<a class="normal" href="Tapo.Hubs.TTapoHub.html">TTapoHub</a>)</code></p>
+<h2 class="description">Description</h2>
+<p>
+Tapo H200 and H500 camera hub.</p>
+<p>
+
+
+<p>Logs in over AES SSL as the hub's local &quot;admin&quot; account with your Tapo password. Reboot and FactoryReset are not supported by these hubs.</p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoEndpoint.html">TTapoEndpoint</a></li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoDevice.html">TTapoDevice</a></li>
+<li class="ancestor"><a class="normal" href="Tapo.Hubs.TTapoHub.html">TTapoHub</a></li>
+<li class="thisitem">TTapoCameraHub</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>constructor <strong><a href="Tapo.Hubs.TTapoCameraHub.html#Create-TTapoClient-string-">Create</a></strong>(AClient: <a href="Tapo.Client.TTapoClient.html">TTapoClient</a>; const AHost: string); override;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Hubs.TTapoCameraHub.html#Family">Family</a></strong>: <a href="Tapo.Client.html#TTapoDeviceFamily">TTapoDeviceFamily</a>; override;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Hubs.TTapoCameraHub.html#AuthMode">AuthMode</a></strong>: <a href="Tapo.Client.html#TTapoAuthMode">TTapoAuthMode</a>; override;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoCameraHub.html#GetGeneralDeviceList">GetGeneralDeviceList</a></strong>: TArray&lt;<a href="Tapo.Hubs.TTapoHubCameraInfo.html">TTapoHubCameraInfo</a>&gt;;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoCameraHub.html#GetGeneralDeviceListJSON">GetGeneralDeviceListJSON</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoCameraHub.html#GetTimezone">GetTimezone</a></strong>: <a href="Tapo.Hubs.TTapoHubTimezone.html">TTapoHubTimezone</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoCameraHub.html#GetRecordingDates-string-TDate-TDate-">GetRecordingDates</a></strong>(const AChildDeviceId: string; AStartDate, AEndDate: TDate): TArray&lt;TDate&gt;;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoCameraHub.html#GetRecordings-string-TDateTime-TDateTime-">GetRecordings</a></strong>(const AChildDeviceId: string; AStart, AEnd: TDateTime): TArray&lt;<a href="Tapo.Hubs.TTapoRecording.html">TTapoRecording</a>&gt;;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Create-TTapoClient-string-"></span><code>constructor <strong>Create</strong>(AClient: <a href="Tapo.Client.TTapoClient.html">TTapoClient</a>; const AHost: string); override;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Creates the hub object; see <a class="normal" href="Tapo.Client.TTapoDevice.html#Create-TTapoClient-string-">TTapoDevice.Create</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Family"></span><code>class function <strong>Family</strong>: <a href="Tapo.Client.html#TTapoDeviceFamily">TTapoDeviceFamily</a>; override;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Returns dfSmartCam.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="AuthMode"></span><code>class function <strong>AuthMode</strong>: <a href="Tapo.Client.html#TTapoAuthMode">TTapoAuthMode</a>; override;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Returns amCameraHub.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetGeneralDeviceList"></span><code>function <strong>GetGeneralDeviceList</strong>: TArray&lt;<a href="Tapo.Hubs.TTapoHubCameraInfo.html">TTapoHubCameraInfo</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the cameras paired to the hub.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetGeneralDeviceListJSON"></span><code>function <strong>GetGeneralDeviceListJSON</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the paired cameras as formatted JSON.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetTimezone"></span><code>function <strong>GetTimezone</strong>: <a href="Tapo.Hubs.TTapoHubTimezone.html">TTapoHubTimezone</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the hub's time zone.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetRecordingDates-string-TDate-TDate-"></span><code>function <strong>GetRecordingDates</strong>(const AChildDeviceId: string; AStartDate, AEndDate: TDate): TArray&lt;TDate&gt;;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the days that have recordings of a camera.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AChildDeviceId</dt>
+<dd>The camera's device id, from <a class="normal" href="Tapo.Hubs.TTapoCameraHub.html#GetGeneralDeviceList">GetGeneralDeviceList</a>.</dd>
+<dt>AStartDate</dt>
+<dd>The first day, on the hub's calendar.</dd>
+<dt>AEndDate</dt>
+<dd>The last day, on the hub's calendar.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AEndDate is before AStartDate.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetRecordings-string-TDateTime-TDateTime-"></span><code>function <strong>GetRecordings</strong>(const AChildDeviceId: string; AStart, AEnd: TDateTime): TArray&lt;<a href="Tapo.Hubs.TTapoRecording.html">TTapoRecording</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the recordings of a camera between two times.</p>
+<p>
+
+
+<p>Downloading a recording is not supported.
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AChildDeviceId</dt>
+<dd>The camera's device id, from <a class="normal" href="Tapo.Hubs.TTapoCameraHub.html#GetGeneralDeviceList">GetGeneralDeviceList</a>.</dd>
+<dt>AStart</dt>
+<dd>The start, local time.</dd>
+<dt>AEnd</dt>
+<dd>The end, local time.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AEnd is before AStart.</dd>
+</dl>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

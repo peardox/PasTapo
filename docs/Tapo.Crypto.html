@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Crypto</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<h1 class="unit">Unit Tapo.Crypto</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Cryptography for the Tapo local protocols, in pure Pascal (RTL only): AES-128 (ECB block, CBC/PKCS#7, CCM), HMAC-SHA256, HKDF-SHA256, PBKDF2-HMAC-SHA256, P-256 arithmetic and the SPAKE2+ prover (RFC 9383).</p>
+<p>
+
+
+<p>Ported from <a href="https://github.com/mihai-dinculescu/tapo">https://github.com/mihai-dinculescu/tapo</a> and checked against the RFC 9383 test vector and the crate's known answers; run TapoCryptoSelfTest to repeat those checks in your build.</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Crypto.ETapoCryptoError.html"><code>ETapoCryptoError</code></a></td>
+<td class="itemdesc">Raised when a cryptographic operation fails: a bad key length, invalid padding after decryption, or a device share that is not a point on P-256.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Crypto.TSpakeProof.html"><code>TSpakeProof</code></a></td>
+<td class="itemdesc">The prover's side of a completed SPAKE2+ exchange (RFC 9383), as returned by <a class="normal" href="Tapo.Crypto.html#SpakeProve-string-TBytes-Integer-TBytes-TBytes-TBytes-">SpakeProve</a>.</td>
+</tr>
+</table>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#Cat-arrayofTBytes-">Cat</a></strong>(const Parts: array of TBytes): TBytes;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#Int32BE-Integer-">Int32BE</a></strong>(V: Integer): TBytes;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#ReadInt32BE-TBytes-Integer-">ReadInt32BE</a></strong>(const B: TBytes; Offset: Integer): Integer;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#BytesEqual-TBytes-TBytes-">BytesEqual</a></strong>(const A, B: TBytes): Boolean;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#Utf8-string-">Utf8</a></strong>(const S: string): TBytes;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#BytesToHex-TBytes-">BytesToHex</a></strong>(const B: TBytes): string;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#HexToBytes-string-">HexToBytes</a></strong>(const S: string): TBytes;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#SecureRandomBytes-Integer-">SecureRandomBytes</a></strong>(Count: Integer): TBytes;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#Base64Encode-TBytes-">Base64Encode</a></strong>(const B: TBytes): string;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#Base64Decode-string-">Base64Decode</a></strong>(const S: string): TBytes;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#SHA1Of-TBytes-">SHA1Of</a></strong>(const A: TBytes): TBytes;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#SHA256Of-TBytes-">SHA256Of</a></strong>(const A: TBytes): TBytes;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#MD5Of-TBytes-">MD5Of</a></strong>(const A: TBytes): TBytes;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#HMACSHA256-TBytes-TBytes-">HMACSHA256</a></strong>(const AKey, AData: TBytes): TBytes;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#HKDFSHA256-TBytes-TBytes-TBytes-Integer-">HKDFSHA256</a></strong>(const IKM, Salt, Info: TBytes; Len: Integer): TBytes;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#PBKDF2SHA256-TBytes-TBytes-Integer-Integer-">PBKDF2SHA256</a></strong>(const Password, Salt: TBytes; Iterations, Len: Integer): TBytes;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#AES128CBCEncrypt-TBytes-TBytes-TBytes-">AES128CBCEncrypt</a></strong>(const Key, IV, Plain: TBytes): TBytes;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#AES128CBCDecrypt-TBytes-TBytes-TBytes-">AES128CBCDecrypt</a></strong>(const Key, IV, Cipher: TBytes): TBytes;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#AES128CCMEncrypt-TBytes-TBytes-TBytes-">AES128CCMEncrypt</a></strong>(const Key, Nonce, Plain: TBytes): TBytes;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#AES128CCMDecrypt-TBytes-TBytes-TBytes-TBytes-">AES128CCMDecrypt</a></strong>(const Key, Nonce, Data: TBytes; out Plain: TBytes): Boolean;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#SpakeProve-string-TBytes-Integer-TBytes-TBytes-TBytes-">SpakeProve</a></strong>(const Credential: string; const Salt: TBytes; Iterations: Integer; const UserRandom, DeviceRandom, DeviceShare: TBytes): <a href="Tapo.Crypto.TSpakeProof.html">TSpakeProof</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="Tapo.Crypto.html#TapoCryptoSelfTest-string-">TapoCryptoSelfTest</a></strong>(out AReport: string): Boolean;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="Cat-arrayofTBytes-"></span><code>function <strong>Cat</strong>(const Parts: array of TBytes): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Concatenates byte arrays.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Parts</dt>
+<dd>The arrays to join, in order. Empty arrays are allowed.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">A new array holding every byte of Parts.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="Int32BE-Integer-"></span><code>function <strong>Int32BE</strong>(V: Integer): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Encodes a 32-bit integer as 4 big-endian bytes.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>V</dt>
+<dd>The value. Negative values are encoded in two's complement.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">4 bytes, most significant first.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="ReadInt32BE-TBytes-Integer-"></span><code>function <strong>ReadInt32BE</strong>(const B: TBytes; Offset: Integer): Integer;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reads a 32-bit big-endian integer.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>B</dt>
+<dd>The bytes to read from.</dd>
+<dt>Offset</dt>
+<dd>Index of the first of the 4 bytes.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The signed value.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="BytesEqual-TBytes-TBytes-"></span><code>function <strong>BytesEqual</strong>(const A, B: TBytes): Boolean;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Compares two byte arrays.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">True if both have the same length and content.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="Utf8-string-"></span><code>function <strong>Utf8</strong>(const S: string): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Encodes a string as UTF-8.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="BytesToHex-TBytes-"></span><code>function <strong>BytesToHex</strong>(const B: TBytes): string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Formats bytes as lower-case hexadecimal.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">Two characters per byte, for example 'a1b2'.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="HexToBytes-string-"></span><code>function <strong>HexToBytes</strong>(const S: string): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Parses hexadecimal text into bytes.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>S</dt>
+<dd>An even number of hexadecimal digits, upper or lower case.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><code>EConvertError</code></dt>
+<dd>S holds a character that is not a hexadecimal digit.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="SecureRandomBytes-Integer-"></span><code>function <strong>SecureRandomBytes</strong>(Count: Integer): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns cryptographically secure random bytes.</p>
+<p>
+
+
+<p>Uses BCryptGenRandom on Windows and /dev/urandom elsewhere. If neither is available it falls back to <code>Random</code>, which is not secure.
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Count</dt>
+<dd>The number of bytes.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="Base64Encode-TBytes-"></span><code>function <strong>Base64Encode</strong>(const B: TBytes): string;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Encodes bytes as standard Base64 without line breaks.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="Base64Decode-string-"></span><code>function <strong>Base64Decode</strong>(const S: string): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Decodes standard Base64.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="SHA1Of-TBytes-"></span><code>function <strong>SHA1Of</strong>(const A: TBytes): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Computes the SHA-1 hash of A.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">20 bytes.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="SHA256Of-TBytes-"></span><code>function <strong>SHA256Of</strong>(const A: TBytes): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Computes the SHA-256 hash of A.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">32 bytes.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="MD5Of-TBytes-"></span><code>function <strong>MD5Of</strong>(const A: TBytes): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Computes the MD5 hash of A.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">16 bytes.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="HMACSHA256-TBytes-TBytes-"></span><code>function <strong>HMACSHA256</strong>(const AKey, AData: TBytes): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Computes HMAC-SHA256 (RFC 2104).</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AKey</dt>
+<dd>The key, of any length.</dd>
+<dt>AData</dt>
+<dd>The message.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The 32-byte MAC.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="HKDFSHA256-TBytes-TBytes-TBytes-Integer-"></span><code>function <strong>HKDFSHA256</strong>(const IKM, Salt, Info: TBytes; Len: Integer): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Derives key material with HKDF-SHA256 (RFC 5869).</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>IKM</dt>
+<dd>The input key material.</dd>
+<dt>Salt</dt>
+<dd>The salt; empty means a string of zeros.</dd>
+<dt>Info</dt>
+<dd>Context information for the expand step.</dd>
+<dt>Len</dt>
+<dd>The number of bytes to derive, at most 8160.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">Len bytes of output key material.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="PBKDF2SHA256-TBytes-TBytes-Integer-Integer-"></span><code>function <strong>PBKDF2SHA256</strong>(const Password, Salt: TBytes; Iterations, Len: Integer): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Derives a key with PBKDF2-HMAC-SHA256 (RFC 8018).</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Password</dt>
+<dd>The password bytes.</dd>
+<dt>Salt</dt>
+<dd>The salt.</dd>
+<dt>Iterations</dt>
+<dd>The iteration count, at least 1.</dd>
+<dt>Len</dt>
+<dd>The number of bytes to derive.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">Len bytes of derived key.</p></td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="AES128CBCEncrypt-TBytes-TBytes-TBytes-"></span><code>function <strong>AES128CBCEncrypt</strong>(const Key, IV, Plain: TBytes): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Encrypts with AES-128 in CBC mode with PKCS#7 padding.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Key</dt>
+<dd>16-byte key.</dd>
+<dt>IV</dt>
+<dd>16-byte initialisation vector.</dd>
+<dt>Plain</dt>
+<dd>The plaintext, of any length.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The ciphertext, a multiple of 16 bytes.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Crypto.ETapoCryptoError.html">ETapoCryptoError</a></dt>
+<dd>Key is not 16 bytes.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Crypto.html#AES128CBCDecrypt-TBytes-TBytes-TBytes-">AES128CBCDecrypt</a></dt>
+  <dd>Decrypts AES-128 CBC and removes PKCS#7 padding.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="AES128CBCDecrypt-TBytes-TBytes-TBytes-"></span><code>function <strong>AES128CBCDecrypt</strong>(const Key, IV, Cipher: TBytes): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Decrypts AES-128 CBC and removes PKCS#7 padding.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Key</dt>
+<dd>16-byte key.</dd>
+<dt>IV</dt>
+<dd>16-byte initialisation vector.</dd>
+<dt>Cipher</dt>
+<dd>The ciphertext, a non-zero multiple of 16 bytes.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The plaintext.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Crypto.ETapoCryptoError.html">ETapoCryptoError</a></dt>
+<dd>Cipher has the wrong length, or the padding is invalid (usually a wrong key).</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Crypto.html#AES128CBCEncrypt-TBytes-TBytes-TBytes-">AES128CBCEncrypt</a></dt>
+  <dd>Encrypts with AES-128 in CBC mode with PKCS#7 padding.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="AES128CCMEncrypt-TBytes-TBytes-TBytes-"></span><code>function <strong>AES128CCMEncrypt</strong>(const Key, Nonce, Plain: TBytes): TBytes;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Encrypts with AES-128 in CCM mode with a 12-byte nonce, a 16-byte tag and no associated data, as TPAP sessions do.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Key</dt>
+<dd>16-byte key.</dd>
+<dt>Nonce</dt>
+<dd>12-byte nonce.</dd>
+<dt>Plain</dt>
+<dd>The plaintext, shorter than 16 MB.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The ciphertext followed by the 16-byte tag.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Crypto.html#AES128CCMDecrypt-TBytes-TBytes-TBytes-TBytes-">AES128CCMDecrypt</a></dt>
+  <dd>Decrypts and authenticates AES-128 CCM (12-byte nonce, 16-byte tag).</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="AES128CCMDecrypt-TBytes-TBytes-TBytes-TBytes-"></span><code>function <strong>AES128CCMDecrypt</strong>(const Key, Nonce, Data: TBytes; out Plain: TBytes): Boolean;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Decrypts and authenticates AES-128 CCM (12-byte nonce, 16-byte tag).</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Key</dt>
+<dd>16-byte key.</dd>
+<dt>Nonce</dt>
+<dd>12-byte nonce.</dd>
+<dt>Data</dt>
+<dd>The ciphertext followed by the 16-byte tag.</dd>
+<dt>Plain</dt>
+<dd>Receives the plaintext, or nil if authentication fails.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">True if the tag is valid.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Crypto.html#AES128CCMEncrypt-TBytes-TBytes-TBytes-">AES128CCMEncrypt</a></dt>
+  <dd>Encrypts with AES-128 in CCM mode with a 12-byte nonce, a 16-byte tag and no associated data, as TPAP sessions do.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="SpakeProve-string-TBytes-Integer-TBytes-TBytes-TBytes-"></span><code>function <strong>SpakeProve</strong>(const Credential: string; const Salt: TBytes; Iterations: Integer; const UserRandom, DeviceRandom, DeviceShare: TBytes): <a href="Tapo.Crypto.TSpakeProof.html">TSpakeProof</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Runs the prover side of SPAKE2+ (RFC 9383) on P-256 with SHA-256, HKDF-SHA256 and HMAC-SHA256, as the TPAP login does.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>Credential</dt>
+<dd>The password transform the device asked for (for plugs, the SHA-1 hex of the password).</dd>
+<dt>Salt</dt>
+<dd>The device's dev_salt.</dd>
+<dt>Iterations</dt>
+<dd>The device's PBKDF2 iteration count.</dd>
+<dt>UserRandom</dt>
+<dd>The 32 random bytes sent in pake_register.</dd>
+<dt>DeviceRandom</dt>
+<dd>The device's 32-byte dev_random.</dd>
+<dt>DeviceShare</dt>
+<dd>The device's share (dev_share), a SEC1 point.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The share and confirmation to send, and the keys for the session.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Crypto.ETapoCryptoError.html">ETapoCryptoError</a></dt>
+<dd>DeviceShare is not a usable point on P-256.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TapoCryptoSelfTest-string-"></span><code>function <strong>TapoCryptoSelfTest</strong>(out AReport: string): Boolean;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Runs known-answer tests of AES, AES-CCM, the hashes, PBKDF2 and SPAKE2+ (against the RFC 9383 test vector). No network access.</p>
+<p>
+
+
+<p>Run this once after building on a new compiler or platform.
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AReport</dt>
+<dd>Receives one line per check, each starting OK or FAIL.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">True if every check passed.</p></td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

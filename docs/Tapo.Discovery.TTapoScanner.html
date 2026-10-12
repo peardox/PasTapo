@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Discovery: Class TTapoScanner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoScanner"></span><h1 class="cio">Class TTapoScanner</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div><div class="one_section"><a class="section" href="#PasDoc-Properties">Properties</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Discovery.html">Tapo.Discovery</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoScanner = class(TObject)</code></p>
+<h2 class="description">Description</h2>
+<p>
+Finds Tapo devices on the local network and adds them to a <a class="normal" href="Tapo.Client.TTapoClient.html">TTapoClient</a>.</p>
+<p>
+
+
+<p>Nothing happens until <a class="normal" href="Tapo.Discovery.TTapoScanner.html#ScanAsync-string-string-TTapoScanCompleteProc-">ScanAsync</a> or <a class="normal" href="Tapo.Discovery.TTapoScanner.html#Scan-string-string-">Scan</a> is called. Devices found are added to the client and stay there, so the scan is needed only when devices are first set up or when one has been added to the network.
+
+<p>Addresses the client already has are reported as tssKnown and not probed again, so rescanning is cheap for devices already found.
+
+<p>One scan at a time per scanner. The scanner must be freed on the main thread; freeing it waits for a probe stage under way to stop.
+
+<p>Example: </p>
+
+<pre class="longcode">
+FScanner := TTapoScanner.Create(FClient);
+FScanner.OnProgress := ScanProgress;
+FScanner.ScanAsync(<span class="pascal_string">'192.168.1.0'</span>, <span class="pascal_string">'255.255.255.0'</span>,
+  <span class="pascal_keyword">procedure</span>(<span class="pascal_keyword">const</span> R: TTapoScanResult; <span class="pascal_keyword">const</span> Err: <span class="pascal_keyword">string</span>)
+  <span class="pascal_keyword">var</span>
+    E: TTapoScanEntry;
+  <span class="pascal_keyword">begin</span>
+    <span class="pascal_keyword">for</span> E <span class="pascal_keyword">in</span> R <span class="pascal_keyword">do</span>
+      <span class="pascal_keyword">if</span> E.IsTapo <span class="pascal_keyword">then</span>
+        Memo1.Lines.Add(E.IP + <span class="pascal_string">'  '</span> + E.Device.ClassName + <span class="pascal_string">'  '</span> + E.Nickname);
+  <span class="pascal_keyword">end</span>);</pre>
+
+<p></p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="thisitem">TTapoScanner</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>constructor <strong><a href="Tapo.Discovery.TTapoScanner.html#Create-TTapoClient-">Create</a></strong>(AClient: <a href="Tapo.Client.TTapoClient.html">TTapoClient</a>);</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>destructor <strong><a href="Tapo.Discovery.TTapoScanner.html#Destroy">Destroy</a></strong>; override;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Discovery.TTapoScanner.html#Supported">Supported</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Discovery.TTapoScanner.html#ScanAsync-string-string-TTapoScanCompleteProc-">ScanAsync</a></strong>(const ANetwork, ASubnet: string; const AOnComplete: <a href="Tapo.Discovery.html#TTapoScanCompleteProc">TTapoScanCompleteProc</a> = nil);</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Discovery.TTapoScanner.html#Scan-string-string-">Scan</a></strong>(const ANetwork, ASubnet: string): <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Discovery.TTapoScanner.html#CheckCandidatesAsync-TMacEntries-TTapoScanCompleteProc-">CheckCandidatesAsync</a></strong>(const ACandidates: <a href="NetMacScan.html#TMacEntries">TMacEntries</a>; const AOnComplete: <a href="Tapo.Discovery.html#TTapoScanCompleteProc">TTapoScanCompleteProc</a> = nil);</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Discovery.TTapoScanner.html#CheckCandidates-TMacEntries-">CheckCandidates</a></strong>(const ACandidates: <a href="NetMacScan.html#TMacEntries">TMacEntries</a>): <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Discovery.TTapoScanner.html#CheckHosts-arrayofstring-">CheckHosts</a></strong>(const AHosts: array of string): <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Discovery.TTapoScanner.html#Cancel">Cancel</a></strong>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Discovery.TTapoScanner.html#Devices">Devices</a></strong>: TArray&lt;<a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>&gt;;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Properties"></span><h3 class="summary">Properties</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#Client">Client</a></strong>: <a href="Tapo.Client.TTapoClient.html">TTapoClient</a> read FClient;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#Busy">Busy</a></strong>: Boolean read GetBusy;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#LastResult">LastResult</a></strong>: <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a> read GetLastResult;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#TpLinkOnly">TpLinkOnly</a></strong>: Boolean read FTpLinkOnly write FTpLinkOnly;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#TcpSweepFallback">TcpSweepFallback</a></strong>: Boolean read FTcpSweepFallback write FTcpSweepFallback;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#SweepTimeout">SweepTimeout</a></strong>: Integer read FSweepTimeout write FSweepTimeout;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#LastArpError">LastArpError</a></strong>: string read GetLastArpError;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#MaxParallel">MaxParallel</a></strong>: Integer read FMaxParallel write FMaxParallel;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#ProbeConnectionTimeout">ProbeConnectionTimeout</a></strong>: Integer read FProbeConnectionTimeout write FProbeConnectionTimeout;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#ProbeResponseTimeout">ProbeResponseTimeout</a></strong>: Integer read FProbeResponseTimeout write FProbeResponseTimeout;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#RetryConnectionTimeout">RetryConnectionTimeout</a></strong>: Integer read FRetryConnectionTimeout write FRetryConnectionTimeout;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#OnProgress">OnProgress</a></strong>: <a href="Tapo.Discovery.html#TTapoScanProgressEvent">TTapoScanProgressEvent</a> read FOnProgress write FOnProgress;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Discovery.TTapoScanner.html#OnDeviceFound">OnDeviceFound</a></strong>: <a href="Tapo.Discovery.html#TTapoScanDeviceEvent">TTapoScanDeviceEvent</a> read FOnDeviceFound write FOnDeviceFound;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Create-TTapoClient-"></span><code>constructor <strong>Create</strong>(AClient: <a href="Tapo.Client.TTapoClient.html">TTapoClient</a>);</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Creates a scanner that adds the devices it finds to AClient.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AClient</dt>
+<dd>The client; it must outlive the scanner.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>AClient is nil.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Destroy"></span><code>destructor <strong>Destroy</strong>; override;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Cancels a scan under way and waits for its probe stage to stop.</p>
+<p>
+
+
+<p>Devices already added stay in the client. No callback runs after the scanner has been freed.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Supported"></span><code>class function <strong>Supported</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True on platforms where the ARP stage can run (Windows, macOS, Linux).</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">False on Android and iOS, where only CheckHosts and CheckCandidates work.</p></td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ScanAsync-string-string-TTapoScanCompleteProc-"></span><code>procedure <strong>ScanAsync</strong>(const ANetwork, ASubnet: string; const AOnComplete: <a href="Tapo.Discovery.html#TTapoScanCompleteProc">TTapoScanCompleteProc</a> = nil);</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Scans a subnet in the background and adds the Tapo devices found to the client.</p>
+<p>
+
+
+<p>Call it from the main thread. Progress, OnDeviceFound and AOnComplete all run on the main thread. Errors (a bad subnet, an unsupported platform) arrive in AOnComplete's AError.
+
+<p><a class="normal" href="Tapo.Discovery.TTapoScanner.html#LastResult">LastResult</a> is set before AOnComplete is called.
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ANetwork</dt>
+<dd>Any address in the network, for example '192.168.1.0'.</dd>
+<dt>ASubnet</dt>
+<dd>The mask: '255.255.255.0', '/24' or '24'.</dd>
+<dt>AOnComplete</dt>
+<dd>Optional; called on the main thread when the scan ends.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A scan is already running.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Tapo.Discovery.TTapoScanner.html#Scan-string-string-">Scan</a></dt>
+  <dd>Scans a subnet and waits for the result. Do not call it on the main thread.</dd>
+  <dt><a class="normal" href="Tapo.Discovery.TTapoScanner.html#Cancel">Cancel</a></dt>
+  <dd>Asks the scan under way to stop.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Scan-string-string-"></span><code>function <strong>Scan</strong>(const ANetwork, ASubnet: string): <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Scans a subnet and waits for the result. Do not call it on the main thread.</p>
+<p>
+
+
+<p>The events are still queued to the main thread. The ARP stage is reported only at its start and end; ScanAsync reports it as it goes.
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ANetwork</dt>
+<dd>Any address in the network, for example '192.168.1.0'.</dd>
+<dt>ASubnet</dt>
+<dd>The mask: '255.255.255.0', '/24' or '24'.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">One entry per candidate. Also stored in <a class="normal" href="Tapo.Discovery.TTapoScanner.html#LastResult">LastResult</a>.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A scan is already running.</dd>
+<dt><code>EArgumentException</code></dt>
+<dd>ANetwork or ASubnet is not valid.</dd>
+<dt><code>ENotSupportedException</code></dt>
+<dd>The platform cannot read the ARP table.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="CheckCandidatesAsync-TMacEntries-TTapoScanCompleteProc-"></span><code>procedure <strong>CheckCandidatesAsync</strong>(const ACandidates: <a href="NetMacScan.html#TMacEntries">TMacEntries</a>; const AOnComplete: <a href="Tapo.Discovery.html#TTapoScanCompleteProc">TTapoScanCompleteProc</a> = nil);</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Probes a list of candidates found by other means, in the background.</p>
+<p>
+
+
+<p>Only the probe stage runs, so it works on every platform.
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ACandidates</dt>
+<dd>Addresses (and MACs) to check, for example from NetMacScan.</dd>
+<dt>AOnComplete</dt>
+<dd>Optional; called on the main thread when the checks end.</dd>
+</dl>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A scan is already running.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="CheckCandidates-TMacEntries-"></span><code>function <strong>CheckCandidates</strong>(const ACandidates: <a href="NetMacScan.html#TMacEntries">TMacEntries</a>): <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Probes a list of candidates and waits for the result. Do not call it on the main thread.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ACandidates</dt>
+<dd>Addresses (and MACs) to check.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">One entry per candidate. Also stored in <a class="normal" href="Tapo.Discovery.TTapoScanner.html#LastResult">LastResult</a>.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A scan is already running.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="CheckHosts-arrayofstring-"></span><code>function <strong>CheckHosts</strong>(const AHosts: array of string): <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Probes a list of addresses and waits for the result. Do not call it on the main thread.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p>
+
+<p>Example: </p>
+
+<pre class="longcode">
+R := Scanner.CheckHosts([<span class="pascal_string">'192.168.1.50'</span>, <span class="pascal_string">'192.168.1.51'</span>]);</pre>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AHosts</dt>
+<dd>IP addresses or host names to check.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">One entry per address. Also stored in <a class="normal" href="Tapo.Discovery.TTapoScanner.html#LastResult">LastResult</a>.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>A scan is already running.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Cancel"></span><code>procedure <strong>Cancel</strong>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Asks the scan under way to stop.</p>
+<p>
+
+
+<p>The ARP stage cannot be interrupted, so a scan cancelled during it stops when that stage ends, before any probing. During the probe stage, logins already started finish and the rest are skipped (tssCancelled). The scan then ends with AError 'Scan cancelled'.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Devices"></span><code>function <strong>Devices</strong>: TArray&lt;<a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The Tapo devices in <a class="normal" href="Tapo.Discovery.TTapoScanner.html#LastResult">LastResult</a> (tssAdded and tssKnown).</p>
+<p>
+
+
+<p>A device freed since the scan is still listed until the next scan. <code>Client.Devices[]</code> always reflects the current set.
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The devices, owned by the client, in address order.</p></td></tr>
+</table>
+<h3 class="detail">Properties</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Client"></span><code>property <strong>Client</strong>: <a href="Tapo.Client.TTapoClient.html">TTapoClient</a> read FClient;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The client devices are added to.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Busy"></span><code>property <strong>Busy</strong>: Boolean read GetBusy;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True while a scan runs.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="LastResult"></span><code>property <strong>LastResult</strong>: <a href="Tapo.Discovery.html#TTapoScanResult">TTapoScanResult</a> read GetLastResult;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The entries of the last scan that reached the probe stage, including one cancelled during probing. Empty until then.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="TpLinkOnly"></span><code>property <strong>TpLinkOnly</strong>: Boolean read FTpLinkOnly write FTpLinkOnly;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True (the default) keeps only TP-Link MAC prefixes after the ARP stage. False probes every host found, which is slower but also finds a device with a MAC prefix missing from NetMacScan's table.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="TcpSweepFallback"></span><code>property <strong>TcpSweepFallback</strong>: Boolean read FTcpSweepFallback write FTcpSweepFallback;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True (the default): when the ARP table cannot be read, find candidates by trying TCP ports 80 and 443 on every address instead. Slower, and candidates then have no MAC, but every one is still checked by logging in.</p>
+<p>
+
+
+<p>macOS can hide the ARP table from an app even when it may use the local network. The reason the ARP stage failed is in <a class="normal" href="Tapo.Discovery.TTapoScanner.html#LastArpError">LastArpError</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="SweepTimeout"></span><code>property <strong>SweepTimeout</strong>: Integer read FSweepTimeout write FSweepTimeout;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+How long the TCP sweep waits for each connection, in ms; the default is 1500.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="LastArpError"></span><code>property <strong>LastArpError</strong>: string read GetLastArpError;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Why the ARP stage of the last scan failed, when the TCP sweep was used instead; empty when the ARP stage worked.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="MaxParallel"></span><code>property <strong>MaxParallel</strong>: Integer read FMaxParallel write FMaxParallel;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+How many candidates are probed at once, 1 to 32. The default is 8.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ProbeConnectionTimeout"></span><code>property <strong>ProbeConnectionTimeout</strong>: Integer read FProbeConnectionTimeout write FProbeConnectionTimeout;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The connection timeout while probing, in ms; the default is 2000. Only the probes use it: devices added keep the client's own timeouts.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ProbeResponseTimeout"></span><code>property <strong>ProbeResponseTimeout</strong>: Integer read FProbeResponseTimeout write FProbeResponseTimeout;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The response timeout while probing, in ms; the default is 8000. A TPAP login on a bulb can take a few seconds, so do not set it too low.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="RetryConnectionTimeout"></span><code>property <strong>RetryConnectionTimeout</strong>: Integer read FRetryConnectionTimeout write FRetryConnectionTimeout;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The connection timeout, in ms, of one more try for each candidate that gave no response at first; the default is 6000. 0 turns the retry off.</p>
+<p>
+
+
+<p>Wi-Fi bulbs in power save can answer the ARP stage and still miss the short <a class="normal" href="Tapo.Discovery.TTapoScanner.html#ProbeConnectionTimeout">ProbeConnectionTimeout</a>. The retry runs after all candidates have had their first try, so it costs time only when something did not answer.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="OnProgress"></span><code>property <strong>OnProgress</strong>: <a href="Tapo.Discovery.html#TTapoScanProgressEvent">TTapoScanProgressEvent</a> read FOnProgress write FOnProgress;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Progress of both stages, on the main thread.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="OnDeviceFound"></span><code>property <strong>OnDeviceFound</strong>: <a href="Tapo.Discovery.html#TTapoScanDeviceEvent">TTapoScanDeviceEvent</a> read FOnDeviceFound write FOnDeviceFound;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Called on the main thread for each Tapo device as soon as it is found.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

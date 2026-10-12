@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Devices: Record TTapoLightState</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoLightState"></span><h1 class="cio">Record TTapoLightState</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Fields">Fields</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Devices.html">Tapo.Devices</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoLightState = record</code></p>
+<h2 class="description">Description</h2>
+<p>
+Several light settings to send in one request.</p>
+<p>
+
+
+<p>Start from <a class="normal" href="Tapo.Devices.TTapoLightState.html#New">New</a> and chain the With... functions; each returns a modified copy. Pass the result to <a class="normal" href="Tapo.Devices.TTapoColorLight.html#Apply-TTapoLightState-">TTapoColorLight.Apply</a>.
+
+<p>Example: </p>
+
+<pre class="longcode">
+Bulb.Apply(TTapoLightState.New.TurnOn.WithBrightness(<span class="pascal_numeric">40</span>).WithColor(tcCoral));</pre>
+
+<p></p>
+<h2 class="overview">Overview</h2>
+<span id="PasDoc-Fields"></span><h3 class="summary">Fields</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoLightState.html#HasOn">HasOn</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoLightState.html#DeviceOn">DeviceOn</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoLightState.html#HasBrightness">HasBrightness</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoLightState.html#Brightness">Brightness</a></strong>: Integer;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoLightState.html#HasHueSaturation">HasHueSaturation</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoLightState.html#Hue">Hue</a></strong>: Integer;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoLightState.html#Saturation">Saturation</a></strong>: Integer;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoLightState.html#HasColorTemp">HasColorTemp</a></strong>: Boolean;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code><strong><a href="Tapo.Devices.TTapoLightState.html#ColorTemp">ColorTemp</a></strong>: Integer;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>class function <strong><a href="Tapo.Devices.TTapoLightState.html#New">New</a></strong>: <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>; static;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoLightState.html#TurnOn">TurnOn</a></strong>: <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoLightState.html#TurnOff">TurnOff</a></strong>: <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoLightState.html#WithBrightness-Integer-">WithBrightness</a></strong>(AValue: Integer): <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoLightState.html#WithColor-TTapoColor-">WithColor</a></strong>(AColor: <a href="Tapo.Devices.html#TTapoColor">TTapoColor</a>): <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoLightState.html#WithHueSaturation-Integer-Integer-">WithHueSaturation</a></strong>(AHue, ASaturation: Integer): <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoLightState.html#WithColorTemperature-Integer-">WithColorTemperature</a></strong>(AKelvin: Integer): <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>procedure <strong><a href="Tapo.Devices.TTapoLightState.html#Validate">Validate</a></strong>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Devices.TTapoLightState.html#ToJSON">ToJSON</a></strong>: TJSONObject;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Fields</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="HasOn"></span><code><strong>HasOn</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True if the power state is to be set.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="DeviceOn"></span><code><strong>DeviceOn</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The power state to set.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="HasBrightness"></span><code><strong>HasBrightness</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True if the brightness is to be set.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Brightness"></span><code><strong>Brightness</strong>: Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The brightness, 1 to 100.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="HasHueSaturation"></span><code><strong>HasHueSaturation</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True if a hue and saturation are to be set.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Hue"></span><code><strong>Hue</strong>: Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The hue, 0 to 360.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Saturation"></span><code><strong>Saturation</strong>: Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The saturation, 1 to 100.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="HasColorTemp"></span><code><strong>HasColorTemp</strong>: Boolean;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+True if a colour temperature is to be set.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ColorTemp"></span><code><strong>ColorTemp</strong>: Integer;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The colour temperature in kelvin, 2500 to 6500; 0 together with a hue and saturation.</p>
+</td></tr>
+</table>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="New"></span><code>class function <strong>New</strong>: <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>; static;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+An empty state, to chain the With... functions from.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="TurnOn"></span><code>function <strong>TurnOn</strong>: <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Also switches the light on.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="TurnOff"></span><code>function <strong>TurnOff</strong>: <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Also switches the light off.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithBrightness-Integer-"></span><code>function <strong>WithBrightness</strong>(AValue: Integer): <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Also sets the brightness.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AValue</dt>
+<dd>1 to 100.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithColor-TTapoColor-"></span><code>function <strong>WithColor</strong>(AColor: <a href="Tapo.Devices.html#TTapoColor">TTapoColor</a>): <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Also sets a colour preset.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithHueSaturation-Integer-Integer-"></span><code>function <strong>WithHueSaturation</strong>(AHue, ASaturation: Integer): <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Also sets a colour by hue and saturation.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AHue</dt>
+<dd>0 to 360.</dd>
+<dt>ASaturation</dt>
+<dd>1 to 100.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="WithColorTemperature-Integer-"></span><code>function <strong>WithColorTemperature</strong>(AKelvin: Integer): <a href="Tapo.Devices.TTapoLightState.html">TTapoLightState</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Also sets a white by colour temperature (and clears any hue and saturation).</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AKelvin</dt>
+<dd>2500 to 6500.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Validate"></span><code>procedure <strong>Validate</strong>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Checks the values.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>Nothing is set, or a value is out of range.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="ToJSON"></span><code>function <strong>ToJSON</strong>: TJSONObject;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Validates the state and returns the set_device_info fields.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">A new object; the caller frees it or passes it on.</p></td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

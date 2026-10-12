@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Cameras</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<h1 class="unit">Unit Tapo.Cameras</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Tapo cameras: C210, C220, C225, C325WB, C520WS, TC40, TC70.</p>
+<p>
+
+
+<p></p>
+
+<pre class="preformatted">
+TTapoDevice (abstract, Tapo.Client)
+`-- TTapoCamera                 device info, pan/tilt, presets, RTSP URLs</pre>
+
+<p>
+
+<p>Cameras log in over TPAP (HTTPS), or AES SSL if Third-Party Compatibility is on; Tapo.Client picks the protocol.
+
+<p>The RTSP URLs need the camera account (Tapo app &gt; camera &gt; Advanced Settings &gt; Camera Account), which is separate from the Tapo cloud account. Snapshot capture is not included: it needs an RTSP/MJPEG client, which is outside the Tapo control API (open the MJPEG URL with any RTSP-capable player or library instead).</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Cameras.TTapoCameraInfo.html"><code>TTapoCameraInfo</code></a></td>
+<td class="itemdesc">Device info of a camera.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Cameras.TTapoCameraPreset.html"><code>TTapoCameraPreset</code></a></td>
+<td class="itemdesc">A pan/tilt position saved on the camera.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="Tapo.Cameras.TTapoRtspStreamUrl.html"><code>TTapoRtspStreamUrl</code></a></td>
+<td class="itemdesc">The RTSP addresses of a camera's video streams.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Class&nbsp;<a class="bold" href="Tapo.Cameras.TTapoCamera.html"><code>TTapoCamera</code></a></td>
+<td class="itemdesc">Tapo pan/tilt camera: C210, C220, C225, C325WB, C520WS, TC40 and TC70.</td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Cameras.html#TTapoC210">TTapoC210</a></strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Cameras.html#TTapoC220">TTapoC220</a></strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Cameras.html#TTapoC225">TTapoC225</a></strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Cameras.html#TTapoC325WB">TTapoC325WB</a></strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Cameras.html#TTapoC520WS">TTapoC520WS</a></strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Cameras.html#TTapoTC40">TTapoTC40</a></strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="Tapo.Cameras.html#TTapoTC70">TTapoTC70</a></strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Types</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoC210"></span><code><strong>TTapoC210</strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo C210: the same as <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoC220"></span><code><strong>TTapoC220</strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo C220: the same as <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoC225"></span><code><strong>TTapoC225</strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo C225: the same as <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoC325WB"></span><code><strong>TTapoC325WB</strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo C325WB: the same as <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoC520WS"></span><code><strong>TTapoC520WS</strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo C520WS: the same as <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoTC40"></span><code><strong>TTapoTC40</strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo TC40: the same as <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TTapoTC70"></span><code><strong>TTapoTC70</strong> = <a href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Tapo TC70: the same as <a class="normal" href="Tapo.Cameras.TTapoCamera.html">TTapoCamera</a>.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

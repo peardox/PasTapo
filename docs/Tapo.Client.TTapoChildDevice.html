@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Client: Class TTapoChildDevice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoChildDevice"></span><h1 class="cio">Class TTapoChildDevice</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div><div class="one_section"><a class="section" href="#PasDoc-Properties">Properties</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Client.html">Tapo.Client</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoChildDevice = class abstract(<a class="normal" href="Tapo.Client.TTapoEndpoint.html">TTapoEndpoint</a>)</code></p>
+<h2 class="description">Description</h2>
+<p>
+A device reached through a parent device: a power-strip socket or a sensor or switch paired to a hub.</p>
+<p>
+
+
+<p>Requests travel inside the parent's session, so a child device never logs in on its own. Obtain children from the parent (for example <code>Strip.Outlet(1)</code> or <code>Hub.T31x('Kitchen')</code>); the parent owns them.</p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoEndpoint.html">TTapoEndpoint</a></li>
+<li class="thisitem">TTapoChildDevice</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-protected">
+<td class="visibility"><span class="badge vis-protected">Protected</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Client.TTapoChildDevice.html#DoRequest-string-TJSONValue-Boolean-">DoRequest</a></strong>(const AMethod: string; AParams: TJSONValue; AStamp: Boolean): TJSONObject; override;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>constructor <strong><a href="Tapo.Client.TTapoChildDevice.html#Create-TTapoDevice-string-">Create</a></strong>(AParent: <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; const ADeviceId: string); virtual;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Properties"></span><h3 class="summary">Properties</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Client.TTapoChildDevice.html#Parent">Parent</a></strong>: <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a> read FParent;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>property <strong><a href="Tapo.Client.TTapoChildDevice.html#DeviceId">DeviceId</a></strong>: string read FDeviceId;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-protected wide_list">
+<tr class="list visibility-protected">
+<td class="visibility"><span class="badge vis-protected">Protected</span></td>
+<td class="itemcode"><span id="DoRequest-string-TJSONValue-Boolean-"></span><code>function <strong>DoRequest</strong>(const AMethod: string; AParams: TJSONValue; AStamp: Boolean): TJSONObject; override;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Sends the request to the parent, which forwards it to this child.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Create-TTapoDevice-string-"></span><code>constructor <strong>Create</strong>(AParent: <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>; const ADeviceId: string); virtual;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Creates a child device object.</p>
+<p>
+
+
+<p>Normally called by the parent device, which owns the object.
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AParent</dt>
+<dd>The device the child is reached through.</dd>
+<dt>ADeviceId</dt>
+<dd>The child's device id.</dd>
+</dl>
+</td></tr>
+</table>
+<h3 class="detail">Properties</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Parent"></span><code>property <strong>Parent</strong>: <a href="Tapo.Client.TTapoDevice.html">TTapoDevice</a> read FParent;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The device this child is reached through.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="DeviceId"></span><code>property <strong>DeviceId</strong>: string read FDeviceId;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+The child's device id.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

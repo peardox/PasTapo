@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tapo.Hubs: Class TTapoHub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.5.snapshot">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Documentation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<span id="TTapoHub"></span><h1 class="cio">Class TTapoHub</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Hierarchy">Hierarchy</a></div><div class="one_section"><a class="section" href="#PasDoc-Methods">Methods</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a href="Tapo.Hubs.html">Tapo.Hubs</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type TTapoHub = class abstract(<a class="normal" href="Tapo.Client.TTapoDevice.html">TTapoDevice</a>)</code></p>
+<h2 class="description">Description</h2>
+<p>
+The features common to the hubs: the sensors and switches paired to them.</p>
+<p>
+
+
+<p>Example: </p>
+
+<pre class="longcode">
+Hub := Client.Add(H100, <span class="pascal_string">'192.168.1.53'</span>);
+Info := Hub.T31x(<span class="pascal_string">'Kitchen'</span>).GetT31xInfo;
+Label1.Text := Format(<span class="pascal_string">'%.1f C, %d%%'</span>, [Info.CurrentTemperature, Info.CurrentHumidity]);</pre>
+
+<p></p>
+<span id="PasDoc-Hierarchy"></span><h2 class="hierarchy">Hierarchy</h2>
+<ul class="hierarchy"><li class="ancestor">TObject</li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoEndpoint.html">TTapoEndpoint</a></li>
+<li class="ancestor"><a class="normal" href="Tapo.Client.TTapoDevice.html">TTapoDevice</a></li>
+<li class="thisitem">TTapoHub</li></ul><h2 class="overview">Overview</h2>
+<span id="PasDoc-Methods"></span><h3 class="summary">Methods</h3>
+<table class="summary wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#GetChildDeviceList">GetChildDeviceList</a></strong>: TArray&lt;<a href="Tapo.Hubs.TTapoHubChildInfo.html">TTapoHubChildInfo</a>&gt;;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#GetChildDeviceListJSON-Integer-">GetChildDeviceListJSON</a></strong>(AStartIndex: Integer = 0): string;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#GetChildDeviceComponentListJSON">GetChildDeviceComponentListJSON</a></strong>: string;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#KE100-string-">KE100</a></strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoKE100.html">TTapoKE100</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#S200-string-">S200</a></strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoS200.html">TTapoS200</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#S210-string-">S210</a></strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoS210.html">TTapoS210</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#T100-string-">T100</a></strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoT100.html">TTapoT100</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#T110-string-">T110</a></strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoT110.html">TTapoT110</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#T300-string-">T300</a></strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoT300.html">TTapoT300</a>;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#T31x-string-">T31x</a></strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoT31x.html">TTapoT31x</a>;</code></td>
+</tr>
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#Children">Children</a></strong>: TArray&lt;<a href="Tapo.Hubs.TTapoHubChild.html">TTapoHubChild</a>&gt;;</code></td>
+</tr>
+<tr class="list2 visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><code>function <strong><a href="Tapo.Hubs.TTapoHub.html#Child-string-TTapoChildDeviceClass-">Child</a></strong>(const ADeviceId: string; AClass: <a href="Tapo.Client.html#TTapoChildDeviceClass">TTapoChildDeviceClass</a>): <a href="Tapo.Client.TTapoChildDevice.html">TTapoChildDevice</a>;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Methods</h3>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetChildDeviceList"></span><code>function <strong>GetChildDeviceList</strong>: TArray&lt;<a href="Tapo.Hubs.TTapoHubChildInfo.html">TTapoHubChildInfo</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads every paired sensor and switch.</p>
+<p>
+
+
+<p>Cameras paired to an H200 or H500 are listed by <a class="normal" href="Tapo.Hubs.TTapoCameraHub.html#GetGeneralDeviceList">TTapoCameraHub.GetGeneralDeviceList</a> instead.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetChildDeviceListJSON-Integer-"></span><code>function <strong>GetChildDeviceListJSON</strong>(AStartIndex: Integer = 0): string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads one page (10 entries) of the child list as formatted JSON.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>AStartIndex</dt>
+<dd>The index to start from.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="GetChildDeviceComponentListJSON"></span><code>function <strong>GetChildDeviceComponentListJSON</strong>: string;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Reads the children's components as formatted JSON.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="KE100-string-"></span><code>function <strong>KE100</strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoKE100.html">TTapoKE100</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A KE100 radiator valve by device id or nickname.</p>
+<p>
+
+
+<p>
+
+<p></p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The valve, owned by the hub.</p><h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>No KE100 with that id or nickname is paired.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="S200-string-"></span><code>function <strong>S200</strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoS200.html">TTapoS200</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+An S200B or S200D by device id or nickname.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>No such device is paired.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="S210-string-"></span><code>function <strong>S210</strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoS210.html">TTapoS210</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+An S210 light switch by device id or nickname.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>No such device is paired.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="T100-string-"></span><code>function <strong>T100</strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoT100.html">TTapoT100</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A T100 motion sensor by device id or nickname.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>No such device is paired.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="T110-string-"></span><code>function <strong>T110</strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoT110.html">TTapoT110</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A T110 contact sensor by device id or nickname.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>No such device is paired.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="T300-string-"></span><code>function <strong>T300</strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoT300.html">TTapoT300</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A T300 water leak sensor by device id or nickname.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>No such device is paired.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="T31x-string-"></span><code>function <strong>T31x</strong>(const AIdOrNickname: string): <a href="Tapo.Hubs.TTapoT31x.html">TTapoT31x</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A T310 or T315 temperature and humidity sensor by device id or nickname.</p>
+<p>
+
+
+<p></p>
+<h6 class="description_section">Exceptions raised</h6>
+<dl class="exceptions_raised">
+<dt><a class="normal" href="Tapo.Client.ETapoError.html">ETapoError</a></dt>
+<dd>No such device is paired.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Children"></span><code>function <strong>Children</strong>: TArray&lt;<a href="Tapo.Hubs.TTapoHubChild.html">TTapoHubChild</a>&gt;;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+Every paired device, each as its own class.</p>
+<p>
+
+
+<p>Use <code>is</code> to tell them apart (for example <code>if C is TTapoT31x</code>). A model this unit does not know comes back as a plain TTapoHubChild.</p>
+</td></tr>
+</table>
+<table class="detail visibility-public wide_list">
+<tr class="list visibility-public">
+<td class="visibility"><span class="badge vis-public">Public</span></td>
+<td class="itemcode"><span id="Child-string-TTapoChildDeviceClass-"></span><code>function <strong>Child</strong>(const ADeviceId: string; AClass: <a href="Tapo.Client.html#TTapoChildDeviceClass">TTapoChildDeviceClass</a>): <a href="Tapo.Client.TTapoChildDevice.html">TTapoChildDevice</a>;</code></td>
+</tr>
+<tr><td colspan="2">
+<p>
+A child by device id, without checking that it exists.</p>
+<p>
+
+
+<p>
+
+<p>
+
+<p></p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ADeviceId</dt>
+<dd>The child's device id, for example from <a class="normal" href="Tapo.Hubs.TTapoHub.html#GetChildDeviceList">GetChildDeviceList</a>.</dd>
+<dt>AClass</dt>
+<dd>The class to use for it.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The child, owned by the hub. No request is made.</p></td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.5.snapshot</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>

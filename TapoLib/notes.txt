@@ -1,0 +1,5 @@
+pasdoc --staronly --format html --output docs Tapo.*.pas
+
+NSLocalNetworkUsageDescription
+
+macOS 15 and later requires you to add NSLocalNetworkUsageDescription under Project Options → Version Info. Without it, the OS silently blocks traffic on the local network.

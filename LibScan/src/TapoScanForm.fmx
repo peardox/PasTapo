@@ -1,0 +1,13 @@
+object TapoScanMainForm: TTapoScanMainForm
+  Left = 0
+  Top = 0
+  Caption = 'Tapo network scan'
+  ClientHeight = 560
+  ClientWidth = 880
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+end

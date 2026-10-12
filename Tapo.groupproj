@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{163D0533-FE79-4CD3-A227-E0C175460037}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="LibScan\LibScan.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="LibScan">
+        <MSBuild Projects="LibScan\LibScan.dproj"/>
+    </Target>
+    <Target Name="LibScan:Clean">
+        <MSBuild Projects="LibScan\LibScan.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LibScan:Make">
+        <MSBuild Projects="LibScan\LibScan.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="LibScan"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="LibScan:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="LibScan:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

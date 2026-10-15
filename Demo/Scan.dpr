@@ -13,7 +13,7 @@ uses
   Tapo.Models in '..\TapoLib\Tapo.Models.pas',
   NetMacScan in '..\TapoLib\NetMacScan.pas',
   TapoScanForm in 'src\TapoScanForm.pas' {TapoScanMainForm},
-  TapoSettingsForm in 'src\TapoSettingsForm.pas',
+  TapoSettingsForm in 'src\TapoSettingsForm.pas' {TapoSettingsDialog},
   Neon.Core.Attributes in '..\delphi-neon\Source\Neon.Core.Attributes.pas',
   Neon.Core.DynamicTypes in '..\delphi-neon\Source\Neon.Core.DynamicTypes.pas',
   Neon.Core.Generator in '..\delphi-neon\Source\Neon.Core.Generator.pas',

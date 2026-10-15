@@ -1,17 +1,20 @@
-//** @abstract(The Tapo account and network form.)
+//** @abstract(The Tapo account, network and camera account dialog.)
 //**
-//** Built in code, so it has no .fmx file: call TTapoSettingsForm.Execute.
+//** The controls are in TapoSettingsForm.fmx. Call TTapoSettingsDialog.Execute; the form is not
+//** auto-created.
 //**
-//** Order, top to bottom: e-mail (user name), password, network, subnet. An empty network or
-//** subnet is filled in from this computer's LAN, or 192.168.0.0 / 255.255.255.0 if it is not on
-//** one.
+//** Order, top to bottom: Tapo account @(e-mail, password@), network to scan @(network, subnet@),
+//** camera account @(user name, password; optional@). An empty network or subnet is filled in
+//** from this computer's LAN, or 192.168.0.0 / 255.255.255.0 if it is not on one.
 unit TapoSettingsForm;
 
 {
-  The Tapo account and network form. Built in code, so it has no .fmx file:
-  call TTapoSettingsForm.Execute.
+  The Tapo account, network and camera account dialog. The controls are in
+  TapoSettingsForm.fmx. Call TTapoSettingsDialog.Execute; the form is not
+  auto-created.
 
-  Order, top to bottom: e-mail (user name), password, network, subnet.
+  Order, top to bottom: Tapo account (e-mail, password), network to scan
+  (network, subnet), camera account (user name, password; optional).
   An empty network or subnet is filled in from this computer's LAN, or
   192.168.0.0 / 255.255.255.0 if it is not on one.
 }
@@ -25,193 +28,131 @@ uses
   Tapo.Settings;
 
 type
-  //** @abstract(Asks for the Tapo account and the network to scan.)
-  /// <summary>Asks for the Tapo account and the network to scan.</summary>
-  TTapoSettingsForm = class(TForm)
-  private
-    FNote: TLabel;
-    FUserEdit, FPasswordEdit, FNetworkEdit, FSubnetEdit: TEdit;
-    FError: TLabel;
-    procedure BuildUI(const ANote: string);
-    function AddField(const ACaption, APrompt: string): TEdit;
+  //** @abstract(Asks for the Tapo account, the network to scan and the camera account.)
+  /// <summary>Asks for the Tapo account, the network to scan and the camera account.</summary>
+  TTapoSettingsDialog = class(TForm)
+    // designed in TapoSettingsForm.fmx
+    NoteLabel: TLabel;
+    AccountGroup: TGroupBox;
+    UserRow: TLayout;
+    UserLabel: TLabel;
+    UserEdit: TEdit;
+    PasswordRow: TLayout;
+    PasswordLabel: TLabel;
+    PasswordEdit: TEdit;
+    NetworkGroup: TGroupBox;
+    NetworkRow: TLayout;
+    NetworkLabel: TLabel;
+    NetworkEdit: TEdit;
+    SubnetRow: TLayout;
+    SubnetLabel: TLabel;
+    SubnetEdit: TEdit;
+    CameraGroup: TGroupBox;
+    CameraNoteLabel: TLabel;
+    CameraUserRow: TLayout;
+    CameraUserLabel: TLabel;
+    CameraUserEdit: TEdit;
+    CameraPasswordRow: TLayout;
+    CameraPasswordLabel: TLabel;
+    CameraPasswordEdit: TEdit;
+    ErrorLabel: TLabel;
+    ButtonBar: TLayout;
+    DetectButton: TButton;
+    OkButton: TButton;
+    CancelButton: TButton;
     procedure OkClick(Sender: TObject);
     procedure CancelClick(Sender: TObject);
     procedure DetectClick(Sender: TObject);
   public
-    //** @abstract(Shows the form modally in front of AOwner, filled in from ASettings.)
+    //** @abstract(Shows the dialog modally in front of AOwner, filled in from ASettings.)
     //**
     //** If the e-mail or password changed, the credential state is reset to csUnknown until they
-    //** have been tried.
+    //** have been tried. The camera account is optional: both fields or neither.
     //**
     //** @param(AOwner The form it belongs to @(the main form@): it is centred on it, kept in front
     //** of it, and the application is blocked until it closes.)
     //**
     //** @param(ASettings The settings to show and, on OK, to update.)
     //**
-    //** @param(ANote Optional text shown above the fields, for example why the form is shown.)
+    //** @param(ANote Optional text shown above the fields, for example why the dialog is shown.)
     //**
     //** @returns(True if the user pressed OK; ASettings then holds the new values @(not yet
     //** saved@).)
-    /// <summary>Shows the form modally in front of AOwner, filled in from ASettings.</summary>
+    /// <summary>Shows the dialog modally in front of AOwner, filled in from ASettings.</summary>
     /// <param name="AOwner">The form it belongs to (the main form): it is centred on it, kept in front of it, and the application is blocked until it closes.</param>
     /// <param name="ASettings">The settings to show and, on OK, to update.</param>
-    /// <param name="ANote">Optional text shown above the fields, for example why the form is shown.</param>
+    /// <param name="ANote">Optional text shown above the fields, for example why the dialog is shown.</param>
     /// <returns>True if the user pressed OK; ASettings then holds the new values (not yet saved).</returns>
     /// <remarks>
     ///   If the e-mail or password changed, the credential state is reset to
-    ///   csUnknown until they have been tried.
+    ///   csUnknown until they have been tried. The camera account is
+    ///   optional: both fields or neither.
     /// </remarks>
     class function Execute(AOwner: TCommonCustomForm; ASettings: TTapoSettings;
       const ANote: string = ''): Boolean;
   end;
+
+var
+  //** @abstract(Unused: the dialog is created by @link(TTapoSettingsDialog.Execute).)
+  /// <summary>Unused: the dialog is created by <see cref="TTapoSettingsDialog.Execute"/>.</summary>
+  TapoSettingsDialog: TTapoSettingsDialog;
 
 implementation
 
 uses
   NetMacScan;
 
-function TTapoSettingsForm.AddField(const ACaption, APrompt: string): TEdit;
-var
-  Row: TLayout;
-  Lbl: TLabel;
-begin
-  // rows are top-aligned, so each new one goes below the last
-  Row := TLayout.Create(Self);
-  Row.Parent := Self;
-  Row.Align := TAlignLayout.Top;
-  Row.Height := 54;
-  Row.Margins.Rect := TRectF.Create(12, 4, 12, 0);
-  Row.Position.Y := 10000;
-
-  Lbl := TLabel.Create(Self);
-  Lbl.Parent := Row;
-  Lbl.Align := TAlignLayout.Top;
-  Lbl.Height := 20;
-  Lbl.Text := ACaption;
-
-  Result := TEdit.Create(Self);
-  Result.Parent := Row;
-  Result.Align := TAlignLayout.Top;
-  Result.Position.Y := 100;
-  Result.TextPrompt := APrompt;
-end;
-
-procedure TTapoSettingsForm.BuildUI(const ANote: string);
-var
-  Buttons: TLayout;
-  OkButton, CancelButton, DetectButton: TButton;
-begin
-  Caption := 'Tapo account and network';
-  BorderStyle := TFmxFormBorderStyle.Single;
-  Position := TFormPosition.ScreenCenter;
-  Width := 400;
-  Height := 400;
-
-  FNote := TLabel.Create(Self);
-  FNote.Parent := Self;
-  FNote.Align := TAlignLayout.Top;
-  FNote.Margins.Rect := TRectF.Create(12, 10, 12, 0);
-  FNote.WordWrap := True;
-  FNote.AutoSize := True;
-  FNote.Text := ANote;
-  FNote.Visible := ANote <> '';
-
-  FUserEdit := AddField('Tapo account e-mail', 'name@example.com');
-  FPasswordEdit := AddField('Tapo account password', '');
-  FPasswordEdit.Password := True;
-  FNetworkEdit := AddField('Network to scan', 'e.g. 192.168.1.0');
-  FSubnetEdit := AddField('Subnet mask', 'e.g. 255.255.255.0 or /24');
-
-  FError := TLabel.Create(Self);
-  FError.Parent := Self;
-  FError.Align := TAlignLayout.Top;
-  FError.Position.Y := 20000;
-  FError.Margins.Rect := TRectF.Create(12, 6, 12, 0);
-  FError.WordWrap := True;
-  FError.AutoSize := True;
-  FError.StyledSettings := FError.StyledSettings - [TStyledSetting.FontColor];
-  FError.TextSettings.FontColor := TAlphaColors.Red;
-  FError.Text := '';
-
-  Buttons := TLayout.Create(Self);
-  Buttons.Parent := Self;
-  Buttons.Align := TAlignLayout.Bottom;
-  Buttons.Height := 48;
-  Buttons.Margins.Rect := TRectF.Create(12, 0, 12, 8);
-
-  CancelButton := TButton.Create(Self);
-  CancelButton.Parent := Buttons;
-  CancelButton.Align := TAlignLayout.Right;
-  CancelButton.Width := 90;
-  CancelButton.Margins.Rect := TRectF.Create(6, 8, 0, 8);
-  CancelButton.Text := 'Cancel';
-  CancelButton.OnClick := CancelClick;
-
-  OkButton := TButton.Create(Self);
-  OkButton.Parent := Buttons;
-  OkButton.Align := TAlignLayout.Right;
-  OkButton.Width := 90;
-  OkButton.Margins.Rect := TRectF.Create(6, 8, 0, 8);
-  OkButton.Text := 'OK';
-  OkButton.OnClick := OkClick;
-
-  DetectButton := TButton.Create(Self);
-  DetectButton.Parent := Buttons;
-  DetectButton.Align := TAlignLayout.Left;
-  DetectButton.Width := 130;
-  DetectButton.Margins.Rect := TRectF.Create(0, 8, 6, 8);
-  DetectButton.Text := 'Detect network';
-  DetectButton.OnClick := DetectClick;
-end;
+{$R *.fmx}
 
 // Refills network and subnet from this computer's LAN.
-procedure TTapoSettingsForm.DetectClick(Sender: TObject);
+procedure TTapoSettingsDialog.DetectClick(Sender: TObject);
 var
   Net, Mask: string;
 begin
   if TapoLocalNetwork(Net, Mask) then
-    FError.Text := ''
+    ErrorLabel.Text := ''
   else
-    FError.Text := 'No LAN found: showing the default network.';
-  FNetworkEdit.Text := Net;
-  FSubnetEdit.Text := Mask;
+    ErrorLabel.Text := 'No LAN found: showing the default network.';
+  NetworkEdit.Text := Net;
+  SubnetEdit.Text := Mask;
 end;
 
-procedure TTapoSettingsForm.OkClick(Sender: TObject);
+procedure TTapoSettingsDialog.OkClick(Sender: TObject);
 begin
-  FError.Text := '';
-  if Trim(FUserEdit.Text) = '' then
-    FError.Text := 'Enter the e-mail of your Tapo account.'
-  else if FPasswordEdit.Text = '' then
-    FError.Text := 'Enter the password of your Tapo account.'
+  ErrorLabel.Text := '';
+  if Trim(UserEdit.Text) = '' then
+    ErrorLabel.Text := 'Enter the e-mail of your Tapo account.'
+  else if PasswordEdit.Text = '' then
+    ErrorLabel.Text := 'Enter the password of your Tapo account.'
+  else if (Trim(CameraUserEdit.Text) = '') <> (CameraPasswordEdit.Text = '') then
+    ErrorLabel.Text := 'Enter both the camera account user name and password, or neither.'
   else
     try
-      if Length(SubnetHosts(Trim(FNetworkEdit.Text), Trim(FSubnetEdit.Text))) = 0 then
-        FError.Text := 'That network and subnet contain no addresses.';
+      if Length(SubnetHosts(Trim(NetworkEdit.Text), Trim(SubnetEdit.Text))) = 0 then
+        ErrorLabel.Text := 'That network and subnet contain no addresses.';
     except
       on E: Exception do
-        FError.Text := E.Message;
+        ErrorLabel.Text := E.Message;
     end;
 
-  if FError.Text = '' then
+  if ErrorLabel.Text = '' then
     ModalResult := mrOk;
 end;
 
-procedure TTapoSettingsForm.CancelClick(Sender: TObject);
+procedure TTapoSettingsDialog.CancelClick(Sender: TObject);
 begin
   ModalResult := mrCancel;
 end;
 
-class function TTapoSettingsForm.Execute(AOwner: TCommonCustomForm; ASettings: TTapoSettings;
+class function TTapoSettingsDialog.Execute(AOwner: TCommonCustomForm; ASettings: TTapoSettings;
   const ANote: string): Boolean;
 var
-  F: TTapoSettingsForm;
+  F: TTapoSettingsDialog;
   Net, Mask: string;
 begin
   // owned by the main form, so it is centred on it and stays in front of it
-  F := TTapoSettingsForm.CreateNew(AOwner);
+  F := TTapoSettingsDialog.Create(AOwner);
   try
-    F.BuildUI(ANote);
     if AOwner <> nil then
     begin
       F.Position := TFormPosition.OwnerFormCenter;
@@ -221,29 +162,37 @@ begin
     // in front of every other window of the app while it is open; ShowModal
     // blocks the rest of the app on Windows, macOS and Linux alike
     F.FormStyle := TFormStyle.StayOnTop;
-    F.FUserEdit.Text := ASettings.Username;
-    F.FPasswordEdit.Text := ASettings.Password;
-    F.FNetworkEdit.Text := ASettings.Network;
-    F.FSubnetEdit.Text := ASettings.Subnet;
+
+    F.NoteLabel.Text := ANote;
+    F.NoteLabel.Visible := ANote <> '';
+    F.ErrorLabel.Text := '';
+    F.UserEdit.Text := ASettings.Username;
+    F.PasswordEdit.Text := ASettings.Password;
+    F.NetworkEdit.Text := ASettings.Network;
+    F.SubnetEdit.Text := ASettings.Subnet;
+    F.CameraUserEdit.Text := ASettings.CameraUsername;
+    F.CameraPasswordEdit.Text := ASettings.CameraPassword;
     if (ASettings.Network = '') or (ASettings.Subnet = '') then
     begin
       TapoLocalNetwork(Net, Mask);      // the LAN, or 192.168.0.0 / 255.255.255.0
       if ASettings.Network = '' then
-        F.FNetworkEdit.Text := Net;
+        F.NetworkEdit.Text := Net;
       if ASettings.Subnet = '' then
-        F.FSubnetEdit.Text := Mask;
+        F.SubnetEdit.Text := Mask;
     end;
 
     Result := F.ShowModal = mrOk;
     if Result then
     begin
-      if (Trim(F.FUserEdit.Text) <> ASettings.Username) or
-         (F.FPasswordEdit.Text <> ASettings.Password) then
+      if (Trim(F.UserEdit.Text) <> ASettings.Username) or
+         (F.PasswordEdit.Text <> ASettings.Password) then
         ASettings.CredentialState := csUnknown;      // not tried yet
-      ASettings.Username := Trim(F.FUserEdit.Text);
-      ASettings.Password := F.FPasswordEdit.Text;
-      ASettings.Network := Trim(F.FNetworkEdit.Text);
-      ASettings.Subnet := Trim(F.FSubnetEdit.Text);
+      ASettings.Username := Trim(F.UserEdit.Text);
+      ASettings.Password := F.PasswordEdit.Text;
+      ASettings.Network := Trim(F.NetworkEdit.Text);
+      ASettings.Subnet := Trim(F.SubnetEdit.Text);
+      ASettings.CameraUsername := Trim(F.CameraUserEdit.Text);
+      ASettings.CameraPassword := F.CameraPasswordEdit.Text;
     end;
   finally
     F.Free;

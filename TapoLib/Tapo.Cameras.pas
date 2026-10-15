@@ -33,7 +33,7 @@ unit Tapo.Cameras;
 interface
 
 uses
-  System.SysUtils, System.Classes, System.JSON, System.NetEncoding,
+  System.SysUtils, System.Classes, System.JSON,
   System.Generics.Collections, Tapo.Client;
 
 type
@@ -73,6 +73,19 @@ type
     /// <summary>True for a preset that cannot be deleted.</summary>
     IsReadOnly: Boolean;
   end;
+
+  //** @abstract(One of a camera's RTSP video streams.)
+  /// <summary>One of a camera's RTSP video streams.</summary>
+  TTapoRtspStream = (
+    //** @abstract(Full quality @(stream1; 1080p on a C210@).)
+    /// <summary>Full quality (stream1; 1080p on a C210).</summary>
+    rsHD,
+    //** @abstract(Low quality @(stream2; 360p on a C210@).)
+    /// <summary>Low quality (stream2; 360p on a C210).</summary>
+    rsSD,
+    //** @abstract(MJPEG @(stream8@), for still images.)
+    /// <summary>MJPEG (stream8), for still images.</summary>
+    rsMJPEG);
 
   //** @abstract(The RTSP addresses of a camera's video streams.)
   /// <summary>The RTSP addresses of a camera's video streams.</summary>
@@ -143,14 +156,116 @@ type
     //**
     //** @param(ACameraPassword The camera account password.)
     //**
-    //** @returns(rtsp://user:password@@host:554/streamN addresses, with the user name and password
-    //** URL-encoded.)
+    //** @param(AEncode True @(the default@) to percent-encode the user name and password, as any
+    //** other program needs; False to put them in as they are, for a viewer in the application
+    //** that splits the address itself. See @link(RtspUrl).)
+    //**
+    //** @returns(rtsp://user:password@@host:554/streamN addresses.)
     /// <summary>Builds the RTSP addresses of the camera's streams.</summary>
     /// <param name="ACameraUsername">The camera account user name (Tapo app &gt; camera &gt; Advanced Settings &gt; Camera Account), not the Tapo account.</param>
     /// <param name="ACameraPassword">The camera account password.</param>
-    /// <returns>rtsp://user:password@host:554/streamN addresses, with the user name and password URL-encoded.</returns>
+    /// <param name="AEncode">True (the default) to percent-encode the user name and password, as any other program needs; False to put them in as they are, for a viewer in the application that splits the address itself. See <see cref="RtspUrl"/>.</param>
+    /// <returns>rtsp://user:password@host:554/streamN addresses.</returns>
     /// <remarks>No request is made.</remarks>
-    function GetRtspStreamUrl(const ACameraUsername, ACameraPassword: string): TTapoRtspStreamUrl;
+    function GetRtspStreamUrl(const ACameraUsername, ACameraPassword: string;
+      AEncode: Boolean = True): TTapoRtspStreamUrl; overload;
+    //** @abstract(Builds the RTSP addresses of the camera's streams, with the client's camera account
+    //** in them.)
+    //**
+    //** No request is made. Uses the client's Account.CameraUsername and CameraPassword.
+    //**
+    //** @param(AEncode True @(the default@) to percent-encode the user name and password; False to
+    //** put them in as they are. See @link(RtspUrl).)
+    /// <summary>Builds the RTSP addresses of the camera's streams, with the client's camera account in them.</summary>
+    /// <param name="AEncode">True (the default) to percent-encode the user name and password; False to put them in as they are. See <see cref="RtspUrl"/>.</param>
+    /// <remarks>No request is made. Uses the client's Account.CameraUsername and CameraPassword.</remarks>
+    function GetRtspStreamUrl(AEncode: Boolean = True): TTapoRtspStreamUrl; overload;
+    //** @abstract(Builds the RTSP address of one of the camera's streams.)
+    //**
+    //** No request is made. With an empty user name the address has no login part, and the player
+    //** asks for it.
+    //**
+    //** Encoded @(AEncode True@), characters such as @@ : / $ ! in the user name and password are
+    //** percent-encoded, so VLC, ffplay, FFmpeg, libVLC and the like read the address correctly. Not
+    //** encoded, they go in as typed: only for a viewer of your own that takes the login from the
+    //** address itself, splitting at the last @@ before the host, since a standard URL parser
+    //** misreads an e-mail address as the user name. A viewer that takes the user name and
+    //** password separately is better served by the address without a login: pass empty strings.
+    //**
+    //** @param(ACameraUsername The camera account user name @(Tapo app > camera > Advanced Settings
+    //** > Camera Account@), not the Tapo account.)
+    //**
+    //** @param(ACameraPassword The camera account password.)
+    //**
+    //** @param(AStream Which stream; full quality by default.)
+    //**
+    //** @param(AEncode True @(the default@) to percent-encode the user name and password.)
+    //**
+    //** @returns(For example 'rtsp://user:pass@@192.168.1.155:554/stream1'.)
+    //**
+    //** Example:
+    //** @longCode(#
+    //** Url := Camera.RtspUrl(Settings.CameraUsername, Settings.CameraPassword, rsSD);
+    //** #)
+    /// <summary>Builds the RTSP address of one of the camera's streams.</summary>
+    /// <param name="ACameraUsername">The camera account user name (Tapo app &gt; camera &gt; Advanced Settings &gt; Camera Account), not the Tapo account.</param>
+    /// <param name="ACameraPassword">The camera account password.</param>
+    /// <param name="AStream">Which stream; full quality by default.</param>
+    /// <param name="AEncode">True (the default) to percent-encode the user name and password.</param>
+    /// <returns>For example 'rtsp://user:pass@192.168.1.155:554/stream1'.</returns>
+    /// <remarks>
+    ///   No request is made. With an empty user name the address has no login
+    ///   part, and the player asks for it.
+    ///   <para>Encoded (AEncode True), characters such as @ : / $ ! in the user
+    ///   name and password are percent-encoded, so VLC, ffplay, FFmpeg, libVLC
+    ///   and the like read the address correctly. Not encoded, they go in as
+    ///   typed: only for a viewer of your own that takes the login from the
+    ///   address itself, splitting at the last @ before the host, since a
+    ///   standard URL parser misreads an e-mail address as the user name. A
+    ///   viewer that takes the user name and password separately is better
+    ///   served by the address without a login: pass empty strings.</para>
+    /// </remarks>
+    /// <example>
+    ///   <code>Url := Camera.RtspUrl(Settings.CameraUsername, Settings.CameraPassword, rsSD);</code>
+    /// </example>
+    function RtspUrl(const ACameraUsername, ACameraPassword: string;
+      AStream: TTapoRtspStream = rsHD; AEncode: Boolean = True): string; overload;
+    //** @abstract(Builds the RTSP address of one of the camera's streams, with the client's camera
+    //** account in it.)
+    //**
+    //** No request is made. Uses the client's Account.CameraUsername and CameraPassword; with no camera
+    //** account set there, the address has no login part and the player asks for it.
+    //**
+    //** @param(AStream Which stream; full quality by default.)
+    //**
+    //** @param(AEncode True @(the default@) to percent-encode the user name and password; False to
+    //** put them in as they are @(see the other overload@).)
+    //**
+    //** @returns(For example 'rtsp://user:pass@@192.168.1.155:554/stream1'.)
+    //**
+    //** Example:
+    //** @longCode(#
+    //** Client.Account.CameraUsername := 'cam';
+    //** Client.Account.CameraPassword := 'secret';
+    //** Url := Camera.RtspUrl(rsSD);
+    //** #)
+    /// <summary>Builds the RTSP address of one of the camera's streams, with the client's camera account in it.</summary>
+    /// <param name="AStream">Which stream; full quality by default.</param>
+    /// <param name="AEncode">True (the default) to percent-encode the user name and password; False to put them in as they are (see the other overload).</param>
+    /// <returns>For example 'rtsp://user:pass@192.168.1.155:554/stream1'.</returns>
+    /// <remarks>
+    ///   No request is made. Uses the client's Account.CameraUsername and CameraPassword;
+    ///   with no camera account set there, the address has no login part and
+    ///   the player asks for it.
+    /// </remarks>
+    /// <example>
+    ///   <code>
+    ///   Client.Account.CameraUsername := 'cam';
+    ///   Client.Account.CameraPassword := 'secret';
+    ///   Url := Camera.RtspUrl(rsSD);
+    ///   </code>
+    /// </example>
+    function RtspUrl(AStream: TTapoRtspStream = rsHD; AEncode: Boolean = True): string; overload;
     //** @abstract(Moves the lens.)
     //**
     //** @param(APan Steps to pan; negative is left.)
@@ -232,17 +347,53 @@ begin
   end;
 end;
 
-function TTapoCamera.GetRtspStreamUrl(const ACameraUsername,
-  ACameraPassword: string): TTapoRtspStreamUrl;
+// Percent-encodes everything but the RFC 3986 unreserved characters, as the
+// user and password of a URL need. (TNetEncoding.URL is form encoding: it
+// turns a space into '+', which a URL's user info reads as a plus sign.)
+function UserInfoEncode(const S: string): string;
 var
-  Base: string;
+  B: Byte;
 begin
-  // user info is percent-encoded, as reqwest::Url does
-  Base := 'rtsp://' + TNetEncoding.URL.Encode(ACameraUsername) + ':' +
-    TNetEncoding.URL.Encode(ACameraPassword) + '@' + Host + ':554/';
-  Result.HD := Base + 'stream1';
-  Result.SD := Base + 'stream2';
-  Result.MJPEG := Base + 'stream8';
+  Result := '';
+  for B in TEncoding.UTF8.GetBytes(S) do
+    if CharInSet(Char(B), ['A'..'Z', 'a'..'z', '0'..'9', '-', '.', '_', '~']) then
+      Result := Result + Char(B)
+    else
+      Result := Result + '%' + IntToHex(B, 2);
+end;
+
+function TTapoCamera.RtspUrl(const ACameraUsername, ACameraPassword: string;
+  AStream: TTapoRtspStream; AEncode: Boolean): string;
+const
+  Paths: array[TTapoRtspStream] of string = ('stream1', 'stream2', 'stream8');
+var
+  Login: string;
+begin
+  Login := '';
+  if ACameraUsername <> '' then
+    if AEncode then
+      Login := UserInfoEncode(ACameraUsername) + ':' + UserInfoEncode(ACameraPassword) + '@'
+    else
+      Login := ACameraUsername + ':' + ACameraPassword + '@';
+  Result := 'rtsp://' + Login + Host + ':554/' + Paths[AStream];
+end;
+
+function TTapoCamera.RtspUrl(AStream: TTapoRtspStream; AEncode: Boolean): string;
+begin
+  Result := RtspUrl(Client.Account.CameraUsername, Client.Account.CameraPassword, AStream, AEncode);
+end;
+
+function TTapoCamera.GetRtspStreamUrl(AEncode: Boolean): TTapoRtspStreamUrl;
+begin
+  Result := GetRtspStreamUrl(Client.Account.CameraUsername, Client.Account.CameraPassword, AEncode);
+end;
+
+function TTapoCamera.GetRtspStreamUrl(const ACameraUsername,
+  ACameraPassword: string; AEncode: Boolean): TTapoRtspStreamUrl;
+begin
+  Result.HD := RtspUrl(ACameraUsername, ACameraPassword, rsHD, AEncode);
+  Result.SD := RtspUrl(ACameraUsername, ACameraPassword, rsSD, AEncode);
+  Result.MJPEG := RtspUrl(ACameraUsername, ACameraPassword, rsMJPEG, AEncode);
 end;
 
 procedure TTapoCamera.PanTilt(APan, ATilt: Integer);

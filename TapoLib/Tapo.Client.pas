@@ -122,12 +122,36 @@ type
   //**
   //** Raised by every login type (KLAP, TPAP, AES SSL). Do not retry in a loop: devices lock
   //** themselves after too many failed logins.
+  //**
+  //** Cameras also raise it, with the right password, while Third-Party Compatibility is off in
+  //** the Tapo app @(Me > Tapo Lab > Third-Party Compatibility; Me > Third-Party Services in some
+  //** versions@): they then take logins from the Tapo app only.
   /// <summary>Raised when a device rejects the Tapo account e-mail or password.</summary>
   /// <remarks>
   ///   Raised by every login type (KLAP, TPAP, AES SSL). Do not retry in a
   ///   loop: devices lock themselves after too many failed logins.
+  ///   <para>Cameras also raise it, with the right password, while
+  ///   Third-Party Compatibility is off in the Tapo app (Me &gt; Tapo Lab &gt;
+  ///   Third-Party Compatibility; Me &gt; Third-Party Services in some
+  ///   versions): they then take logins from the Tapo app only.</para>
   /// </remarks>
   ETapoAuthError = class(ETapoError);
+
+  //** @abstract(Raised when a device refuses every login for a while, after too many failed ones.)
+  //**
+  //** The device answers the first login step with -2101 @(TPAP_AUTH_ATTEMPTS_LIMIT@) or -40401
+  //** @(a camera's "temporary suspension"@) before it has looked at the password, so this says
+  //** nothing about whether the credentials are right. Wait - the message gives the seconds left
+  //** when the device reports them - or power-cycle the device, then try once.
+  /// <summary>Raised when a device refuses every login for a while, after too many failed ones.</summary>
+  /// <remarks>
+  ///   The device answers the first login step with -2101 (TPAP_AUTH_ATTEMPTS_LIMIT)
+  ///   or -40401 (a camera's "temporary suspension") before it has looked at the
+  ///   password, so this says nothing about whether the credentials are right.
+  ///   Wait - the message gives the seconds left when the device reports them -
+  ///   or power-cycle the device, then try once.
+  /// </remarks>
+  ETapoLockedError = class(ETapoError);
 
   //** @abstract(The local protocol a device is spoken to with.)
   /// <summary>The local protocol a device is spoken to with.</summary>
@@ -514,9 +538,11 @@ type
     FHttp: THTTPClient;
     FLock: TCriticalSection;
     FLoggedIn: Boolean;
+    FLoginRevision: Integer;     // the account's LoginRevision when it last logged in
     FLastHeaders: string;        // response headers of the last call (diagnostics)
     FAcceptAnyCert: Boolean;     // TPAP over TLS without certificate checks
     FCloseConnection: Boolean;   // send Connection: close (during a TPAP login)
+    FNotTpap: Boolean;           // the last TPAP login found the device in AES SSL mode
     FChildren: TObjectList<TTapoChildDevice>;
     // KLAP session
     FCookie: string;
@@ -551,11 +577,11 @@ type
     function Discover: Boolean;
     procedure KlapHandshake;
     function KlapSend(const AJson: string): string;
-    procedure TpapHandshake;
+    function TpapHandshake: Boolean;
     procedure TpapHandshakeSteps;
     function TpapLoginRequest(const ASubMethod: string; AParams: TJSONObject): TJSONObject;
     function TpapSend(const AJson: string): string;
-    function AesHandshake: Boolean;
+    function AesHandshake(const AUsername: string = ''): Boolean;
     function AesSend(const AJson: string): string;
     procedure CameraLogin;
     procedure DoLogin;
@@ -717,6 +743,99 @@ type
   /// <summary>A device class, for <see cref="TTapoClient.AddDevice"/>.</summary>
   TTapoDeviceClass = class of TTapoDevice;
 
+  //** @abstract(The Tapo account and the camera account: what a client logs in and builds stream
+  //** addresses with.)
+  //**
+  //** A client either owns one @(TTapoClient.Create with an e-mail and password@) or uses one it is
+  //** given @(TTapoClient.Create with an account@), such as the application's settings object,
+  //** which can descend from this class. Changing the e-mail or password makes every device of a
+  //** client using the account log in again on its next request.
+  /// <summary>The Tapo account and the camera account: what a client logs in and builds stream addresses with.</summary>
+  /// <remarks>
+  ///   A client either owns one (TTapoClient.Create with an e-mail and
+  ///   password) or uses one it is given (TTapoClient.Create with an account),
+  ///   such as the application's settings object, which can descend from this
+  ///   class. Changing the e-mail or password makes every device of a client
+  ///   using the account log in again on its next request.
+  /// </remarks>
+  TTapoAccount = class
+  strict private
+    FUsername: string;
+    FPassword: string;
+    FCameraUsername: string;
+    FCameraPassword: string;
+    FLoginRevision: Integer;
+    procedure SetUsername(const AValue: string);
+    procedure SetPassword(const AValue: string);
+  public
+    //** @abstract(Sets the Tapo account e-mail and password together.)
+    //**
+    //** @param(AUsername The Tapo app account e-mail.)
+    //**
+    //** @param(APassword The Tapo app account password @(case-sensitive@).)
+    /// <summary>Sets the Tapo account e-mail and password together.</summary>
+    /// <param name="AUsername">The Tapo app account e-mail.</param>
+    /// <param name="APassword">The Tapo app account password (case-sensitive).</param>
+    procedure SetLogin(const AUsername, APassword: string);
+    //** @abstract(Sets the camera account user name and password together.)
+    //**
+    //** @param(AUsername The camera account user name; empty for none.)
+    //**
+    //** @param(APassword The camera account password.)
+    /// <summary>Sets the camera account user name and password together.</summary>
+    /// <param name="AUsername">The camera account user name; empty for none.</param>
+    /// <param name="APassword">The camera account password.</param>
+    procedure SetCameraLogin(const AUsername, APassword: string);
+    //** @abstract(True if a Tapo account e-mail and password are set.)
+    //**
+    //** @returns(False if either is empty.)
+    /// <summary>True if a Tapo account e-mail and password are set.</summary>
+    /// <returns>False if either is empty.</returns>
+    function HasLogin: Boolean;
+    //** @abstract(True if a camera account user name and password are set.)
+    //**
+    //** @returns(False if either is empty.)
+    /// <summary>True if a camera account user name and password are set.</summary>
+    /// <returns>False if either is empty.</returns>
+    function HasCameraLogin: Boolean;
+    //** @abstract(A number that changes whenever the e-mail or password changes.)
+    //**
+    //** Devices compare it with the one they logged in with, to know when to log in again. It is a
+    //** function rather than a property so that it is not saved with the settings.
+    //**
+    //** @returns(The current revision; starts at 0.)
+    /// <summary>A number that changes whenever the e-mail or password changes.</summary>
+    /// <returns>The current revision; starts at 0.</returns>
+    /// <remarks>
+    ///   Devices compare it with the one they logged in with, to know when to
+    ///   log in again. It is a function rather than a property so that it is
+    ///   not saved with the settings.
+    /// </remarks>
+    function LoginRevision: Integer;
+
+    //** @abstract(The Tapo app account e-mail.)
+    /// <summary>The Tapo app account e-mail.</summary>
+    property Username: string read FUsername write SetUsername;
+    //** @abstract(The Tapo app account password @(case-sensitive; plain text for now@).)
+    /// <summary>The Tapo app account password (case-sensitive; plain text for now).</summary>
+    property Password: string read FPassword write SetPassword;
+    //** @abstract(The camera account user name; empty if none is set.)
+    //**
+    //** Set in the Tapo app under the camera's Settings > Advanced Settings > Camera Account. It is
+    //** separate from the Tapo account, is not used to log in, and is what TTapoCamera.RtspUrl puts
+    //** in the stream address.
+    /// <summary>The camera account user name; empty if none is set.</summary>
+    /// <remarks>
+    ///   Set in the Tapo app under the camera's Settings &gt; Advanced Settings &gt;
+    ///   Camera Account. It is separate from the Tapo account, is not used to
+    ///   log in, and is what TTapoCamera.RtspUrl puts in the stream address.
+    /// </remarks>
+    property CameraUsername: string read FCameraUsername write FCameraUsername;
+    //** @abstract(The camera account password @(plain text for now@); empty if none is set.)
+    /// <summary>The camera account password (plain text for now); empty if none is set.</summary>
+    property CameraPassword: string read FCameraPassword write FCameraPassword;
+  end;
+
   //** @abstract(Your Tapo account, and the devices reached with it.)
   //**
   //** Give the account details once, then add each device by IP address. The client owns the devices
@@ -765,18 +884,21 @@ type
   ///   </code>
   /// </example>
   TTapoClient = class
-  private
-    FUsername: string;
-    FPassword: string;
+  strict private
+    FAccount: TTapoAccount;
+    FOwnsAccount: Boolean;
     FProtocol: TTapoProtocol;
     FDevices: TList<TTapoDevice>;
     FListLock: TCriticalSection;
     FConnectionTimeout: Integer;
     FResponseTimeout: Integer;
-    procedure RegisterDevice(ADevice: TTapoDevice);
-    procedure UnregisterDevice(ADevice: TTapoDevice);
     function GetCount: Integer;
     function GetDevice(AIndex: Integer): TTapoDevice;
+    function GetUsername: string;
+  private
+    // called by TTapoDevice's constructor and destructor, so not strict
+    procedure RegisterDevice(ADevice: TTapoDevice);
+    procedure UnregisterDevice(ADevice: TTapoDevice);
   public
     //** @abstract(Creates a client for a Tapo account.)
     //**
@@ -790,7 +912,37 @@ type
     /// <param name="AUsername">The Tapo app account e-mail.</param>
     /// <param name="APassword">The Tapo app account password (case-sensitive).</param>
     /// <param name="AProtocol">Forces one protocol for every device. tpAuto, the default, picks it per device.</param>
-    constructor Create(const AUsername, APassword: string; AProtocol: TTapoProtocol = tpAuto);
+    /// <remarks>The client creates and owns its own <see cref="TTapoAccount"/>.</remarks>
+    constructor Create(const AUsername, APassword: string; AProtocol: TTapoProtocol = tpAuto); overload;
+    //** @abstract(Creates a client that uses an account it is given.)
+    //**
+    //** The client does not own AAccount: it must outlive the client. Changes to it are seen at
+    //** once; a new e-mail or password makes every device log in again on its next request.
+    //**
+    //** @param(AAccount The account, for example the application's settings object.)
+    //**
+    //** @param(AProtocol Forces one protocol for every device. tpAuto, the default, picks it per
+    //** device.)
+    //**
+    //** @raises(ETapoError AAccount is nil.)
+    //**
+    //** Example:
+    //** @longCode(#
+    //** Client := TTapoClient.Create(Settings);   // Settings: a TTapoAccount descendant
+    //** #)
+    /// <summary>Creates a client that uses an account it is given.</summary>
+    /// <param name="AAccount">The account, for example the application's settings object.</param>
+    /// <param name="AProtocol">Forces one protocol for every device. tpAuto, the default, picks it per device.</param>
+    /// <exception cref="ETapoError">AAccount is nil.</exception>
+    /// <remarks>
+    ///   The client does not own AAccount: it must outlive the client. Changes
+    ///   to it are seen at once; a new e-mail or password makes every device
+    ///   log in again on its next request.
+    /// </remarks>
+    /// <example>
+    ///   <code>Client := TTapoClient.Create(Settings);   // Settings: a TTapoAccount descendant</code>
+    /// </example>
+    constructor Create(AAccount: TTapoAccount; AProtocol: TTapoProtocol = tpAuto); overload;
     //** @abstract(Frees the client and every device it owns.)
     /// <summary>Frees the client and every device it owns.</summary>
     destructor Destroy; override;
@@ -861,9 +1013,9 @@ type
     //** addresses with shorter timeouts during a network scan. A device found that way can be added
     //** to this client and given the probe's login with @link(TTapoDevice.TakeSession).
     //**
-    //** @returns(The new client. The caller owns it and must free it.)
+    //** @returns(The new client. The caller owns it and must free it, before this client.)
     /// <summary>Creates a new client with the same account, protocol and timeouts, and no devices.</summary>
-    /// <returns>The new client. The caller owns it and must free it.</returns>
+    /// <returns>The new client. The caller owns it and must free it, before this client.</returns>
     /// <remarks>
     ///   Use it for short-lived work that must not touch this client's devices,
     ///   for example probing addresses with shorter timeouts during a network
@@ -885,9 +1037,15 @@ type
     /// <seealso cref="Tapo.Crypto.TapoCryptoSelfTest"/>
     class function SelfTest(out AReport: string): Boolean;
 
-    //** @abstract(The Tapo app account e-mail.)
-    /// <summary>The Tapo app account e-mail.</summary>
-    property Username: string read FUsername;
+    //** @abstract(The account the client logs in with, and its camera account.)
+    //**
+    //** Owned by the client only if it was created with an e-mail and password.
+    /// <summary>The account the client logs in with, and its camera account.</summary>
+    /// <remarks>Owned by the client only if it was created with an e-mail and password.</remarks>
+    property Account: TTapoAccount read FAccount;
+    //** @abstract(The Tapo app account e-mail; the same as Account.Username.)
+    /// <summary>The Tapo app account e-mail; the same as Account.Username.</summary>
+    property Username: string read GetUsername;
     //** @abstract(The protocol forced for every device, or tpAuto.)
     /// <summary>The protocol forced for every device, or tpAuto.</summary>
     property Protocol: TTapoProtocol read FProtocol;
@@ -1162,6 +1320,24 @@ begin
   except
     Result := S;
   end;
+end;
+
+// The lock-out time a device reports with a refused login, as text: cameras
+// send {"result": {"data": {"code": -40404, "sec_left": N}}}.
+function LockoutWait(Resp: TJSONObject): string;
+var
+  Secs: Int64;
+begin
+  Secs := JInt64(JObj(JObj(Resp, 'result'), 'data'), 'sec_left', -1);
+  if Secs < 0 then
+    Secs := JInt64(JObj(Resp, 'result'), 'sec_left', -1);
+  if Secs < 0 then
+    Secs := JInt64(JObj(Resp, 'data'), 'sec_left', -1);
+  if Secs > 0 then
+    Result := Format('Try again in %d seconds (about %d minutes), or power-cycle it.',
+      [Secs, (Secs + 59) div 60])
+  else
+    Result := 'Wait a while (30 minutes or more) or power-cycle it, then try once.';
 end;
 
 function JObject(const Pairs: array of const): TJSONObject;
@@ -1476,7 +1652,7 @@ begin
   if AuthMode = amCameraHub then
     Result := CAMERA_HUB_USERNAME
   else
-    Result := FClient.FUsername;
+    Result := FClient.Account.Username;
 end;
 
 procedure TTapoDevice.Login;
@@ -1512,6 +1688,7 @@ begin
   try
     FActive := ASource.FActive;
     FLoggedIn := ASource.FLoggedIn;
+    FLoginRevision := ASource.FLoginRevision;
     FAcceptAnyCert := ASource.FAcceptAnyCert;
     FCookie := ASource.FCookie;
     FSessionExpires := ASource.FSessionExpires;
@@ -1972,8 +2149,8 @@ begin
       Exit;
     Code := TJSONNumber(V).AsInt;
     if Code = -2101 then
-      raise ETapoError.CreateCode(Code, 'Device is locked after too many failed logins (-2101). ' +
-        'Wait a while before trying again.');
+      raise ETapoLockedError.CreateCode(Code, 'Device is locked after too many failed logins (-2101). ' +
+        LockoutWait(Resp));
     if Code <> 0 then
       Exit;
     ResultObj := JObj(Resp, 'result');
@@ -2012,7 +2189,7 @@ var
   SetCookie, Part: string;
 begin
   FCookie := '';
-  AuthHash := SHA256Of(Cat([SHA1Of(Utf8(FClient.FUsername)), SHA1Of(Utf8(FClient.FPassword))]));
+  AuthHash := SHA256Of(Cat([SHA1Of(Utf8(FClient.Account.Username)), SHA1Of(Utf8(FClient.Account.Password))]));
   LocalSeed := SecureRandomBytes(16);
 
   Body := HttpPost('http://' + FHost + '/app/handshake1', 'application/octet-stream',
@@ -2122,6 +2299,21 @@ begin
         raise ETapoAuthError.CreateCode(Code, 'TPAP login rejected: wrong password. The password is ' +
           'case-sensitive, and the device locks itself after too many failed logins, so do not ' +
           'retry in a loop.');
+      // -40401 at the first step: the device is refusing every login for now
+      if (Code = -2101) or ((ASubMethod = 'pake_register') and (Code = -40401)) then
+        raise ETapoLockedError.CreateCode(Code, Format('TPAP %s: the device is refusing logins ' +
+          'for now after too many failed attempts (error %d, %s). %s',
+          [ASubMethod, Code, ErrorCodeName(Code), LockoutWait(Resp)]));
+      // INVALID_NONCE to pake_register opens the AES SSL login: the device is
+      // not in TPAP mode. Not an error: the caller tries AES SSL next.
+      if (Code = -40413) and (ASubMethod = 'pake_register') then
+      begin
+        FNotTpap := True;
+        Exit(nil);
+      end;
+      if Code = -40413 then
+        raise ETapoError.CreateCode(Code, Format('TPAP %s: the device answered INVALID_NONCE ' +
+          '(-40413), the opening of the AES SSL login, so it is not in TPAP mode', [ASubMethod]));
       raise ETapoError.CreateCode(Code, Format('TPAP %s failed: error_code %d (%s)',
         [ASubMethod, Code, ErrorCodeName(Code)]));
     end;
@@ -2138,14 +2330,18 @@ end;
 // pake_share the client computes the SPAKE2+ proof; a device that closes an
 // idle keep-alive connection meanwhile would otherwise make pake_share fail
 // with a connection error.
-procedure TTapoDevice.TpapHandshake;
+// Returns False, without raising, when the device answers that it is not in
+// TPAP mode (a camera that takes the AES SSL login).
+function TTapoDevice.TpapHandshake: Boolean;
 begin
   FCloseConnection := True;
+  FNotTpap := False;
   try
     TpapHandshakeSteps;
   finally
     FCloseConnection := False;
   end;
+  Result := not FNotTpap;
 end;
 
 procedure TTapoDevice.TpapHandshakeSteps;
@@ -2199,6 +2395,8 @@ begin
   Params.AddPair('encryption', TJSONArray.Create.Add(TPAP_ENCRYPTION));
   Params.AddPair('passcode_type', 'userpw');
   Reg := TpapLoginRequest('pake_register', Params);
+  if Reg = nil then
+    Exit;                      // not in TPAP mode (FNotTpap)
   try
     if JInt64(Reg, 'cipher_suites', -1) <> TPAP_CIPHER_SUITE then
       raise ETapoError.CreateCode(-1, Format('TPAP: device picked cipher suite %d, which is not supported',
@@ -2224,7 +2422,7 @@ begin
       if Family <> dfSmartCam then
         raise ETapoError.CreateCode(-1, 'TPAP: device names no password transform (extra_crypt), ' +
           'which is not supported');
-      Credential := BytesToHex(MD5Of(Utf8(FClient.FPassword)));
+      Credential := BytesToHex(MD5Of(Utf8(FClient.Account.Password)));
       Kind := '';
     end
     else
@@ -2233,7 +2431,7 @@ begin
     if Extra = nil then
       // credential set above
     else if (Kind = 'password_shadow') and (JInt64(ExtraParams, 'passwd_id', -1) = 2) then
-      Credential := BytesToHex(SHA1Of(Utf8(FClient.FPassword)))
+      Credential := BytesToHex(SHA1Of(Utf8(FClient.Account.Password)))
     else
       raise ETapoError.CreateCode(-1, 'TPAP: unsupported password transform: ' + Extra.ToJSON);
   finally
@@ -2321,19 +2519,22 @@ end;
 
 // Returns False when the device does not take the AES SSL login at all
 // (-40211, e.g. a camera with Third-Party Compatibility off).
-function TTapoDevice.AesHandshake: Boolean;
+// AUsername: the account to log in as; empty for LoginUsername.
+function TTapoDevice.AesHandshake(const AUsername: string): Boolean;
 var
   Url, LocalNonce, ServerNonce, DeviceConfirm, PwHash, Candidate, Username: string;
   Req, Resp, Data, R: TJSONObject;
   Status, Code: Integer;
-  Candidates: array[0..1] of string;
-  I: Integer;
+  Hashes: TArray<string>;
   HashedKey, Token: string;
 begin
   Result := True;
   FAcceptAnyCert := True;     // self-signed certificate
   Url := 'https://' + FHost;
-  Username := LoginUsername;
+  if AUsername <> '' then
+    Username := AUsername
+  else
+    Username := LoginUsername;
   LocalNonce := UpperHex(SecureRandomBytes(8));
 
   // --- handshake 1: the device answers INVALID_NONCE (-40413) with its nonce
@@ -2352,6 +2553,12 @@ begin
     Code := Integer(JInt64(Resp, 'error_code', 0));
     if Code = -40211 then
       Exit(False);
+    // -40401 here, before any password has been sent: the camera is refusing
+    // every login for now ("temporary suspension" after failed attempts)
+    if (Code = -40401) or (Code = -2101) then
+      raise ETapoLockedError.CreateCode(Code, Format('%s: AES SSL handshake1: the camera is refusing ' +
+        'logins for now after too many failed attempts (error %d, %s). %s',
+        [FHost, Code, TapoErrorName(Code), LockoutWait(Resp)]));
     if Code <> -40413 then
       raise ETapoError.CreateCode(Code, Format('%s: AES SSL handshake1 expected INVALID_NONCE (-40413), got %d (%s)',
         [FHost, Code, TapoErrorName(Code)]));
@@ -2363,21 +2570,22 @@ begin
   end;
 
   // The password hash is SHA-256, or MD5 on older firmware; the device
-  // confirm says which.
-  Candidates[0] := SHA256HexUpper(FClient.FPassword);
-  Candidates[1] := UpperHex(MD5Of(Utf8(FClient.FPassword)));
+  // confirm says which. It is checked before any password is sent, so a
+  // wrong password costs the device nothing.
   PwHash := '';
-  for I := 0 to 1 do
-  begin
-    Candidate := Candidates[I];
+  Hashes := TArray<string>.Create(UpperHex(SHA256Of(Utf8(FClient.Account.Password))),
+    UpperHex(MD5Of(Utf8(FClient.Account.Password))));
+  for Candidate in Hashes do
     if SHA256HexUpper(LocalNonce + Candidate + ServerNonce) + ServerNonce + LocalNonce = DeviceConfirm then
     begin
       PwHash := Candidate;
       Break;
     end;
-  end;
   if PwHash = '' then
-    raise ETapoAuthError.CreateCode(-1, FHost + ': AES SSL device confirm did not match - check the password');
+    raise ETapoAuthError.CreateCode(-1, Format('%s: AES SSL device confirm did not match the ' +
+      'password. Check the password, and that Third-Party Compatibility is on in the Tapo app ' +
+      '(Me > Tapo Lab > Third-Party Compatibility): while it is off the camera turns down every ' +
+      'login but the app''s', [FHost]));
 
   // --- handshake 2
   Req := JObject(['method', 'login', 'params',
@@ -2473,28 +2681,54 @@ end;
 // login (unless it cannot be reached at all or has locked itself).
 procedure TTapoDevice.CameraLogin;
 var
-  TpapMsg: string;
+  TpapMsg, AesMsg: string;
   TpapCode: Integer;
-  TpapAuth: Boolean;
+  TpapAuth, Taken, Auth: Boolean;
+
+  // Both logins failed: report both, since the TPAP error usually says why.
+  procedure RaiseBoth(AAuth: Boolean; ACode: Integer);
+  var
+    Msg: string;
+  begin
+    Msg := FHost + ': the camera took neither login.';
+    if TpapMsg <> '' then
+      Msg := Msg + ' TPAP: ' + TpapMsg + '.';
+    if AesMsg <> '' then
+      Msg := Msg + ' AES SSL: ' + AesMsg + '.';
+    if AAuth then
+      raise ETapoAuthError.CreateCode(ACode, Msg);
+    raise ETapoError.CreateCode(ACode, Msg);
+  end;
+
 begin
   TpapMsg := '';
+  AesMsg := '';
   TpapCode := 0;
   TpapAuth := False;
-  if FClient.FProtocol <> tpAesSsl then
+  // a camera that took AES SSL last time goes straight there, and so does
+  // one that answers TPAP with "not in TPAP mode" (no exception for that)
+  if (FClient.Protocol <> tpAesSsl) and (FActive <> tpAesSsl) then
   begin
     FTpapTls := 1;
     FTpapPort := 0;
     FTpapPake := [2];
     try
-      TpapHandshake;
-      FActive := tpTpap;
-      Exit;
+      if TpapHandshake then
+      begin
+        FActive := tpTpap;
+        Exit;
+      end;
+      if FClient.Protocol = tpTpap then
+        raise ETapoError.CreateCode(-40413, FHost + ': the camera is not in TPAP mode (it takes the AES SSL login)');
+      TpapMsg := 'not in TPAP mode';
     except
       on E: ENetHTTPClientException do
         raise;
+      on E: ETapoLockedError do
+        raise;                 // another login now would only extend the lock-out
       on E: ETapoError do
       begin
-        if (E.ErrorCode = -2101) or (FClient.FProtocol = tpTpap) then
+        if (E.ErrorCode = -2101) or (FClient.Protocol = tpTpap) then
           raise;
         TpapMsg := E.Message;
         TpapCode := E.ErrorCode;
@@ -2503,15 +2737,33 @@ begin
     end;
   end;
 
-  if AesHandshake then
-    FActive := tpAesSsl
-  else if TpapAuth then
-    raise ETapoAuthError.CreateCode(TpapCode, TpapMsg)
-  else if TpapMsg <> '' then
-    raise ETapoError.CreateCode(TpapCode, TpapMsg)
-  else
-    raise ETapoError.CreateCode(-40211, FHost + ': the camera does not take the AES SSL login. ' +
-      'Turn on Third-Party Compatibility in the Tapo app, or use tpAuto.');
+  // A camera checks only the password, not the user name.
+  Taken := False;
+  try
+    Taken := AesHandshake;
+  except
+    on E: ENetHTTPClientException do
+      raise;
+    on E: ETapoLockedError do
+      raise;
+    on E: ETapoError do
+      AesMsg := E.Message;
+  end;
+
+  if Taken then
+  begin
+    FActive := tpAesSsl;
+    Exit;
+  end;
+
+  if AesMsg = '' then
+    AesMsg := 'not accepted (error -40211): turn on Third-Party Compatibility in the Tapo app';
+  // wrong credentials only if every login that ran said so ("not in TPAP
+  // mode" leaves TpapCode at 0: that login did not run)
+  Auth := ((TpapCode = 0) or TpapAuth) and AesMsg.Contains('device confirm did not match');
+  if TpapCode = 0 then
+    TpapCode := -1;
+  RaiseBoth(Auth, TpapCode);
 end;
 
 { ============================================================================ }
@@ -2521,6 +2773,7 @@ end;
 procedure TTapoDevice.DoLogin;
 begin
   FLoggedIn := False;
+  FLoginRevision := FClient.Account.LoginRevision;
   case AuthMode of
     amCameraHub:
       begin
@@ -2533,7 +2786,7 @@ begin
   else
     if FActive = tpAuto then
     begin
-      case FClient.FProtocol of
+      case FClient.Protocol of
         tpKlap:
           FActive := tpKlap;
         tpTpap:
@@ -2551,7 +2804,9 @@ begin
       end;
     end;
     case FActive of
-      tpTpap: TpapHandshake;
+      tpTpap:
+        if not TpapHandshake then
+          raise ETapoError.CreateCode(-40413, FHost + ': the device is not in TPAP mode (it takes the AES SSL login)');
       tpAesSsl:
         if not AesHandshake then
           raise ETapoError.CreateCode(-40211, FHost + ': the device does not take the AES SSL login');
@@ -2564,8 +2819,60 @@ end;
 
 procedure TTapoDevice.EnsureLoggedIn;
 begin
+  // a new e-mail or password since the last login: log in again
+  if FLoggedIn and (FLoginRevision <> FClient.Account.LoginRevision) then
+    FLoggedIn := False;
   if not FLoggedIn then
     DoLogin;
+end;
+
+{ ============================================================================ }
+{ TTapoAccount                                                                 }
+{ ============================================================================ }
+
+procedure TTapoAccount.SetUsername(const AValue: string);
+begin
+  if AValue <> FUsername then
+  begin
+    FUsername := AValue;
+    TInterlocked.Increment(FLoginRevision);
+  end;
+end;
+
+procedure TTapoAccount.SetPassword(const AValue: string);
+begin
+  if AValue <> FPassword then
+  begin
+    FPassword := AValue;
+    TInterlocked.Increment(FLoginRevision);
+  end;
+end;
+
+procedure TTapoAccount.SetLogin(const AUsername, APassword: string);
+begin
+  SetUsername(AUsername);
+  SetPassword(APassword);
+end;
+
+procedure TTapoAccount.SetCameraLogin(const AUsername, APassword: string);
+begin
+  FCameraUsername := AUsername;
+  FCameraPassword := APassword;
+end;
+
+function TTapoAccount.HasLogin: Boolean;
+begin
+  Result := (Trim(FUsername) <> '') and (FPassword <> '');
+end;
+
+function TTapoAccount.HasCameraLogin: Boolean;
+begin
+  Result := (Trim(FCameraUsername) <> '') and (FCameraPassword <> '');
+end;
+
+function TTapoAccount.LoginRevision: Integer;
+begin
+  Result := TInterlocked.CompareExchange(FLoginRevision, 0, 0);
 end;
 
 { ============================================================================ }
@@ -2574,9 +2881,17 @@ end;
 
 constructor TTapoClient.Create(const AUsername, APassword: string; AProtocol: TTapoProtocol);
 begin
+  Create(TTapoAccount.Create, AProtocol);
+  FOwnsAccount := True;
+  FAccount.SetLogin(AUsername, APassword);
+end;
+
+constructor TTapoClient.Create(AAccount: TTapoAccount; AProtocol: TTapoProtocol);
+begin
   inherited Create;
-  FUsername := AUsername;
-  FPassword := APassword;
+  if AAccount = nil then
+    raise ETapoError.Create('TTapoClient.Create: no account');
+  FAccount := AAccount;
   FProtocol := AProtocol;
   FDevices := TList<TTapoDevice>.Create;
   FListLock := TCriticalSection.Create;
@@ -2591,6 +2906,8 @@ begin
       FDevices.Last.Free;     // a device removes itself from the list
   FDevices.Free;
   FListLock.Free;
+  if FOwnsAccount then
+    FAccount.Free;
   inherited;
 end;
 
@@ -2669,19 +2986,20 @@ end;
 
 function TTapoClient.CloneEmpty: TTapoClient;
 begin
-  Result := TTapoClient.Create(FUsername, FPassword, FProtocol);
+  Result := TTapoClient.Create(FAccount, FProtocol);    // shares the account
   Result.FConnectionTimeout := FConnectionTimeout;
   Result.FResponseTimeout := FResponseTimeout;
 end;
 
 procedure TTapoClient.SetCredentials(const AUsername, APassword: string);
-var
-  I: Integer;
 begin
-  FUsername := AUsername;
-  FPassword := APassword;
-  for I := 0 to Count - 1 do
-    Devices[I].Logout;
+  // the devices see the new login revision and log in again
+  FAccount.SetLogin(AUsername, APassword);
+end;
+
+function TTapoClient.GetUsername: string;
+begin
+  Result := FAccount.Username;
 end;
 
 class function TTapoClient.SelfTest(out AReport: string): Boolean;

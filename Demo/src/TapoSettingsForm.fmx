@@ -1,0 +1,318 @@
+object TapoSettingsDialog: TTapoSettingsDialog
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Tapo account and network'
+  ClientHeight = 640
+  ClientWidth = 420
+  Position = OwnerFormCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object NoteLabel: TLabel
+    Align = Top
+    AutoSize = True
+    Margins.Left = 12.000000000000000000
+    Margins.Top = 10.000000000000000000
+    Margins.Right = 12.000000000000000000
+    Position.X = 12.000000000000000000
+    Position.Y = 10.000000000000000000
+    Size.Width = 396.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.WordWrap = True
+    Text = 'Why the dialog is shown'
+    TabOrder = 0
+  end
+  object AccountGroup: TGroupBox
+    Align = Top
+    Margins.Left = 12.000000000000000000
+    Margins.Top = 8.000000000000000000
+    Margins.Right = 12.000000000000000000
+    Padding.Left = 8.000000000000000000
+    Padding.Top = 22.000000000000000000
+    Padding.Right = 8.000000000000000000
+    Padding.Bottom = 4.000000000000000000
+    Position.X = 12.000000000000000000
+    Position.Y = 40.000000000000000000
+    Size.Width = 396.000000000000000000
+    Size.Height = 134.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Tapo account'
+    TabOrder = 1
+    object UserRow: TLayout
+      Align = Top
+      Margins.Bottom = 4.000000000000000000
+      Position.Y = 22.000000000000000000
+      Size.Width = 380.000000000000000000
+      Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      object UserLabel: TLabel
+        Align = Top
+        Size.Width = 380.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Tapo account e-mail'
+        TabOrder = 0
+      end
+      object UserEdit: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Top
+        TabOrder = 1
+        Position.Y = 20.000000000000000000
+        Size.Width = 380.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TextPrompt = 'name@example.com'
+      end
+    end
+    object PasswordRow: TLayout
+      Align = Top
+      Margins.Bottom = 4.000000000000000000
+      Position.Y = 72.000000000000000000
+      Size.Width = 380.000000000000000000
+      Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      object PasswordLabel: TLabel
+        Align = Top
+        Size.Width = 380.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Tapo account password'
+        TabOrder = 0
+      end
+      object PasswordEdit: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Top
+        TabOrder = 1
+        Password = True
+        Position.Y = 20.000000000000000000
+        Size.Width = 380.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+  end
+  object NetworkGroup: TGroupBox
+    Align = Top
+    Margins.Left = 12.000000000000000000
+    Margins.Top = 8.000000000000000000
+    Margins.Right = 12.000000000000000000
+    Padding.Left = 8.000000000000000000
+    Padding.Top = 22.000000000000000000
+    Padding.Right = 8.000000000000000000
+    Padding.Bottom = 4.000000000000000000
+    Position.X = 12.000000000000000000
+    Position.Y = 182.000000000000000000
+    Size.Width = 396.000000000000000000
+    Size.Height = 134.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Network to scan'
+    TabOrder = 2
+    object NetworkRow: TLayout
+      Align = Top
+      Margins.Bottom = 4.000000000000000000
+      Position.Y = 22.000000000000000000
+      Size.Width = 380.000000000000000000
+      Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      object NetworkLabel: TLabel
+        Align = Top
+        Size.Width = 380.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Network'
+        TabOrder = 0
+      end
+      object NetworkEdit: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Top
+        TabOrder = 1
+        Position.Y = 20.000000000000000000
+        Size.Width = 380.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TextPrompt = 'e.g. 192.168.1.0'
+      end
+    end
+    object SubnetRow: TLayout
+      Align = Top
+      Margins.Bottom = 4.000000000000000000
+      Position.Y = 72.000000000000000000
+      Size.Width = 380.000000000000000000
+      Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      object SubnetLabel: TLabel
+        Align = Top
+        Size.Width = 380.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Subnet mask'
+        TabOrder = 0
+      end
+      object SubnetEdit: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Top
+        TabOrder = 1
+        Position.Y = 20.000000000000000000
+        Size.Width = 380.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TextPrompt = 'e.g. 255.255.255.0 or /24'
+      end
+    end
+  end
+  object CameraGroup: TGroupBox
+    Align = Top
+    Margins.Left = 12.000000000000000000
+    Margins.Top = 8.000000000000000000
+    Margins.Right = 12.000000000000000000
+    Padding.Left = 8.000000000000000000
+    Padding.Top = 22.000000000000000000
+    Padding.Right = 8.000000000000000000
+    Padding.Bottom = 4.000000000000000000
+    Position.X = 12.000000000000000000
+    Position.Y = 324.000000000000000000
+    Size.Width = 396.000000000000000000
+    Size.Height = 178.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Tapo camera account (optional)'
+    TabOrder = 3
+    object CameraNoteLabel: TLabel
+      Align = Top
+      AutoSize = True
+      Margins.Bottom = 6.000000000000000000
+      Position.Y = 22.000000000000000000
+      Size.Width = 380.000000000000000000
+      Size.Height = 34.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = True
+      Text = 'Set in the Tapo app: the camera''s Settings > Advanced Settings > Camera Account. Used for RTSP video and ONVIF; leave blank if you have not set one.'
+      TabOrder = 0
+    end
+    object CameraUserRow: TLayout
+      Align = Top
+      Margins.Bottom = 4.000000000000000000
+      Position.Y = 62.000000000000000000
+      Size.Width = 380.000000000000000000
+      Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      object CameraUserLabel: TLabel
+        Align = Top
+        Size.Width = 380.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Camera account user name'
+        TabOrder = 0
+      end
+      object CameraUserEdit: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Top
+        TabOrder = 1
+        Position.Y = 20.000000000000000000
+        Size.Width = 380.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+    object CameraPasswordRow: TLayout
+      Align = Top
+      Margins.Bottom = 4.000000000000000000
+      Position.Y = 112.000000000000000000
+      Size.Width = 380.000000000000000000
+      Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      object CameraPasswordLabel: TLabel
+        Align = Top
+        Size.Width = 380.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Camera account password'
+        TabOrder = 0
+      end
+      object CameraPasswordEdit: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Top
+        TabOrder = 1
+        Password = True
+        Position.Y = 20.000000000000000000
+        Size.Width = 380.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+  end
+  object ErrorLabel: TLabel
+    Align = Top
+    AutoSize = True
+    StyledSettings = [Family, Size, Style]
+    Margins.Left = 12.000000000000000000
+    Margins.Top = 6.000000000000000000
+    Margins.Right = 12.000000000000000000
+    Position.X = 12.000000000000000000
+    Position.Y = 516.000000000000000000
+    Size.Width = 396.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.FontColor = claRed
+    TextSettings.WordWrap = True
+    TabOrder = 4
+  end
+  object ButtonBar: TLayout
+    Align = Bottom
+    Margins.Left = 12.000000000000000000
+    Margins.Right = 12.000000000000000000
+    Margins.Bottom = 8.000000000000000000
+    Position.X = 12.000000000000000000
+    Position.Y = 584.000000000000000000
+    Size.Width = 396.000000000000000000
+    Size.Height = 48.000000000000000000
+    Size.PlatformDefault = False
+    object DetectButton: TButton
+      Align = Left
+      Margins.Top = 8.000000000000000000
+      Margins.Right = 6.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Position.X = 0.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 130.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Detect network'
+      OnClick = DetectClick
+    end
+    object OkButton: TButton
+      Align = Right
+      Default = True
+      Margins.Left = 6.000000000000000000
+      Margins.Top = 8.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Position.X = 210.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 90.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'OK'
+      OnClick = OkClick
+    end
+    object CancelButton: TButton
+      Align = Right
+      Cancel = True
+      Margins.Left = 6.000000000000000000
+      Margins.Top = 8.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Position.X = 306.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 90.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Cancel'
+      OnClick = CancelClick
+    end
+  end
+end

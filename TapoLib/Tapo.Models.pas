@@ -1138,7 +1138,9 @@ end;
 
 function IsLockout(E: Exception): Boolean;
 begin
-  Result := (E is ETapoError) and (ETapoError(E).ErrorCode = -2101);
+  // the device refuses every login for now: another try only extends that
+  Result := (E is ETapoLockedError) or
+    ((E is ETapoError) and (ETapoError(E).ErrorCode = -2101));
 end;
 
 function TTapoClientModels.AddDetected(const AHost: string): TTapoDevice;
@@ -1224,6 +1226,10 @@ begin
           Errors := Errors + E.Message;
           if (E is ETapoAuthError) and (AuthErrors = '') then
             AuthErrors := E.Message;
+          // a camera that rejected the password is not a hub either, and
+          // another try only adds a failed login
+          if E is ETapoAuthError then
+            Break;
         end;
       end;
     end;

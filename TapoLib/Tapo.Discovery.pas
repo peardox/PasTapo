@@ -117,9 +117,12 @@ type
     //** @abstract(A Tapo device that logged in, of a model that is not supported.)
     /// <summary>A Tapo device that logged in, of a model that is not supported.</summary>
     tssUnsupported,
-    //** @abstract(A Tapo device that has locked itself after too many failed logins @(error
-    //** -2101@).)
-    /// <summary>A Tapo device that has locked itself after too many failed logins (error -2101).</summary>
+    //** @abstract(A Tapo device that is refusing every login for now, after too many failed ones
+    //** @(error -2101, or -40401 from a camera@).)
+    //**
+    //** Nothing is known about the credentials: wait or power-cycle the device, then scan again.
+    /// <summary>A Tapo device that is refusing every login for now, after too many failed ones (error -2101, or -40401 from a camera).</summary>
+    /// <remarks>Nothing is known about the credentials: wait or power-cycle the device, then scan again.</remarks>
     tssLockedOut,
     //** @abstract(Not probed, because the scan was cancelled first.)
     /// <summary>Not probed, because the scan was cancelled first.</summary>
@@ -704,7 +707,7 @@ begin
     tssRejected:    Result := 'not a Tapo device these credentials open';
     tssBadCredentials: Result := 'Tapo device that rejected the e-mail or password';
     tssUnsupported: Result := 'unsupported Tapo model';
-    tssLockedOut:   Result := 'locked out';
+    tssLockedOut:   Result := 'Tapo device refusing logins for now (too many failed attempts)';
     tssCancelled:   Result := 'not checked (cancelled)';
   else
     Result := '?';
@@ -1159,7 +1162,7 @@ begin
     end;
     on E: ETapoError do
     begin
-      if E.ErrorCode = TPAP_LOCKOUT then
+      if (E is ETapoLockedError) or (E.ErrorCode = TPAP_LOCKOUT) then
         AEntry.Status := tssLockedOut
       else
         AEntry.Status := tssRejected;

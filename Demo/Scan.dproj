@@ -384,7 +384,10 @@
             <Form>TapoScanMainForm</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="src\TapoSettingsForm.pas"/>
+        <DCCReference Include="src\TapoSettingsForm.pas">
+            <Form>TapoSettingsDialog</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <DCCReference Include="..\delphi-neon\Source\Neon.Core.Attributes.pas"/>
         <DCCReference Include="..\delphi-neon\Source\Neon.Core.DynamicTypes.pas"/>
         <DCCReference Include="..\delphi-neon\Source\Neon.Core.Generator.pas"/>

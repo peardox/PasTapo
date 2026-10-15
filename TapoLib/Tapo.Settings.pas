@@ -74,19 +74,25 @@ type
 
   //** @abstract(The contents of settings.json.)
   //**
-  //** Every public property is written to the file by Neon. Use @link(Load) and @link(Save);
-  //** @link(FileName) says where it lives.
+  //** Every public property is written to the file by Neon, including the account ones inherited
+  //** from TTapoAccount @(Username, Password, CameraUsername, CameraPassword@). Use @link(Load) and
+  //** @link(Save); @link(FileName) says where it lives.
+  //**
+  //** Being a TTapoAccount, it can be handed straight to TTapoClient.Create: the client and its
+  //** devices then use the saved account as it is now, with nothing to copy.
   /// <summary>The contents of settings.json.</summary>
   /// <remarks>
-  ///   Every public property is written to the file by Neon. Use
-  ///   <see cref="Load"/> and <see cref="Save"/>; <see cref="FileName"/> says
-  ///   where it lives.
+  ///   Every public property is written to the file by Neon, including the
+  ///   account ones inherited from TTapoAccount (Username, Password,
+  ///   CameraUsername, CameraPassword). Use <see cref="Load"/> and
+  ///   <see cref="Save"/>; <see cref="FileName"/> says where it lives.
+  ///   <para>Being a TTapoAccount, it can be handed straight to
+  ///   TTapoClient.Create: the client and its devices then use the saved
+  ///   account as it is now, with nothing to copy.</para>
   /// </remarks>
-  TTapoSettings = class
-  private
+  TTapoSettings = class(TTapoAccount)
+  strict private
     FVersion: Integer;
-    FUsername: string;
-    FPassword: string;
     FNetwork: string;
     FSubnet: string;
     FCredentialState: TTapoCredentialState;
@@ -120,12 +126,6 @@ type
     /// <summary>Writes this object to settings.json, creating the folder if needed.</summary>
     /// <exception cref="EInOutError">The file could not be written.</exception>
     procedure Save;
-    //** @abstract(True if a user name and password are set.)
-    //**
-    //** @returns(False if either is empty.)
-    /// <summary>True if a user name and password are set.</summary>
-    /// <returns>False if either is empty.</returns>
-    function HasLogin: Boolean;
     //** @abstract(True if the network and subnet describe a usable range.)
     //**
     //** @returns(False if either is empty or invalid.)
@@ -142,12 +142,6 @@ type
     //** @abstract(The file format version; 1.)
     /// <summary>The file format version; 1.</summary>
     property Version: Integer read FVersion write FVersion;
-    //** @abstract(The Tapo app account e-mail.)
-    /// <summary>The Tapo app account e-mail.</summary>
-    property Username: string read FUsername write FUsername;
-    //** @abstract(The Tapo app account password @(plain text for now@).)
-    /// <summary>The Tapo app account password (plain text for now).</summary>
-    property Password: string read FPassword write FPassword;
     //** @abstract(Any address in the network to scan, for example '192.168.1.0'.)
     /// <summary>Any address in the network to scan, for example '192.168.1.0'.</summary>
     property Network: string read FNetwork write FNetwork;
@@ -523,11 +517,6 @@ procedure TTapoSettings.Save;
 begin
   FVersion := FILE_VERSION;
   WriteFileSafely(FileName, TNeon.ObjectToJSONString(Self, NeonConfig));
-end;
-
-function TTapoSettings.HasLogin: Boolean;
-begin
-  Result := (Trim(FUsername) <> '') and (FPassword <> '');
 end;
 
 function TTapoSettings.HasValidNetwork: Boolean;

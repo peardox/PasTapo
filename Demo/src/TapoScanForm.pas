@@ -56,35 +56,23 @@ uses
 
 type
   TTapoScanMainForm = class(TForm)
+    // designed in TapoScanForm.fmx
+    MainMenu: TMainMenu;
+    SettingsMenu: TMenuItem;
+    AccountItem: TMenuItem;
+    ShowFolderItem: TMenuItem;
+    ResetCredentialsItem: TMenuItem;
+    ButtonBar: TLayout;
+    ScanButton: TButton;
+    CancelButton: TButton;
+    ReadButton: TButton;
+    DiagButton: TButton;
+    ProgressBar: TProgressBar;
+    StatusLabel: TLabel;
+    LogMemo: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-  private
-    FScanButton, FCancelButton, FReadButton, FDiagButton: TButton;
-    FProgress: TProgressBar;
-    FStatus: TLabel;
-    FMemo: TMemo;
-    FClient: TTapoClient;
-    FScanner: TTapoScanner;
-    FPassword: string;              // the password the client was given
-    FSettings: TTapoSettings;
-    FStore: TTapoDeviceStore;
-    FLoaded: TArray<TTapoDevice>;   // devices.json entries, by store index
-    FCheckTask: ITask;
-    FClosing: Boolean;
-    FResetOnExit: Boolean;          // Settings > Reset Credentials
-    FStarted: Boolean;              // start-up has run
-    FResetItem: TMenuItem;
     procedure FormShow(Sender: TObject);
-    function SettingsNote: string;
-    procedure BuildMenu;
-    procedure StartUp;
-    function AskSettings(const ANote: string): Boolean;
-    procedure ApplySettings;
-    procedure SaveSettings;
-    procedure LoadStoredDevices;
-    procedure CheckStoredDevices;
-    procedure ChecksDone(AOk, ABadLogin, AOther: Integer);
-    procedure UpdateStatus;
     procedure SettingsClick(Sender: TObject);
     procedure ShowFolderClick(Sender: TObject);
     procedure ResetCredentialsClick(Sender: TObject);
@@ -92,6 +80,26 @@ type
     procedure CancelClick(Sender: TObject);
     procedure ReadClick(Sender: TObject);
     procedure DiagnoseClick(Sender: TObject);
+  private
+    FClient: TTapoClient;
+    FScanner: TTapoScanner;
+    FSettings: TTapoSettings;
+    FStore: TTapoDeviceStore;
+    FLoaded: TArray<TTapoDevice>;   // devices.json entries, by store index
+    FCheckTask: ITask;
+    FClosing: Boolean;
+    FResetOnExit: Boolean;          // Settings > Reset Credentials
+    FStarted: Boolean;              // start-up has run
+    function SettingsNote: string;
+    procedure StartUp;
+    function AskSettings(const ANote: string): Boolean;
+    procedure ApplySettings;
+    procedure SaveSettings;
+    procedure LoadStoredDevices;
+    procedure CheckStoredDevices;
+    procedure LogCheck(AIndex: Integer; AStatus: TTapoCheckStatus; const AMsg: string);
+    procedure ChecksDone(AOk, ABadLogin, AUnreachable, AOther: Integer);
+    procedure UpdateStatus;
     procedure ScanProgress(Sender: TObject; AStage: TTapoScanStage;
       ADone, ATotal, AFound: Integer);
     procedure DeviceFound(Sender: TObject; const AEntry: TTapoScanEntry);
@@ -122,64 +130,17 @@ begin
 end;
 
 procedure TTapoScanMainForm.FormCreate(Sender: TObject);
-var
-  Bar2: TLayout;
-
-  function AddButton(AParent: TLayout; const AText: string; AOnClick: TNotifyEvent): TButton;
-  begin
-    Result := TButton.Create(Self);
-    Result.Parent := AParent;
-    Result.Align := TAlignLayout.Left;
-    Result.Width := 100;
-    Result.Margins.Rect := TRectF.Create(4, 4, 4, 4);
-    Result.Text := AText;
-    Result.OnClick := AOnClick;
-  end;
-
 begin
-  Caption := 'Tapo network scan';
-  Width := 900;
-  Height := 600;
-  BuildMenu;
-
-  Bar2 := TLayout.Create(Self);
-  Bar2.Parent := Self;
-  Bar2.Align := TAlignLayout.Top;
-  Bar2.Height := 40;
-
-  FScanButton := AddButton(Bar2, 'Scan', ScanClick);
-  FCancelButton := AddButton(Bar2, 'Cancel', CancelClick);
-  FCancelButton.Enabled := False;
-  FReadButton := AddButton(Bar2, 'Read devices', ReadClick);
-  FDiagButton := AddButton(Bar2, 'Diagnose', DiagnoseClick);
-
-  FProgress := TProgressBar.Create(Self);
-  FProgress.Parent := Bar2;
-  FProgress.Align := TAlignLayout.Left;
-  FProgress.Width := 200;
-  FProgress.Margins.Rect := TRectF.Create(8, 12, 8, 12);
-
-  FStatus := TLabel.Create(Self);
-  FStatus.Parent := Bar2;
-  FStatus.Align := TAlignLayout.Client;
-  FStatus.Margins.Rect := TRectF.Create(4, 4, 4, 4);
-  FStatus.Text := 'Ready';
-
-  FMemo := TMemo.Create(Self);
-  FMemo.Parent := Self;
-  FMemo.Align := TAlignLayout.Client;
-  FMemo.Margins.Rect := TRectF.Create(4, 0, 4, 4);
-  FMemo.ReadOnly := True;
-  FMemo.TextSettings.Font.Family := MonoFontFamily;
+  // The controls come from TapoScanForm.fmx. Set here: what depends on the
+  // platform, and the state while start-up runs.
+  LogMemo.TextSettings.Font.Family := MonoFontFamily;
 
   FSettings := TTapoSettings.Create;
   FStore := TTapoDeviceStore.Create;
   SetRunning(True);              // until start-up is done
-  FCancelButton.Enabled := False;
-
-  // start-up runs once the main form is on screen (FormShow), so the
-  // account form opens in front of it
-  OnShow := FormShow;
+  CancelButton.Enabled := False;
+  // start-up runs once the main form is on screen (FormShow, wired in the
+  // .fmx), so the account form opens in front of it
 end;
 
 procedure TTapoScanMainForm.FormShow(Sender: TObject);
@@ -202,6 +163,8 @@ begin
     try
       FSettings.Username := '';
       FSettings.Password := '';
+      FSettings.CameraUsername := '';
+      FSettings.CameraPassword := '';
       FSettings.CredentialState := csUnknown;
       FSettings.Save;
     except
@@ -214,41 +177,12 @@ begin
   FSettings.Free;
 end;
 
-procedure TTapoScanMainForm.BuildMenu;
-var
-  Menu: TMainMenu;
-  Top, Item: TMenuItem;
-begin
-  Menu := TMainMenu.Create(Self);
-  Menu.Parent := Self;
-
-  Top := TMenuItem.Create(Self);
-  Top.Parent := Menu;
-  Top.Text := 'Settings';
-
-  Item := TMenuItem.Create(Self);
-  Item.Parent := Top;
-  Item.Text := 'Account and network...';
-  Item.OnClick := SettingsClick;
-
-  Item := TMenuItem.Create(Self);
-  Item.Parent := Top;
-  Item.Text := 'Show data folder';
-  Item.OnClick := ShowFolderClick;
-
-  // ticked = the e-mail and password are deleted from settings.json on exit
-  FResetItem := TMenuItem.Create(Self);
-  FResetItem.Parent := Top;
-  FResetItem.Text := 'Reset Credentials';
-  FResetItem.OnClick := ResetCredentialsClick;
-end;
-
 procedure TTapoScanMainForm.ResetCredentialsClick(Sender: TObject);
 begin
   FResetOnExit := not FResetOnExit;
-  FResetItem.IsChecked := FResetOnExit;
+  ResetCredentialsItem.IsChecked := FResetOnExit;
   if FResetOnExit then
-    Log('The Tapo account e-mail and password will be deleted when the app closes ' +
+    Log('The Tapo account and camera account details will be deleted when the app closes ' +
       '(choose Reset Credentials again to cancel).')
   else
     Log('Reset Credentials cancelled: the account details will be kept.');
@@ -291,8 +225,8 @@ begin
   begin
     Log('No Tapo account yet: use Settings > Account and network.');
     SetRunning(False);
-    FScanButton.Enabled := False;
-    FReadButton.Enabled := False;
+    ScanButton.Enabled := False;
+    ReadButton.Enabled := False;
     UpdateStatus;
     Exit;
   end;
@@ -304,7 +238,7 @@ end;
 // Shows the account form; on OK saves settings.json and applies the details.
 function TTapoScanMainForm.AskSettings(const ANote: string): Boolean;
 begin
-  Result := TTapoSettingsForm.Execute(Self, FSettings, ANote);
+  Result := TTapoSettingsDialog.Execute(Self, FSettings, ANote);
   if Result then
   begin
     SaveSettings;
@@ -318,16 +252,17 @@ procedure TTapoScanMainForm.ApplySettings;
 begin
   if FClient = nil then
   begin
-    FClient := TTapoClient.Create(FSettings.Username, FSettings.Password);
+    // the client uses the settings object as its account: changes made in
+    // the settings dialog reach it, and every device, with nothing to copy
+    FClient := TTapoClient.Create(FSettings);
     FClient.ConnectionTimeout := 3000;
     FClient.ResponseTimeout := 10000;
     FScanner := TTapoScanner.Create(FClient);
     FScanner.OnProgress := ScanProgress;
     FScanner.OnDeviceFound := DeviceFound;
-  end
-  else if (FClient.Username <> FSettings.Username) or (FPassword <> FSettings.Password) then
-    FClient.SetCredentials(FSettings.Username, FSettings.Password);   // devices log in again
-  FPassword := FSettings.Password;
+  end;
+  // a new e-mail or password needs nothing here: each device sees the
+  // account's new login revision and logs in again on its next request
   UpdateStatus;
 end;
 
@@ -345,7 +280,7 @@ procedure TTapoScanMainForm.UpdateStatus;
 const
   StateText: array[TTapoCredentialState] of string = ('not tried yet', 'good', 'rejected');
 begin
-  FStatus.Text := Format('Network %s / %s - account %s - %d device(s) stored',
+  StatusLabel.Text := Format('Network %s / %s - account %s - %d device(s) stored',
     [FSettings.Network, FSettings.Subnet, StateText[FSettings.CredentialState],
      Length(FStore.Devices)]);
 end;
@@ -402,64 +337,118 @@ var
   Count: Integer;
 begin
   Count := Length(FStore.Devices);
-  FMemo.Lines.Add('');
+  LogMemo.Lines.Add('');
   Log(Format('==== Checking %d stored device(s) ====', [Count]));
   SetRunning(True);
-  FCancelButton.Enabled := False;
+  CancelButton.Enabled := False;
 
   Work :=
     procedure
     var
-      Ok, BadLogin, Other: Integer;
+      Ok, BadLogin, Unreachable, Other: Integer;
+      Retry: TArray<Integer>;
+      RetryLock: TObject;
       Body: TProc<Integer>;
       Finish: TThreadProcedure;
+      Tally: TProc<TTapoCheckStatus>;
+      I: Integer;
+      Status: TTapoCheckStatus;
+      Msg: string;
     begin
-      Ok := 0;
-      BadLogin := 0;
-      Other := 0;
-      Body :=
-        procedure(I: Integer)
-        var
-          Status: TTapoCheckStatus;
-          Msg: string;
-          D: TTapoStoredDevice;
+      Tally :=
+        procedure(AStatus: TTapoCheckStatus)
         begin
-          if FClosing then
-            Exit;
-          Status := FStore.CheckDevice(I, FLoaded[I], Msg);
-          D := FStore.Devices[I];
-          case Status of
+          case AStatus of
             tcsOk: TInterlocked.Increment(Ok);
             tcsBadCredentials: TInterlocked.Increment(BadLogin);
+            tcsUnreachable: TInterlocked.Increment(Unreachable);
           else
             TInterlocked.Increment(Other);
           end;
-          Log(Format('  %-17s %-15s %-10s %-20s %s', [TapoCheckStatusName(Status),
-            D.Host, D.Model, '"' + D.Nickname + '"', IfThen(Status = tcsOk, '', Msg)]));
         end;
+      Ok := 0;
+      BadLogin := 0;
+      Unreachable := 0;
+      Other := 0;
+      Retry := nil;
+      RetryLock := TObject.Create;
       try
-        TParallel.For(0, Count - 1, Body);
-      except
-        on E: Exception do
-          Log('Check failed: ' + E.Message);
+        Body :=
+          procedure(AIndex: Integer)
+          var
+            Status: TTapoCheckStatus;
+            Msg: string;
+          begin
+            if FClosing then
+              Exit;
+            Status := FStore.CheckDevice(AIndex, FLoaded[AIndex], Msg);
+            if Status = tcsUnreachable then
+            begin
+              // bulbs in particular drop connections when many devices are
+              // checked at once: try again below, one at a time
+              TMonitor.Enter(RetryLock);
+              try
+                Retry := Retry + [AIndex];
+              finally
+                TMonitor.Exit(RetryLock);
+              end;
+              Exit;
+            end;
+            Tally(Status);
+            LogCheck(AIndex, Status, Msg);
+          end;
+        try
+          TParallel.For(0, Count - 1, Body);
+        except
+          on E: Exception do
+            Log('Check failed: ' + E.Message);
+        end;
+      finally
+        RetryLock.Free;
       end;
+
+      // second chance, one device at a time, on a fresh connection
+      for I in Retry do
+      begin
+        if FClosing then
+          Break;
+        FLoaded[I].Logout;           // log in again from scratch
+        Sleep(500);
+        Status := FStore.CheckDevice(I, FLoaded[I], Msg);
+        Tally(Status);
+        LogCheck(I, Status, Msg);
+      end;
+
       Finish :=
         procedure
         begin
           if not FClosing then
-            ChecksDone(Ok, BadLogin, Other);
+            ChecksDone(Ok, BadLogin, Unreachable, Other);
         end;
       TThread.Queue(nil, Finish);
     end;
   FCheckTask := TTask.Run(Work);
 end;
 
-procedure TTapoScanMainForm.ChecksDone(AOk, ABadLogin, AOther: Integer);
+// One line of the stored-device check (any thread: Log queues).
+procedure TTapoScanMainForm.LogCheck(AIndex: Integer; AStatus: TTapoCheckStatus; const AMsg: string);
+var
+  D: TTapoStoredDevice;
+begin
+  D := FStore.Devices[AIndex];
+  Log(Format('  %-17s %-15s %-10s %-20s %s', [TapoCheckStatusName(AStatus),
+    D.Host, D.Model, '"' + D.Nickname + '"', IfThen(AStatus = tcsOk, '', AMsg)]));
+end;
+
+procedure TTapoScanMainForm.ChecksDone(AOk, ABadLogin, AUnreachable, AOther: Integer);
 begin
   FCheckTask := nil;
   SetRunning(False);
-  Log(Format('Check done: %d ok, %d rejected the account, %d not as stored.',
-    [AOk, ABadLogin, AOther]));
+  Log(Format('Check done: %d ok, %d rejected the account, %d did not answer, ' +
+    '%d not as stored.', [AOk, ABadLogin, AUnreachable, AOther]));
+  if AUnreachable > 0 then
+    Log('  A device that did not answer may be switched off (a bulb at the wall switch) or ' +
+      'have a new address; Scan finds it again when it is back.');
   try
     FStore.Save;              // last-seen times and check results
   except
@@ -494,17 +483,17 @@ begin
   Proc :=
     procedure
     begin
-      FMemo.Lines.Add(Line);
-      FMemo.GoToTextEnd;
+      LogMemo.Lines.Add(Line);
+      LogMemo.GoToTextEnd;
     end;
   TThread.Queue(nil, Proc);
 end;
 
 procedure TTapoScanMainForm.SetRunning(ARunning: Boolean);
 begin
-  FScanButton.Enabled := not ARunning;
-  FReadButton.Enabled := not ARunning;
-  FCancelButton.Enabled := ARunning;
+  ScanButton.Enabled := not ARunning;
+  ReadButton.Enabled := not ARunning;
+  CancelButton.Enabled := ARunning;
 end;
 
 // Re-enables the buttons from a background thread.
@@ -531,9 +520,9 @@ begin
       ApplySettings;
   end;
 
-  FMemo.Lines.Add('');
+  LogMemo.Lines.Add('');
   Log(Format('==== Scan of %s %s ====', [FSettings.Network, FSettings.Subnet]));
-  FProgress.Value := 0;
+  ProgressBar.Value := 0;
   SetRunning(True);
   try
     FScanner.ScanAsync(FSettings.Network, FSettings.Subnet, ScanDone);
@@ -543,14 +532,15 @@ begin
   end;
 end;
 
+// Network diagnostics for the ARP and sweep stages, on a background thread.
 procedure TTapoScanMainForm.DiagnoseClick(Sender: TObject);
 var
   Work: TProc;
 begin
-  FMemo.Lines.Add('');
+  LogMemo.Lines.Add('');
   Log('==== Scan diagnostics ====');
   SetRunning(True);
-  FCancelButton.Enabled := False;
+  CancelButton.Enabled := False;
   // a few seconds of network checks, so off the UI thread
   Work :=
     procedure
@@ -574,24 +564,24 @@ begin
   if FScanner <> nil then
   begin
     FScanner.Cancel;
-    FStatus.Text := 'Cancelling...';
+    StatusLabel.Text := 'Cancelling...';
   end;
 end;
 
 procedure TTapoScanMainForm.ScanProgress(Sender: TObject; AStage: TTapoScanStage;
   ADone, ATotal, AFound: Integer);
 begin
-  FProgress.Max := Max(ATotal, 1);
-  FProgress.Value := ADone;
+  ProgressBar.Max := Max(ATotal, 1);
+  ProgressBar.Value := ADone;
   case AStage of
     tsgArp:
-      FStatus.Text := Format('ARP: checked %d of %d addresses - %d candidate(s)',
+      StatusLabel.Text := Format('ARP: checked %d of %d addresses - %d candidate(s)',
         [ADone, ATotal, AFound]);
     tsgSweep:
-      FStatus.Text := Format('TCP sweep: checked %d of %d addresses - %d candidate(s)',
+      StatusLabel.Text := Format('TCP sweep: checked %d of %d addresses - %d candidate(s)',
         [ADone, ATotal, AFound]);
     tsgProbe:
-      FStatus.Text := Format('Probing: %d of %d candidates - %d Tapo device(s)',
+      StatusLabel.Text := Format('Probing: %d of %d candidates - %d Tapo device(s)',
         [ADone, ATotal, AFound]);
   end;
 end;
@@ -629,7 +619,7 @@ begin
     else
       Log(Format('  %-15s %-17s %s  %s', [E.IP, E.MAC, TapoScanStatusName(E.Status), E.Error]));
   end;
-  FStatus.Text := Format('Done - %d candidate(s), %d Tapo device(s); the client now holds %d',
+  StatusLabel.Text := Format('Done - %d candidate(s), %d Tapo device(s); the client now holds %d',
     [Length(AResult), Tapo, FClient.Count]);
 
   // what the scan says about the account
@@ -744,10 +734,10 @@ begin
   for I := 0 to High(Devices) do
     Devices[I] := FClient.Devices[I];
 
-  FMemo.Lines.Add('');
+  LogMemo.Lines.Add('');
   Log(Format('==== Reading %d device(s) ====', [Length(Devices)]));
   SetRunning(True);
-  FCancelButton.Enabled := False;
+  CancelButton.Enabled := False;
   Work :=
     procedure
     var
